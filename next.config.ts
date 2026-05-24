@@ -10,6 +10,7 @@ const securityHeaders = [
 ]
 
 const nextConfig: NextConfig = {
+  transpilePackages: ['sanity', '@sanity/vision', 'next-sanity'],
   images: {
     remotePatterns: [
       {
