@@ -1,0 +1,60 @@
+import type { Metadata } from 'next'
+import { draftMode } from 'next/headers'
+import { VisualEditing } from 'next-sanity/visual-editing'
+import { Header } from '@/components/Header'
+import { Footer } from '@/components/Footer'
+import { DisableDraftMode } from '@/components/DisableDraftMode'
+import { getSiteSettings, publishedQuery } from '@/lib/sanity'
+import { SanityLive } from '@/lib/sanity-live'
+
+const defaultDescription =
+  'Soneterapeut Terje Horpestad – 40 års erfaring. Soneterapi, øreakupunktur og tankefeltterapi i Sandnes.'
+
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSiteSettings(publishedQuery)
+  const title = settings?.title ?? 'Sandnes Soneterapi'
+  const description = settings?.metaDescription ?? defaultDescription
+
+  return {
+    title: {
+      default: title,
+      template: `%s | ${title}`,
+    },
+    description,
+    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sandnessoneterapi.no'),
+    openGraph: {
+      title,
+      description,
+      locale: 'nb_NO',
+      type: 'website',
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
+  }
+}
+
+export default async function SiteLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode
+}>) {
+  const { isEnabled: isDraftMode } = await draftMode()
+  const settings = await getSiteSettings()
+
+  return (
+    <>
+      <Header settings={settings} />
+      <main>{children}</main>
+      <Footer settings={settings} />
+      <SanityLive includeDrafts={isDraftMode} />
+      {isDraftMode && (
+        <>
+          <VisualEditing />
+          <DisableDraftMode />
+        </>
+      )}
+    </>
+  )
+}

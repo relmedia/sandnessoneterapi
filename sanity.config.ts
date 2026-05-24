@@ -23,6 +23,8 @@ export default defineConfig({
 
   plugins: [
     structureTool({
+      name: 'innhold',
+      title: 'Innhold',
       structure: (S) =>
         S.list()
           .title('Innhold')
@@ -36,34 +38,18 @@ export default defineConfig({
                   .documentId('siteSettings')
               ),
             S.divider(),
-            S.listItem()
-              .title('Behandlinger')
-              .schemaType('service')
-              .child(S.documentTypeList('service').title('Behandlinger')),
-            S.listItem()
-              .title('Kurs')
-              .schemaType('course')
-              .child(S.documentTypeList('course').title('Kurs')),
-            S.listItem()
-              .title('Bøker')
-              .schemaType('book')
-              .child(S.documentTypeList('book').title('Bøker')),
-            S.listItem()
-              .title('Artikler')
-              .schemaType('article')
-              .child(S.documentTypeList('article').title('Artikler')),
-            S.listItem()
-              .title('Timebestillinger')
-              .schemaType('bookingRequest')
-              .child(S.documentTypeList('bookingRequest').title('Timebestillinger')),
+            S.documentTypeListItem('service').title('Behandlinger'),
+            S.documentTypeListItem('article').title('Artikler'),
+            S.documentTypeListItem('page').title('Sider'),
+            S.documentTypeListItem('course').title('Kurs'),
+            S.documentTypeListItem('book').title('Bøker'),
             S.divider(),
-            S.listItem()
-              .title('Sider')
-              .schemaType('page')
-              .child(S.documentTypeList('page').title('Sider')),
+            S.documentTypeListItem('bookingRequest').title('Timebestillinger'),
           ]),
     }),
     presentationTool({
+      name: 'forhandsvisning',
+      title: 'Forhåndsvisning',
       resolve,
       previewUrl: {
         previewMode: {
@@ -81,9 +67,16 @@ export default defineConfig({
   },
 
   document: {
-    actions: (input, context) =>
-      singletonTypes.has(context.schemaType)
-        ? input.filter(({ action }) => action !== 'delete' && action !== 'duplicate')
-        : input,
+    actions: (input, context) => {
+      if (context.schemaType === 'bookingRequest') {
+        return input.filter(({ action }) => action !== 'duplicate')
+      }
+
+      if (singletonTypes.has(context.schemaType)) {
+        return input.filter(({ action }) => action !== 'delete' && action !== 'duplicate')
+      }
+
+      return input
+    },
   },
 })
