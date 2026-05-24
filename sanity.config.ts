@@ -49,7 +49,16 @@ export default defineConfig({
             S.divider(),
             S.documentTypeListItem('service').title('Behandlinger'),
             S.documentTypeListItem('article').title('Artikler'),
-            S.documentTypeListItem('page').title('Sider'),
+            S.listItem()
+              .title('Priser')
+              .id('priser')
+              .child(
+                S.document()
+                  .schemaType('page')
+                  .documentId('priser')
+                  .title('Priser')
+              ),
+            S.documentTypeListItem('page').title('Andre sider'),
             S.documentTypeListItem('course').title('Kurs'),
             S.documentTypeListItem('book').title('Bøker'),
             S.divider(),
@@ -71,8 +80,23 @@ export default defineConfig({
 
   schema: {
     types: schemaTypes,
-    templates: (templates) =>
-      templates.filter(({ schemaType }) => !singletonTypes.has(schemaType)),
+    templates: (templates) => [
+      ...templates.filter(({ schemaType }) => !singletonTypes.has(schemaType)),
+      {
+        id: 'page-priser',
+        title: 'Priser-side',
+        schemaType: 'page',
+        value: {
+          title: 'Priser',
+          slug: { _type: 'slug', current: 'priser' },
+          priceList: [
+            { _type: 'priceItem', label: 'Soneterapi – 1 time', price: '660 kr' },
+            { _type: 'priceItem', label: 'Øreakupunktur', price: 'Kontakt for pris' },
+            { _type: 'priceItem', label: 'Tankefeltterapi', price: 'Kontakt for pris' },
+          ],
+        },
+      },
+    ],
   },
 
   document: {

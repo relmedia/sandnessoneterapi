@@ -6,6 +6,7 @@ import {
 } from '@portabletext/react'
 import type { PortableTextBlock } from '@portabletext/types'
 import { urlFor } from '@/lib/sanity'
+import { replaceEmojiWithIcons } from '@/lib/replaceEmojiWithIcons'
 import { isSafeExternalUrl } from '@/lib/utils'
 import type { SanityImage } from '@/lib/types'
 
@@ -25,7 +26,7 @@ const blockComponents: Record<string, PortableTextBlockComponent> = {
   ),
   normal: ({ children }) => (
     <p className="font-sans font-light text-base md:text-lg text-muted leading-relaxed mb-5">
-      {children}
+      {replaceEmojiWithIcons(children)}
     </p>
   ),
   blockquote: ({ children }) => (

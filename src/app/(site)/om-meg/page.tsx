@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Phone } from 'lucide-react'
 import { getPage, getSiteSettings } from '@/lib/sanity'
 import { PortableTextRenderer } from '@/components/PortableText'
 import { getPhoneDisplay, getPhoneTel } from '@/lib/utils'
@@ -43,8 +44,8 @@ export default async function OmMegPage() {
             <h2 className="font-serif text-2xl md:text-3xl font-normal text-stone mt-10 mb-4">
               Kontakt
             </h2>
-            <p>
-              📞{' '}
+            <p className="inline-flex items-center gap-2">
+              <Phone className="size-4 shrink-0" aria-hidden="true" />
               <a href={`tel:${phoneTel}`} className="text-sage-dark underline">
                 {phoneDisplay}
               </a>

@@ -106,7 +106,8 @@ export const articleBySlugQuery = defineQuery(
 
 export const pageBySlugQuery = defineQuery(
   `*[_type == "page" && slug.current == $slug][0]{
-    _id, _type, title, slug, body
+    _id, _type, title, slug, body,
+    priceList[]{ label, price }
   }`
 )
 

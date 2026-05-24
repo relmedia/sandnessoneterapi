@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Phone } from 'lucide-react'
 import { getPage, getSiteSettings } from '@/lib/sanity'
 import { PortableTextRenderer } from '@/components/PortableText'
 import { getPhoneDisplay, getPhoneTel } from '@/lib/utils'
@@ -21,6 +22,7 @@ export default async function PriserPage() {
   const [page, settings] = await Promise.all([getPage('priser'), getSiteSettings()])
   const phoneDisplay = getPhoneDisplay(settings?.phone)
   const phoneTel = getPhoneTel(settings?.phone)
+  const prices = page?.priceList?.length ? page.priceList : defaultPrices
 
   return (
     <div className="py-16 md:py-24">
@@ -30,27 +32,32 @@ export default async function PriserPage() {
         </p>
         <h1 className="font-serif text-display text-stone mb-12">{page?.title ?? 'Priser'}</h1>
 
-        {page?.body ? (
-          <PortableTextRenderer value={page.body} />
-        ) : (
-          <>
-            <div className="divide-y divide-warm-light border-t border-b border-warm-light mb-12">
-              {defaultPrices.map((item) => (
-                <div key={item.label} className="flex justify-between items-center py-5 gap-4">
-                  <span className="font-sans font-light text-stone">{item.label}</span>
-                  <span className="font-serif text-xl text-sage-dark text-right">{item.price}</span>
-                </div>
-              ))}
+        <div className="divide-y divide-warm-light border-t border-b border-warm-light mb-12">
+          {prices.map((item) => (
+            <div key={item.label} className="flex justify-between items-center py-5 gap-4">
+              <span className="font-sans font-light text-stone">{item.label}</span>
+              <span className="font-serif text-xl text-sage-dark text-right">{item.price}</span>
             </div>
-            <p className="font-sans font-light text-muted text-sm">
+          ))}
+        </div>
+
+        {page?.body && page.body.length > 0 && (
+          <div className="mb-12">
+            <PortableTextRenderer value={page.body} />
+          </div>
+        )}
+
+        {phoneDisplay && phoneTel && (
+          <p className="font-sans font-light text-muted text-sm inline-flex items-center gap-2 flex-wrap">
+            <Phone className="size-4 shrink-0" aria-hidden="true" />
+            <span>
               Ring{' '}
               <a href={`tel:${phoneTel}`} className="text-sage-dark underline">
                 {phoneDisplay}
               </a>{' '}
-              for priser og bestilling av time. Legg til priser i Sanity CMS under{' '}
-              <em>Sider → priser</em>.
-            </p>
-          </>
+              for priser og bestilling av time.
+            </span>
+          </p>
         )}
       </div>
     </div>

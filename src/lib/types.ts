@@ -80,12 +80,18 @@ export interface Article {
   body?: PortableTextBlock[]
 }
 
+export interface PagePriceItem {
+  label: string
+  price: string
+}
+
 export interface Page {
   _id: string
   _type: 'page'
   title: string
   slug: SanitySlug
   body?: PortableTextBlock[]
+  priceList?: PagePriceItem[]
 }
 
 export interface ServiceListItem {
