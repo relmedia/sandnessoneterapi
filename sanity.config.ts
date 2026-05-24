@@ -2,6 +2,7 @@ import { defineConfig } from 'sanity'
 import { structureTool } from 'sanity/structure'
 import { presentationTool } from 'sanity/presentation'
 import { visionTool } from '@sanity/vision'
+import { nbNOLocale } from '@sanity/locale-nb-no'
 import { schemaTypes } from './sanity/schemas'
 import { resolve } from './sanity/presentation/resolve'
 
@@ -21,7 +22,15 @@ export default defineConfig({
     process.env.NEXT_PUBLIC_SANITY_DATASET ??
     'production',
 
+  i18n: {
+    locales: (prev) => {
+      const nbNO = prev.find((locale) => locale.id === 'nb-NO')
+      return nbNO ? [nbNO] : prev
+    },
+  },
+
   plugins: [
+    nbNOLocale(),
     structureTool({
       name: 'innhold',
       title: 'Innhold',
