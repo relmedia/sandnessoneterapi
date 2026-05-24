@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { Mail, MapPin, Phone } from 'lucide-react'
 import type { SiteSettings } from '@/lib/types'
 import { getPhoneDisplay, getPhoneTel, isSafeExternalUrl } from '@/lib/utils'
 
@@ -68,16 +69,29 @@ export function Footer({ settings }: FooterProps) {
           <h4 className="font-sans text-xs uppercase tracking-widest text-warm mb-4">Kontakt</h4>
           <div className="flex flex-col gap-2 text-sm font-sans font-light text-cream/70">
             {phoneDisplay && phoneTel && (
-              <a href={`tel:${phoneTel}`} className="hover:text-cream transition-colors">
-                📞 {phoneDisplay}
+              <a
+                href={`tel:${phoneTel}`}
+                className="inline-flex items-center gap-2 hover:text-cream transition-colors"
+              >
+                <Phone className="size-4 shrink-0" aria-hidden="true" />
+                {phoneDisplay}
               </a>
             )}
             {settings?.email && (
-              <a href={`mailto:${settings.email}`} className="hover:text-cream transition-colors">
-                ✉️ {settings.email}
+              <a
+                href={`mailto:${settings.email}`}
+                className="inline-flex items-center gap-2 hover:text-cream transition-colors"
+              >
+                <Mail className="size-4 shrink-0" aria-hidden="true" />
+                {settings.email}
               </a>
             )}
-            {settings?.address && <span>📍 {settings.address}</span>}
+            {settings?.address && (
+              <span className="inline-flex items-center gap-2">
+                <MapPin className="size-4 shrink-0" aria-hidden="true" />
+                {settings.address}
+              </span>
+            )}
             {facebookUrl && (
               <a
                 href={facebookUrl}

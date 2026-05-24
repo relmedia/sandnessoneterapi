@@ -3,7 +3,6 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import type { SiteSettings } from '@/lib/types'
-import { getPhoneDisplay, getPhoneTel } from '@/lib/utils'
 
 const navLinks = [
   { href: '/bestill-time', label: 'Bestill time' },
@@ -16,13 +15,11 @@ const navLinks = [
 ] as const
 
 interface HeaderProps {
-  settings: Pick<SiteSettings, 'title' | 'phone'> | null
+  settings: Pick<SiteSettings, 'title'> | null
 }
 
 export function Header({ settings }: HeaderProps) {
   const [open, setOpen] = useState(false)
-  const phoneDisplay = settings?.phone ? getPhoneDisplay(settings.phone) : null
-  const phoneTel = settings?.phone ? getPhoneTel(settings.phone) : null
 
   return (
     <header className="sticky top-0 z-50 bg-cream/90 backdrop-blur-sm border-b border-warm-light">
@@ -46,14 +43,6 @@ export function Header({ settings }: HeaderProps) {
               {link.label}
             </Link>
           ))}
-          {phoneDisplay && phoneTel && (
-            <a
-              href={`tel:${phoneTel}`}
-              className="ml-2 px-4 py-2 border border-sage/30 text-sage-dark text-sm font-sans font-light rounded-full hover:bg-sage-light transition-colors tracking-wide"
-            >
-              {phoneDisplay}
-            </a>
-          )}
         </nav>
 
         <button
@@ -90,14 +79,6 @@ export function Header({ settings }: HeaderProps) {
               {link.label}
             </Link>
           ))}
-          {phoneDisplay && phoneTel && (
-            <a
-              href={`tel:${phoneTel}`}
-              className="mt-2 text-center px-4 py-3 border border-sage/40 text-sage-dark rounded-full font-sans font-light"
-            >
-              Ring {phoneDisplay}
-            </a>
-          )}
         </nav>
       )}
     </header>
