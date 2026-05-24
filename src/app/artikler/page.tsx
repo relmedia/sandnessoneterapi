@@ -1,0 +1,75 @@
+import type { Metadata } from 'next'
+import Link from 'next/link'
+import Image from 'next/image'
+import { getArticles, urlFor } from '@/lib/sanity'
+import { formatDateNb } from '@/lib/utils'
+
+export const revalidate = 3600
+
+export const metadata: Metadata = {
+  title: 'Artikler',
+  description: 'Artikler om soneterapi, helse og velvære av Terje Horpestad.',
+}
+
+export default async function ArtiklerPage() {
+  const articles = await getArticles()
+
+  return (
+    <div className="py-16 md:py-24">
+      <div className="container-wide section-padding mx-auto">
+        <p className="font-sans font-light text-xs uppercase tracking-[0.3em] text-sage mb-4">
+          Fagstoff
+        </p>
+        <h1 className="font-serif text-display text-stone mb-16">Artikler om soneterapi</h1>
+
+        {articles.length > 0 ? (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {articles.map((article) => (
+              <Link
+                key={article._id}
+                href={`/artikler/${article.slug.current}`}
+                className="group block"
+              >
+                {article.coverImage ? (
+                  <div className="relative aspect-[16/9] rounded-2xl overflow-hidden mb-5 bg-sage-light">
+                    <Image
+                      src={urlFor(article.coverImage).width(600).height(338).url()}
+                      alt={article.coverImage.alt ?? article.title}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                    />
+                  </div>
+                ) : (
+                  <div className="aspect-[16/9] rounded-2xl bg-sage-light mb-5" />
+                )}
+                {article.publishedAt && (
+                  <p className="font-sans text-xs text-sage uppercase tracking-widest mb-2">
+                    {formatDateNb(article.publishedAt, {
+                      day: 'numeric',
+                      month: 'long',
+                      year: 'numeric',
+                    })}
+                  </p>
+                )}
+                <h2 className="font-serif text-xl text-stone mb-2 group-hover:text-sage-dark transition-colors">
+                  {article.title}
+                </h2>
+                {article.excerpt && (
+                  <p className="font-sans font-light text-sm text-muted leading-relaxed">
+                    {article.excerpt}
+                  </p>
+                )}
+                <span className="inline-block mt-3 text-xs uppercase tracking-widest text-sage font-sans">
+                  Les artikkelen →
+                </span>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <p className="font-sans font-light text-muted text-lg">Artikler legges til snart.</p>
+        )}
+      </div>
+    </div>
+  )
+}

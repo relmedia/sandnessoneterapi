@@ -1,0 +1,91 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cream: #faf7f2;
+  --color-stone: #3d3530;
+  --color-muted: #7a6e68;
+  --color-sage: #6b8c76;
+  --color-sage-light: #ebf0ec;
+  --color-sage-dark: #4e6b58;
+  --color-warm: #c4a882;
+  --color-warm-light: #f2ebe0;
+
+  --font-serif: var(--font-cormorant), Georgia, serif;
+  --font-sans: var(--font-outfit), system-ui, sans-serif;
+
+  --text-display: clamp(2.5rem, 6vw, 4.5rem);
+  --text-display--line-height: 1.05;
+  --text-display--letter-spacing: -0.02em;
+
+  --text-hero: clamp(1.8rem, 4vw, 3rem);
+  --text-hero--line-height: 1.1;
+  --text-hero--letter-spacing: -0.01em;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-cream);
+  color: var(--color-stone);
+  font-family: var(--font-sans);
+}
+
+@utility section-padding {
+  padding-inline: calc(var(--spacing) * 6);
+
+  @media (width >= 48rem) {
+    padding-inline: calc(var(--spacing) * 12);
+  }
+
+  @media (width >= 64rem) {
+    padding-inline: calc(var(--spacing) * 24);
+  }
+}
+
+@utility container-narrow {
+  max-width: 48rem;
+  margin-inline: auto;
+}
+
+@utility container-wide {
+  max-width: 72rem;
+  margin-inline: auto;
+}
+
+@utility text-display {
+  font-size: var(--text-display);
+  line-height: var(--text-display--line-height);
+  letter-spacing: var(--text-display--letter-spacing);
+}
+
+@utility text-hero {
+  font-size: var(--text-hero);
+  line-height: var(--text-hero--line-height);
+  letter-spacing: var(--text-hero--letter-spacing);
+}
+
+.prose-sanity h2 {
+  @apply font-serif text-2xl md:text-3xl font-normal text-stone mt-10 mb-4;
+}
+
+.prose-sanity h3 {
+  @apply font-serif text-xl md:text-2xl font-normal text-stone mt-8 mb-3;
+}
+
+.prose-sanity p {
+  @apply text-base md:text-lg text-muted leading-relaxed mb-5 font-sans font-light;
+}
+
+.prose-sanity ul {
+  @apply list-disc list-inside space-y-2 text-muted mb-5;
+}
+
+.prose-sanity strong {
+  @apply font-medium text-stone;
+}
+
+.prose-sanity a {
+  @apply text-sage-dark underline underline-offset-2 hover:text-sage transition-colors;
+}
