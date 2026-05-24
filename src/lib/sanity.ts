@@ -1,7 +1,9 @@
-import { createClient, defineQuery } from 'next-sanity'
+import { defineQuery } from 'next-sanity'
 import imageUrlBuilder from '@sanity/image-url'
-import { isSanityConfigured, sanityConfig } from './env'
-import { REVALIDATE_SECONDS, SANITY_CACHE_TAG } from './revalidate'
+import { isSanityConfigured } from './env'
+import { client } from './sanity-client'
+import { sanityFetch } from './sanity-live'
+import { SANITY_CACHE_TAG } from './revalidate'
 import type {
   Article,
   ArticleListItem,
@@ -15,27 +17,34 @@ import type {
   SiteSettings,
 } from './types'
 
-export const client = createClient({
-  ...sanityConfig,
-  // Skip Sanity CDN so published edits appear as soon as Next.js revalidates.
-  useCdn: false,
-})
-
 const builder = imageUrlBuilder(client)
 
 export function urlFor(source: SanityImage) {
   return builder.image(source)
 }
 
-async function safeFetch<T>(query: string, params: Record<string, string> = {}, fallback: T): Promise<T> {
+export type SanityQueryOptions = {
+  stega?: boolean
+  perspective?: 'published' | 'drafts'
+}
+
+async function safeFetch<T>(
+  query: string,
+  params: Record<string, string> = {},
+  fallback: T,
+  options?: SanityQueryOptions,
+): Promise<T> {
   if (!isSanityConfigured()) return fallback
 
   try {
-    return await client.fetch<T>(query, params, {
-      ...(REVALIDATE_SECONDS === 0
-        ? { cache: 'no-store' as const }
-        : { next: { revalidate: REVALIDATE_SECONDS, tags: [SANITY_CACHE_TAG] } }),
+    const { data } = await sanityFetch({
+      query,
+      params,
+      tags: [SANITY_CACHE_TAG],
+      ...(options?.stega !== undefined && { stega: options.stega }),
+      ...(options?.perspective !== undefined && { perspective: options.perspective }),
     })
+    return (data ?? fallback) as T
   } catch (error) {
     if (process.env.NODE_ENV === 'development') {
       console.warn('[sanity] Fetch failed:', error)
@@ -43,6 +52,8 @@ async function safeFetch<T>(query: string, params: Record<string, string> = {}, 
     return fallback
   }
 }
+
+const publishedQuery = { perspective: 'published' as const, stega: false }
 
 // ─── GROQ Queries ────────────────────────────────────────────────────────────
 
@@ -99,38 +110,41 @@ export const pageBySlugQuery = defineQuery(
   }`
 )
 
-export async function getSiteSettings(): Promise<SiteSettings | null> {
-  return safeFetch<SiteSettings | null>(siteSettingsQuery, {}, null)
+export async function getSiteSettings(options?: SanityQueryOptions): Promise<SiteSettings | null> {
+  return safeFetch<SiteSettings | null>(siteSettingsQuery, {}, null, options)
 }
 
-export async function getServices(): Promise<ServiceListItem[]> {
-  return safeFetch<ServiceListItem[]>(servicesQuery, {}, [])
+export async function getServices(options?: SanityQueryOptions): Promise<ServiceListItem[]> {
+  return safeFetch<ServiceListItem[]>(servicesQuery, {}, [], options)
 }
 
-export async function getService(slug: string): Promise<Service | null> {
-  return safeFetch<Service | null>(serviceBySlugQuery, { slug }, null)
+export async function getService(slug: string, options?: SanityQueryOptions): Promise<Service | null> {
+  return safeFetch<Service | null>(serviceBySlugQuery, { slug }, null, options)
 }
 
-export async function getCourses(): Promise<CourseListItem[]> {
-  return safeFetch<CourseListItem[]>(coursesQuery, {}, [])
+export async function getCourses(options?: SanityQueryOptions): Promise<CourseListItem[]> {
+  return safeFetch<CourseListItem[]>(coursesQuery, {}, [], options)
 }
 
-export async function getCourse(slug: string): Promise<Course | null> {
-  return safeFetch<Course | null>(courseBySlugQuery, { slug }, null)
+export async function getCourse(slug: string, options?: SanityQueryOptions): Promise<Course | null> {
+  return safeFetch<Course | null>(courseBySlugQuery, { slug }, null, options)
 }
 
-export async function getBooks(): Promise<BookListItem[]> {
-  return safeFetch<BookListItem[]>(booksQuery, {}, [])
+export async function getBooks(options?: SanityQueryOptions): Promise<BookListItem[]> {
+  return safeFetch<BookListItem[]>(booksQuery, {}, [], options)
 }
 
-export async function getArticles(): Promise<ArticleListItem[]> {
-  return safeFetch<ArticleListItem[]>(articlesQuery, {}, [])
+export async function getArticles(options?: SanityQueryOptions): Promise<ArticleListItem[]> {
+  return safeFetch<ArticleListItem[]>(articlesQuery, {}, [], options)
 }
 
-export async function getArticle(slug: string): Promise<Article | null> {
-  return safeFetch<Article | null>(articleBySlugQuery, { slug }, null)
+export async function getArticle(slug: string, options?: SanityQueryOptions): Promise<Article | null> {
+  return safeFetch<Article | null>(articleBySlugQuery, { slug }, null, options)
 }
 
-export async function getPage(slug: string): Promise<Page | null> {
-  return safeFetch<Page | null>(pageBySlugQuery, { slug }, null)
+export async function getPage(slug: string, options?: SanityQueryOptions): Promise<Page | null> {
+  return safeFetch<Page | null>(pageBySlugQuery, { slug }, null, options)
 }
+
+export { publishedQuery }
+export { client } from './sanity-client'

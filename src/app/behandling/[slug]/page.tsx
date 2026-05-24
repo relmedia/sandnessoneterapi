@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-import { getService, getServices, getSiteSettings, urlFor } from '@/lib/sanity'
+import { getService, getServices, getSiteSettings, publishedQuery, urlFor } from '@/lib/sanity'
 import { PortableTextRenderer } from '@/components/PortableText'
 import { getPhoneDisplay, getPhoneTel } from '@/lib/utils'
 
@@ -13,13 +13,13 @@ interface PageProps {
 }
 
 export async function generateStaticParams() {
-  const services = await getServices()
+  const services = await getServices(publishedQuery)
   return services.map((service) => ({ slug: service.slug.current }))
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
-  const service = await getService(slug)
+  const service = await getService(slug, publishedQuery)
   if (!service) return { title: 'Behandling ikke funnet' }
   return {
     title: service.title,

@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-import { getArticle, getArticles, urlFor } from '@/lib/sanity'
+import { getArticle, getArticles, publishedQuery, urlFor } from '@/lib/sanity'
 import { PortableTextRenderer } from '@/components/PortableText'
 import { formatDateNb } from '@/lib/utils'
 
@@ -13,13 +13,13 @@ interface PageProps {
 }
 
 export async function generateStaticParams() {
-  const articles = await getArticles()
+  const articles = await getArticles(publishedQuery)
   return articles.map((article) => ({ slug: article.slug.current }))
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
-  const article = await getArticle(slug)
+  const article = await getArticle(slug, publishedQuery)
   if (!article) return { title: 'Artikkel ikke funnet' }
   return {
     title: article.title,

@@ -1,7 +1,9 @@
 import { defineConfig } from 'sanity'
 import { structureTool } from 'sanity/structure'
+import { presentationTool } from 'sanity/presentation'
 import { visionTool } from '@sanity/vision'
 import { schemaTypes } from './sanity/schemas'
+import { resolve } from './sanity/presentation/resolve'
 
 const singletonTypes = new Set(['siteSettings'])
 
@@ -60,6 +62,14 @@ export default defineConfig({
               .schemaType('page')
               .child(S.documentTypeList('page').title('Sider')),
           ]),
+    }),
+    presentationTool({
+      resolve,
+      previewUrl: {
+        previewMode: {
+          enable: '/api/draft-mode/enable',
+        },
+      },
     }),
     visionTool(),
   ],

@@ -1,9 +1,13 @@
 import type { Metadata } from 'next'
+import { draftMode } from 'next/headers'
 import { Cormorant_Garamond, Outfit } from 'next/font/google'
+import { VisualEditing } from 'next-sanity/visual-editing'
 import './globals.css'
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
-import { getSiteSettings } from '@/lib/sanity'
+import { DisableDraftMode } from '@/components/DisableDraftMode'
+import { getSiteSettings, publishedQuery } from '@/lib/sanity'
+import { SanityLive } from '@/lib/sanity-live'
 
 const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
@@ -24,7 +28,7 @@ const defaultDescription =
   'Soneterapeut Terje Horpestad – 40 års erfaring. Soneterapi, øreakupunktur og tankefeltterapi i Sandnes.'
 
 export async function generateMetadata(): Promise<Metadata> {
-  const settings = await getSiteSettings()
+  const settings = await getSiteSettings(publishedQuery)
   const title = settings?.title ?? 'Sandnes Soneterapi'
   const description = settings?.metaDescription ?? defaultDescription
 
@@ -53,6 +57,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const { isEnabled: isDraftMode } = await draftMode()
   const settings = await getSiteSettings()
 
   return (
@@ -61,6 +66,13 @@ export default async function RootLayout({
         <Header settings={settings} />
         <main>{children}</main>
         <Footer settings={settings} />
+        <SanityLive includeDrafts={isDraftMode} />
+        {isDraftMode && (
+          <>
+            <VisualEditing />
+            <DisableDraftMode />
+          </>
+        )}
       </body>
     </html>
   )
