@@ -44,6 +44,10 @@ export default defineConfig({
               .title('Artikler')
               .schemaType('article')
               .child(S.documentTypeList('article').title('Artikler')),
+            S.listItem()
+              .title('Timebestillinger')
+              .schemaType('bookingRequest')
+              .child(S.documentTypeList('bookingRequest').title('Timebestillinger')),
             S.divider(),
             S.listItem()
               .title('Sider')

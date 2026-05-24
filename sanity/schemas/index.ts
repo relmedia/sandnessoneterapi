@@ -4,5 +4,6 @@ import { course } from './course'
 import { book } from './book'
 import { article } from './article'
 import { page } from './page'
+import { bookingRequest } from './bookingRequest'
 
-export const schemaTypes = [siteSettings, service, course, book, article, page]
+export const schemaTypes = [siteSettings, service, course, book, article, page, bookingRequest]

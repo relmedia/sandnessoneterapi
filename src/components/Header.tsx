@@ -6,6 +6,7 @@ import type { SiteSettings } from '@/lib/types'
 import { getPhoneDisplay, getPhoneTel } from '@/lib/utils'
 
 const navLinks = [
+  { href: '/bestill-time', label: 'Bestill time' },
   { href: '/behandling/soneterapi', label: 'Behandlinger' },
   { href: '/kurs', label: 'Kurs' },
   { href: '/boker', label: 'Bøker' },
@@ -48,9 +49,9 @@ export function Header({ settings }: HeaderProps) {
           {phoneDisplay && phoneTel && (
             <a
               href={`tel:${phoneTel}`}
-              className="ml-4 px-4 py-2 bg-sage text-cream text-sm font-sans font-light rounded-full hover:bg-sage-dark transition-colors tracking-wide"
+              className="ml-2 px-4 py-2 border border-sage/30 text-sage-dark text-sm font-sans font-light rounded-full hover:bg-sage-light transition-colors tracking-wide"
             >
-              Ring {phoneDisplay}
+              {phoneDisplay}
             </a>
           )}
         </nav>
@@ -92,7 +93,7 @@ export function Header({ settings }: HeaderProps) {
           {phoneDisplay && phoneTel && (
             <a
               href={`tel:${phoneTel}`}
-              className="mt-2 text-center px-4 py-3 bg-sage text-cream rounded-full font-sans font-light"
+              className="mt-2 text-center px-4 py-3 border border-sage/40 text-sage-dark rounded-full font-sans font-light"
             >
               Ring {phoneDisplay}
             </a>

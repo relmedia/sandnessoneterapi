@@ -11,6 +11,8 @@ interface FooterProps {
 
 const footerLinks = [
   ['/', 'Forside'],
+  ['/bestill-time', 'Bestill time'],
+  ['/avbestill', 'Avbestill time'],
   ['/behandling/soneterapi', 'Behandlinger'],
   ['/kurs', 'Kurs'],
   ['/boker', 'Bøker'],

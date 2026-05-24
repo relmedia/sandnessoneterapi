@@ -62,12 +62,12 @@ export default async function HomePage() {
                 'Terje Horpestad er godkjent soneterapeut med over 40 års daglig erfaring. Han tilbyr soneterapi, øreakupunktur og tankefeltterapi i Sandnes.'}
             </p>
             <div className="flex flex-wrap gap-4">
-              <a
-                href={`tel:${phoneTel}`}
+              <Link
+                href="/bestill-time"
                 className="px-8 py-4 bg-stone text-cream font-sans font-light text-sm rounded-full hover:bg-sage-dark transition-colors tracking-wide"
               >
-                Book time – {phoneDisplay}
-              </a>
+                Bestill time
+              </Link>
               <Link
                 href="/behandling/soneterapi"
                 className="px-8 py-4 border border-stone/30 text-stone font-sans font-light text-sm rounded-full hover:border-sage hover:text-sage-dark transition-colors tracking-wide"
@@ -249,14 +249,22 @@ export default async function HomePage() {
         <div className="container-wide section-padding mx-auto text-center">
           <h2 className="font-serif text-display text-cream mb-6">Klar for en behandling?</h2>
           <p className="font-sans font-light text-cream/80 text-lg mb-10 max-w-md mx-auto">
-            Ring for å avtale time. Velkommen til Industrigata 1 i Sandnes.
+            Bestill time online eller ring for å avtale. Velkommen til Industrigata 1 i Sandnes.
           </p>
-          <a
-            href={`tel:${phoneTel}`}
-            className="inline-block px-10 py-5 bg-cream text-stone font-sans font-light rounded-full hover:bg-warm-light transition-colors tracking-wide text-lg"
-          >
-            📞 {phoneDisplay}
-          </a>
+          <div className="flex flex-wrap justify-center gap-4">
+            <Link
+              href="/bestill-time"
+              className="inline-block px-10 py-5 bg-cream text-stone font-sans font-light rounded-full hover:bg-warm-light transition-colors tracking-wide text-lg"
+            >
+              Bestill time
+            </Link>
+            <a
+              href={`tel:${phoneTel}`}
+              className="inline-block px-10 py-5 border border-cream/40 text-cream font-sans font-light rounded-full hover:bg-cream/10 transition-colors tracking-wide text-lg"
+            >
+              Ring {phoneDisplay}
+            </a>
+          </div>
         </div>
       </section>
     </>

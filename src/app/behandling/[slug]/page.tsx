@@ -77,13 +77,21 @@ export default async function ServicePage({ params }: PageProps) {
 
         <div className="mt-16 p-10 rounded-2xl bg-sage-light text-center">
           <h2 className="font-serif text-2xl text-stone mb-3">Ønsker du en time?</h2>
-          <p className="font-sans font-light text-muted mb-6">Ring Terje for å avtale behandling.</p>
-          <a
-            href={`tel:${phoneTel}`}
-            className="inline-block px-8 py-4 bg-sage text-cream font-sans font-light text-sm rounded-full hover:bg-sage-dark transition-colors tracking-wide"
-          >
-            Ring {phoneDisplay}
-          </a>
+          <p className="font-sans font-light text-muted mb-6">Bestill online eller ring Terje direkte.</p>
+          <div className="flex flex-wrap justify-center gap-4">
+            <Link
+              href="/bestill-time"
+              className="inline-block px-8 py-4 bg-sage text-cream font-sans font-light text-sm rounded-full hover:bg-sage-dark transition-colors tracking-wide"
+            >
+              Bestill time
+            </Link>
+            <a
+              href={`tel:${phoneTel}`}
+              className="inline-block px-8 py-4 border border-sage/30 text-sage-dark font-sans font-light text-sm rounded-full hover:bg-sage-light transition-colors tracking-wide"
+            >
+              Ring {phoneDisplay}
+            </a>
+          </div>
         </div>
       </div>
     </article>
