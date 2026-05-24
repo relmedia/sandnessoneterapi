@@ -30,15 +30,13 @@ export default async function BokerPage() {
 
         <div className="flex flex-col gap-16">
           {books.length > 0 ? (
-            books.map((book, index) => (
+            books.map((book) => (
               <article
                 key={book._id}
-                className={`grid md:grid-cols-[280px_1fr] gap-10 items-start ${index % 2 !== 0 ? 'md:grid-cols-[1fr_280px]' : ''}`}
+                className="grid md:grid-cols-[280px_1fr] gap-10 items-start"
               >
                 {book.coverImage ? (
-                  <div
-                    className={`relative aspect-[3/4] rounded-2xl overflow-hidden shadow-lg bg-sage-light ${index % 2 !== 0 ? 'md:order-2' : ''}`}
-                  >
+                  <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-lg bg-sage-light">
                     <Image
                       src={urlFor(book.coverImage).width(560).height(747).url()}
                       alt={book.coverImage.alt ?? book.title}
@@ -48,15 +46,13 @@ export default async function BokerPage() {
                     />
                   </div>
                 ) : (
-                  <div
-                    className={`aspect-[3/4] rounded-2xl bg-sage-light flex items-center justify-center ${index % 2 !== 0 ? 'md:order-2' : ''}`}
-                  >
+                  <div className="aspect-[3/4] rounded-2xl bg-sage-light flex items-center justify-center">
                     <span className="text-5xl" aria-hidden="true">
                       📖
                     </span>
                   </div>
                 )}
-                <div className={index % 2 !== 0 ? 'md:order-1' : ''}>
+                <div>
                   <h2 className="font-serif text-3xl md:text-4xl text-stone mb-3">{book.title}</h2>
                   <div className="flex flex-wrap gap-4 text-xs font-sans font-light text-muted uppercase tracking-widest mb-6">
                     {book.isbn && <span>ISBN {book.isbn}</span>}
