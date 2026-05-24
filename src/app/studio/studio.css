@@ -1,0 +1,16 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+body {
+  background: #fff;
+}
+
+/* Keep Studio chrome above document panes and preview overlays */
+#sanity [data-ui='Navbar'] {
+  position: relative;
+  z-index: 1000;
+}

@@ -6,6 +6,7 @@ import { Footer } from '@/components/Footer'
 import { DisableDraftMode } from '@/components/DisableDraftMode'
 import { getSiteSettings, publishedQuery } from '@/lib/sanity'
 import { SanityLive } from '@/lib/sanity-live'
+import '../globals.css'
 
 const defaultDescription =
   'Soneterapeut Terje Horpestad – 40 års erfaring. Soneterapi, øreakupunktur og tankefeltterapi i Sandnes.'
