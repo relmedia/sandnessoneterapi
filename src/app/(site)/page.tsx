@@ -1,9 +1,10 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import { CourseCard } from '@/components/CourseCard'
 import { ServiceCard } from '@/components/ServiceCard'
 import { getSiteSettings, getServices, getCourses, urlFor } from '@/lib/sanity'
 import { mapServiceCards } from '@/lib/service-fallbacks'
-import { formatDateNb, getPhoneDisplay, getPhoneTel } from '@/lib/utils'
+import { getPhoneDisplay, getPhoneTel } from '@/lib/utils'
 
 export const revalidate = 3600
 
@@ -177,45 +178,17 @@ export default async function HomePage() {
               </Link>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid gap-6 md:grid-cols-3 md:gap-8">
               {upcomingCourses.map((course) => (
-                <Link
-                  key={course._id}
-                  href={`/kurs/${course.slug.current}`}
-                  className="group block rounded-2xl border border-warm-light p-8 transition-colors hover:border-sage/30 hover:bg-sage-light/30"
-                >
-                  {course.startDate && (
-                    <p className="font-sans text-xs text-sage uppercase tracking-widest mb-3">
-                      {formatDateNb(course.startDate, {
-                        day: 'numeric',
-                        month: 'long',
-                        year: 'numeric',
-                      })}
-                    </p>
-                  )}
-                  <h3 className="font-serif text-xl text-stone mb-3 group-hover:text-sage-dark transition-colors">
-                    {course.title}
-                  </h3>
-                  {course.shortDescription && (
-                    <p className="font-sans font-light text-sm text-muted leading-relaxed mb-4">
-                      {course.shortDescription}
-                    </p>
-                  )}
-                  <div className="flex items-center gap-4 text-xs font-sans font-light text-muted">
-                    {course.location && <span>📍 {course.location}</span>}
-                    {course.price != null && (
-                      <span>{course.price.toLocaleString('nb-NO')} kr</span>
-                    )}
-                  </div>
-                </Link>
+                <CourseCard key={course._id} course={course} />
               ))}
             </div>
           </div>
         </section>
       )}
 
-      <section className="bg-sage py-20 md:py-28">
-        <div className="container-wide section-padding mx-auto text-center">
+      <section className="bg-sage pt-20 md:pt-28">
+        <div className="container-wide section-padding mx-auto pb-16 md:pb-20 text-center">
           <h2 className="font-serif text-display text-cream mb-6">Klar for en behandling?</h2>
           <p className="font-sans font-light text-cream/80 text-lg mb-10 max-w-md mx-auto">
             Bestill time online eller ring for å avtale. Velkommen til Industrigata 1 i Sandnes.

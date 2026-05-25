@@ -32,7 +32,7 @@ export function Footer({ settings }: FooterProps) {
       : null
 
   return (
-    <footer className="bg-stone text-cream/80 mt-24">
+    <footer className="bg-stone text-cream/80">
       <div className="container-wide section-padding mx-auto py-16 grid md:grid-cols-3 gap-12">
         <div>
           <h3 className="font-serif text-2xl font-light text-cream mb-3">
