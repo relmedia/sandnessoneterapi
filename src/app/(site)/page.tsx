@@ -63,14 +63,9 @@ export default async function HomePage() {
                   Les mer om behandlinger
                 </Link>
               </div>
-              {settings?.address && (
-                <p className="mt-8 text-xs text-muted font-sans font-light tracking-wide">
-                  📍 {settings.address}
-                </p>
-              )}
             </div>
 
-            <div className="relative z-10 mx-auto w-[160px] shrink-0 self-center sm:w-[190px] lg:mx-0 lg:w-[220px] xl:w-[240px]">
+            <div className="relative z-10 mx-auto hidden w-[220px] shrink-0 self-center lg:mx-0 lg:block xl:w-[240px]">
               <Image
                 src={
                   heroImage
@@ -82,7 +77,7 @@ export default async function HomePage() {
                 height={heroImageHeight}
                 className="h-auto w-full"
                 priority
-                sizes="(max-width: 640px) 160px, (max-width: 1024px) 190px, 240px"
+                sizes="240px"
               />
               <div
                 aria-hidden
