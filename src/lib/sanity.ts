@@ -23,6 +23,12 @@ export function urlFor(source: SanityImage) {
   return builder.image(source)
 }
 
+export function getSanityImageAspectStyle(image?: SanityImage): { aspectRatio: string } {
+  const width = image?.dimensions?.width ?? 1
+  const height = image?.dimensions?.height ?? 1
+  return { aspectRatio: `${width} / ${height}` }
+}
+
 export type SanityQueryOptions = {
   stega?: boolean
   perspective?: 'published' | 'drafts'
@@ -82,13 +88,21 @@ export const serviceBySlugQuery = defineQuery(
 
 export const coursesQuery = defineQuery(
   `*[_type == "course" && active == true] | order(startDate asc) {
-    _id, title, slug, startDate, endDate, location, price, shortDescription, coverImage
+    _id, title, slug, startDate, endDate, location, price, shortDescription,
+    coverImage{
+      ...,
+      "dimensions": asset->metadata.dimensions
+    }
   }`
 )
 
 export const courseBySlugQuery = defineQuery(
   `*[_type == "course" && slug.current == $slug && active == true][0]{
-    _id, _type, title, slug, startDate, endDate, location, price, shortDescription, coverImage, body
+    _id, _type, title, slug, startDate, endDate, location, price, shortDescription, body,
+    coverImage{
+      ...,
+      "dimensions": asset->metadata.dimensions
+    }
   }`
 )
 

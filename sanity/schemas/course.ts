@@ -49,7 +49,7 @@ export const course = defineType({
       name: 'coverImage',
       title: 'Hovedbilde',
       description:
-        'Vises øverst på kurssiden og i oversikten. Anbefalt liggende bilde (ca. 16:9).',
+        'Vises på kurssiden og i oversikten. Anbefalt kvadratisk (1024×1024) eller liggende bilde i god oppløsning.',
       type: 'image',
       options: { hotspot: true },
       fields: [

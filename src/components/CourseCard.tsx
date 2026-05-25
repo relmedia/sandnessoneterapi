@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowRight, GraduationCap, MapPin } from 'lucide-react'
-import { urlFor } from '@/lib/sanity'
+import { getSanityImageAspectStyle, urlFor } from '@/lib/sanity'
 import { formatCourseDateRange } from '@/lib/utils'
 import type { CourseListItem } from '@/lib/types'
 
@@ -19,9 +19,12 @@ export function CourseCard({ course }: CourseCardProps) {
       className="group flex h-full flex-col overflow-hidden rounded-2xl border border-stone/10 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-sage/25 hover:shadow-lg"
     >
       {course.coverImage ? (
-        <div className="relative aspect-[16/10] overflow-hidden bg-sage-light">
+        <div
+          className="relative overflow-hidden bg-sage-light"
+          style={getSanityImageAspectStyle(course.coverImage)}
+        >
           <Image
-            src={urlFor(course.coverImage).width(640).height(400).url()}
+            src={urlFor(course.coverImage).width(640).url()}
             alt={course.coverImage.alt ?? course.title}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -33,7 +36,7 @@ export function CourseCard({ course }: CourseCardProps) {
           </div>
         </div>
       ) : (
-        <div className="relative aspect-[16/10] overflow-hidden bg-gradient-to-br from-sage-light via-cream to-warm-light/60">
+        <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-sage-light via-cream to-warm-light/60">
           <div
             aria-hidden
             className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-sage/10 blur-2xl"

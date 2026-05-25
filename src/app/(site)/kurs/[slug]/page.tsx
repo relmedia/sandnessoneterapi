@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { MapPin } from 'lucide-react'
-import { getCourse, getCourses, getSiteSettings, publishedQuery, urlFor } from '@/lib/sanity'
+import { getCourse, getCourses, getSiteSettings, getSanityImageAspectStyle, publishedQuery, urlFor } from '@/lib/sanity'
 import { PortableTextRenderer } from '@/components/PortableText'
 import {
   formatCourseDateRange,
@@ -93,9 +93,12 @@ export default async function CoursePage({ params }: PageProps) {
         )}
 
         {course.coverImage && (
-          <div className="relative mb-14 aspect-video overflow-hidden rounded-2xl bg-sage-light">
+          <div
+            className="relative mb-14 max-w-xl overflow-hidden rounded-2xl bg-sage-light"
+            style={getSanityImageAspectStyle(course.coverImage)}
+          >
             <Image
-              src={urlFor(course.coverImage).width(1200).height(675).url()}
+              src={urlFor(course.coverImage).width(1024).url()}
               alt={course.coverImage.alt ?? course.title}
               fill
               className="object-cover"

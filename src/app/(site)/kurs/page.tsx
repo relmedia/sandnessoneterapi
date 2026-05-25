@@ -45,7 +45,7 @@ export default async function KursPage() {
                   >
                     {course.coverImage ? (
                       <Image
-                        src={urlFor(course.coverImage).width(640).height(480).url()}
+                        src={urlFor(course.coverImage).width(640).url()}
                         alt={course.coverImage.alt ?? course.title}
                         fill
                         className="object-cover"
