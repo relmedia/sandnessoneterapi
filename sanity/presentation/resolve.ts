@@ -33,20 +33,36 @@ export const resolve: PresentationPluginOptions['resolve'] = {
       }),
     }),
     page: defineLocations({
+      select: { title: 'title', slug: 'slug.current', documentId: '_id' },
+      resolve: (doc) => {
+        const knownRoutes: Record<string, string> = {
+          priser: '/priser',
+          foredrag: '/foredrag',
+        }
+        const href =
+          (doc?.documentId && knownRoutes[doc.documentId]) ||
+          (doc?.slug ? `/${doc.slug}` : '/')
+
+        return {
+          locations: [
+            {
+              title: doc?.title ?? 'Side',
+              href,
+            },
+          ],
+        }
+      },
+    }),
+    course: defineLocations({
       select: { title: 'title', slug: 'slug.current' },
       resolve: (doc) => ({
         locations: [
           {
-            title: doc?.title ?? 'Side',
-            href: doc?.slug ? `/${doc.slug}` : '/',
+            title: doc?.title ?? 'Kurs',
+            href: doc?.slug ? `/kurs/${doc.slug}` : '/kurs',
           },
+          { title: 'Kurs', href: '/kurs' },
         ],
-      }),
-    }),
-    course: defineLocations({
-      select: { title: 'title' },
-      resolve: (doc) => ({
-        locations: [{ title: doc?.title ?? 'Kurs', href: '/kurs' }],
       }),
     }),
     book: defineLocations({

@@ -8,6 +8,10 @@ export interface SanityImage {
   }
   alt?: string
   caption?: string
+  dimensions?: {
+    width?: number
+    height?: number
+  }
 }
 
 export interface SanitySlug {
@@ -52,6 +56,7 @@ export interface Course {
   price?: number
   shortDescription?: string
   body?: PortableTextBlock[]
+  coverImage?: SanityImage
   active?: boolean
 }
 
@@ -91,6 +96,7 @@ export interface Page {
   title: string
   slug: SanitySlug
   body?: PortableTextBlock[]
+  sidebarImages?: SanityImage[]
   priceList?: PagePriceItem[]
 }
 
@@ -111,6 +117,7 @@ export interface CourseListItem {
   location?: string
   price?: number
   shortDescription?: string
+  coverImage?: SanityImage
 }
 
 export interface BookListItem {

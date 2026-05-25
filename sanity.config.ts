@@ -8,6 +8,7 @@ import { nbNOLocale } from '@sanity/locale-nb-no'
 import { schemaTypes } from './sanity/schemas'
 import { resolve } from './sanity/presentation/resolve'
 import { draftModeCleanupPlugin } from './sanity/plugins/draftModeCleanup'
+import { DeleteBookingAction } from './sanity/plugins/bookingRequestActions'
 
 const singletonTypes = new Set(['siteSettings'])
 
@@ -62,11 +63,28 @@ export default defineConfig({
                   .documentId('priser')
                   .title('Priser')
               ),
+            S.listItem()
+              .title('Foredrag')
+              .id('foredrag')
+              .child(
+                S.document()
+                  .schemaType('page')
+                  .documentId('foredrag')
+                  .title('Foredrag')
+              ),
             S.documentTypeListItem('page').title('Andre sider'),
             S.documentTypeListItem('course').title('Kurs'),
             S.documentTypeListItem('book').title('Bøker'),
             S.divider(),
-            S.documentTypeListItem('bookingRequest').title('Timebestillinger'),
+            S.documentTypeListItem('availabilityDay').title('Ledige dager'),
+            S.listItem()
+              .title('Timebestillinger')
+              .schemaType('bookingRequest')
+              .child(
+                S.documentTypeList('bookingRequest')
+                  .title('Timebestillinger')
+                  .defaultOrdering([{ field: 'createdAt', direction: 'desc' }])
+              ),
           ]),
     }),
     presentationTool({
@@ -100,13 +118,24 @@ export default defineConfig({
           ],
         },
       },
+      {
+        id: 'page-foredrag',
+        title: 'Foredrag-side',
+        schemaType: 'page',
+        value: {
+          title: 'Foredrag',
+          slug: { _type: 'slug', current: 'foredrag' },
+        },
+      },
     ],
   },
 
   document: {
     actions: (input, context) => {
       if (context.schemaType === 'bookingRequest') {
-        return input.filter(({ action }) => action !== 'duplicate')
+        return input
+          .filter(({ action }) => action !== 'duplicate' && action !== 'delete')
+          .concat(DeleteBookingAction)
       }
 
       if (singletonTypes.has(context.schemaType)) {

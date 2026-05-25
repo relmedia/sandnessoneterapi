@@ -78,12 +78,14 @@ export const serviceBySlugQuery = defineQuery(
 
 export const coursesQuery = defineQuery(
   `*[_type == "course" && active == true] | order(startDate asc) {
-    _id, title, slug, startDate, endDate, location, price, shortDescription
+    _id, title, slug, startDate, endDate, location, price, shortDescription, coverImage
   }`
 )
 
 export const courseBySlugQuery = defineQuery(
-  `*[_type == "course" && slug.current == $slug][0]`
+  `*[_type == "course" && slug.current == $slug && active == true][0]{
+    _id, _type, title, slug, startDate, endDate, location, price, shortDescription, coverImage, body
+  }`
 )
 
 export const booksQuery = defineQuery(
@@ -105,8 +107,12 @@ export const articleBySlugQuery = defineQuery(
 )
 
 export const pageBySlugQuery = defineQuery(
-  `*[_type == "page" && slug.current == $slug][0]{
+  `*[_type == "page" && (slug.current == $slug || _id == $slug)][0]{
     _id, _type, title, slug, body,
+    sidebarImages[]{
+      ...,
+      "dimensions": asset->metadata.dimensions
+    },
     priceList[]{ label, price }
   }`
 )

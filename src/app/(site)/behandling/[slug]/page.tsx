@@ -4,6 +4,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { getService, getServices, getSiteSettings, publishedQuery, urlFor } from '@/lib/sanity'
 import { PortableTextRenderer } from '@/components/PortableText'
+import { ServiceBodyFallback } from '@/components/ServiceBodyFallback'
+import { getServiceFallback, resolveServiceShortDescription } from '@/lib/service-fallbacks'
 import { getPhoneDisplay, getPhoneTel } from '@/lib/utils'
 
 export const revalidate = 3600
@@ -21,9 +23,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params
   const service = await getService(slug, publishedQuery)
   if (!service) return { title: 'Behandling ikke funnet' }
+  const description = resolveServiceShortDescription(slug, service.shortDescription)
   return {
     title: service.title,
-    description: service.shortDescription,
+    description,
   }
 }
 
@@ -34,12 +37,15 @@ export default async function ServicePage({ params }: PageProps) {
 
   const phoneDisplay = getPhoneDisplay(settings?.phone)
   const phoneTel = getPhoneTel(settings?.phone)
+  const fallback = getServiceFallback(slug)
+  const shortDescription = resolveServiceShortDescription(slug, service.shortDescription)
+  const bodyParagraphs = fallback?.bodyParagraphs
 
   return (
     <article className="py-16 md:py-24">
       <div className="container-narrow section-padding mx-auto">
         <nav
-          className="flex items-center gap-2 text-xs font-sans font-light text-muted mb-12 uppercase tracking-widest"
+          className="mb-12 flex items-center gap-2 font-sans text-xs font-light uppercase tracking-widest text-muted"
           aria-label="Brødsmulesti"
         >
           <Link href="/" className="hover:text-stone transition-colors">
@@ -49,19 +55,19 @@ export default async function ServicePage({ params }: PageProps) {
           <span className="text-stone">{service.title}</span>
         </nav>
 
-        <p className="font-sans font-light text-xs uppercase tracking-[0.3em] text-sage mb-4">
+        <p className="mb-4 font-sans text-xs font-light uppercase tracking-[0.3em] text-sage">
           Behandling
         </p>
-        <h1 className="font-serif text-display text-stone mb-8">{service.title}</h1>
+        <h1 className="mb-8 font-serif text-display text-stone">{service.title}</h1>
 
-        {service.shortDescription && (
-          <p className="font-sans font-light text-xl text-muted leading-relaxed mb-12 border-l-4 border-sage pl-6">
-            {service.shortDescription}
+        {shortDescription && (
+          <p className="mb-12 max-w-3xl font-sans text-xl font-light leading-relaxed text-muted border-l-4 border-sage pl-6">
+            {shortDescription}
           </p>
         )}
 
         {service.image && (
-          <div className="relative aspect-video rounded-2xl overflow-hidden mb-14 bg-sage-light">
+          <div className="relative mb-14 aspect-video overflow-hidden rounded-2xl bg-sage-light">
             <Image
               src={urlFor(service.image).width(1200).height(675).url()}
               alt={service.image.alt ?? service.title}
@@ -73,9 +79,13 @@ export default async function ServicePage({ params }: PageProps) {
           </div>
         )}
 
-        <PortableTextRenderer value={service.body} />
+        {bodyParagraphs ? (
+          <ServiceBodyFallback paragraphs={bodyParagraphs} />
+        ) : (
+          <PortableTextRenderer value={service.body} />
+        )}
 
-        <div className="mt-16 p-10 rounded-2xl bg-sage-light text-center">
+        <div className="mt-16 rounded-2xl bg-sage-light p-10 text-center">
           <h2 className="font-serif text-2xl text-stone mb-3">Ønsker du en time?</h2>
           <p className="font-sans font-light text-muted mb-6">Bestill online eller ring Terje direkte.</p>
           <div className="flex flex-wrap justify-center gap-4">

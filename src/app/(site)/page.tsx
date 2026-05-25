@@ -1,30 +1,11 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { getSiteSettings, getServices, getCourses, urlFor } from '@/lib/sanity'
+import { ServiceCard } from '@/components/ServiceCard'
+import { getSiteSettings, getServices, getCourses } from '@/lib/sanity'
+import { mapServiceCards } from '@/lib/service-fallbacks'
 import { formatDateNb, getPhoneDisplay, getPhoneTel } from '@/lib/utils'
 
 export const revalidate = 3600
-
-const fallbackServices = [
-  {
-    title: 'Soneterapi',
-    emoji: '🦶',
-    desc: 'Refleksologi på føttene som påvirker hele kroppen gjennom sonekartet.',
-    slug: 'soneterapi',
-  },
-  {
-    title: 'Øreakupunktur',
-    emoji: '👂',
-    desc: 'Stimulering av akupunkturpunkter i øret for balanse og velvære.',
-    slug: 'oreakupunktur',
-  },
-  {
-    title: 'Tankefeltterapi',
-    emoji: '🧠',
-    desc: 'Behandling av negative tanke- og følelsesmønstre via energisystemet.',
-    slug: 'tankefeltterapi',
-  },
-] as const
 
 export default async function HomePage() {
   const [settings, services, courses] = await Promise.all([
@@ -36,6 +17,7 @@ export default async function HomePage() {
   const phoneDisplay = getPhoneDisplay(settings?.phone)
   const phoneTel = getPhoneTel(settings?.phone)
   const upcomingCourses = courses.slice(0, 3)
+  const serviceCards = mapServiceCards(services)
 
   return (
     <>
@@ -50,105 +32,84 @@ export default async function HomePage() {
         />
 
         <div className="container-wide section-padding mx-auto py-24 md:py-36 relative">
-          <div className="max-w-2xl">
-            <p className="font-sans font-light text-xs uppercase tracking-[0.3em] text-sage mb-6">
-              Godkjent av NNH – Norske Naturterapeuters Hovedorganisasjon
-            </p>
-            <h1 className="font-serif text-display text-stone mb-8 leading-tight whitespace-pre-line">
-              {settings?.heroHeading ?? 'Naturlig helse\ngjennom berøring'}
-            </h1>
-            <p className="font-sans font-light text-lg md:text-xl text-muted leading-relaxed mb-10 max-w-lg">
-              {settings?.heroBody ??
-                'Terje Horpestad er godkjent soneterapeut med over 40 års daglig erfaring. Han tilbyr soneterapi, øreakupunktur og tankefeltterapi i Sandnes.'}
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <Link
-                href="/bestill-time"
-                className="px-8 py-4 bg-stone text-cream font-sans font-light text-sm rounded-full hover:bg-sage-dark transition-colors tracking-wide"
-              >
-                Bestill time
-              </Link>
-              <Link
-                href="/behandling/soneterapi"
-                className="px-8 py-4 border border-stone/30 text-stone font-sans font-light text-sm rounded-full hover:border-sage hover:text-sage-dark transition-colors tracking-wide"
-              >
-                Les mer om behandlinger
-              </Link>
-            </div>
-            {settings?.address && (
-              <p className="mt-8 text-xs text-muted font-sans font-light tracking-wide">
-                📍 {settings.address}
+          <div className="grid items-center gap-10 lg:grid-cols-[1fr_auto] lg:gap-14">
+            <div className="max-w-2xl">
+              <p className="font-sans font-light text-xs uppercase tracking-[0.3em] text-sage mb-6">
+                Godkjent av NNH – Norske Naturterapeuters Hovedorganisasjon
               </p>
-            )}
+              <h1 className="font-serif text-display text-stone mb-8 leading-tight whitespace-pre-line">
+                {settings?.heroHeading ?? 'Naturlig helse\ngjennom berøring'}
+              </h1>
+              <p className="font-sans font-light text-lg md:text-xl text-muted leading-relaxed mb-10 max-w-lg">
+                {settings?.heroBody ??
+                  'Terje Horpestad er godkjent soneterapeut med over 40 års daglig erfaring. Han tilbyr soneterapi, øreakupunktur og tankefeltterapi i Sandnes.'}
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <Link
+                  href="/bestill-time"
+                  className="px-8 py-4 bg-stone text-cream font-sans font-light text-sm rounded-full hover:bg-sage-dark transition-colors tracking-wide"
+                >
+                  Bestill time
+                </Link>
+                <Link
+                  href="#behandlinger"
+                  className="px-8 py-4 border border-stone/30 text-stone font-sans font-light text-sm rounded-full hover:border-sage hover:text-sage-dark transition-colors tracking-wide"
+                >
+                  Les mer om behandlinger
+                </Link>
+              </div>
+              {settings?.address && (
+                <p className="mt-8 text-xs text-muted font-sans font-light tracking-wide">
+                  📍 {settings.address}
+                </p>
+              )}
+            </div>
+
+            <div className="relative z-10 mx-auto w-[160px] shrink-0 self-center sm:w-[190px] lg:mx-0 lg:w-[220px] xl:w-[240px]">
+              <Image
+                src="/images/terje-horpestad.png"
+                alt="Terje Horpestad, soneterapeut"
+                width={600}
+                height={969}
+                className="h-auto w-full"
+                priority
+                sizes="(max-width: 640px) 160px, (max-width: 1024px) 190px, 240px"
+              />
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,transparent_55%,var(--color-cream)),linear-gradient(to_right,transparent_60%,var(--color-cream))]"
+              />
+            </div>
           </div>
         </div>
       </section>
 
       <div className="h-px bg-gradient-to-r from-transparent via-warm/30 to-transparent" />
 
-      <section className="py-20 md:py-28">
+      <section id="behandlinger" className="bg-gradient-to-b from-cream to-warm-light/40 py-20 md:py-28 scroll-mt-20">
         <div className="container-wide section-padding mx-auto">
-          <div className="mb-14">
-            <p className="font-sans font-light text-xs uppercase tracking-[0.3em] text-sage mb-3">
+          <div className="mb-14 max-w-2xl">
+            <p className="mb-3 font-sans text-xs font-light uppercase tracking-[0.3em] text-sage">
               Behandlinger
             </p>
             <h2 className="font-serif text-hero text-stone">Hva kan jeg hjelpe deg med?</h2>
+            <p className="mt-4 font-sans text-base font-light leading-relaxed text-muted">
+              Skånsomme, erfaringsbaserte metoder tilpasset dine behov — enten du søker avspenning,
+              balanse eller støtte i en utfordrende periode.
+            </p>
           </div>
 
-          {services.length > 0 ? (
-            <div className="grid md:grid-cols-3 gap-8">
-              {services.map((service) => (
-                <Link
-                  key={service._id}
-                  href={`/behandling/${service.slug.current}`}
-                  className="group block"
-                >
-                  {service.image ? (
-                    <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-5 bg-sage-light">
-                      <Image
-                        src={urlFor(service.image).width(600).height(450).url()}
-                        alt={service.image.alt ?? service.title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-500"
-                        sizes="(max-width: 768px) 100vw, 33vw"
-                      />
-                    </div>
-                  ) : (
-                    <div className="aspect-[4/3] rounded-2xl bg-sage-light mb-5 flex items-center justify-center">
-                      <span className="text-4xl" aria-hidden="true">
-                        🌿
-                      </span>
-                    </div>
-                  )}
-                  <h3 className="font-serif text-2xl font-normal text-stone mb-2 group-hover:text-sage-dark transition-colors">
-                    {service.title}
-                  </h3>
-                  {service.shortDescription && (
-                    <p className="font-sans font-light text-sm text-muted leading-relaxed">
-                      {service.shortDescription}
-                    </p>
-                  )}
-                  <span className="inline-block mt-4 text-xs uppercase tracking-widest text-sage font-sans">
-                    Les mer →
-                  </span>
-                </Link>
-              ))}
-            </div>
-          ) : (
-            <div className="grid md:grid-cols-3 gap-8">
-              {fallbackServices.map((item) => (
-                <Link key={item.title} href={`/behandling/${item.slug}`} className="group block">
-                  <div className="aspect-[4/3] rounded-2xl bg-sage-light mb-5 flex items-center justify-center">
-                    <span className="text-5xl" aria-hidden="true">
-                      {item.emoji}
-                    </span>
-                  </div>
-                  <h3 className="font-serif text-2xl font-normal text-stone mb-2">{item.title}</h3>
-                  <p className="font-sans font-light text-sm text-muted leading-relaxed">{item.desc}</p>
-                </Link>
-              ))}
-            </div>
-          )}
+          <div className="grid gap-6 md:grid-cols-3 md:gap-8">
+            {serviceCards.map((service) => (
+              <ServiceCard
+                key={service.key}
+                title={service.title}
+                slug={service.slug}
+                description={service.description}
+                image={service.image}
+              />
+            ))}
+          </div>
         </div>
       </section>
 
@@ -212,8 +173,8 @@ export default async function HomePage() {
               {upcomingCourses.map((course) => (
                 <Link
                   key={course._id}
-                  href="/kurs"
-                  className="block p-8 rounded-2xl border border-warm-light hover:border-sage/30 hover:bg-sage-light/30 transition-colors group"
+                  href={`/kurs/${course.slug.current}`}
+                  className="group block rounded-2xl border border-warm-light p-8 transition-colors hover:border-sage/30 hover:bg-sage-light/30"
                 >
                   {course.startDate && (
                     <p className="font-sans text-xs text-sage uppercase tracking-widest mb-3">

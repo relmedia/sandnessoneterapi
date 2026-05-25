@@ -21,8 +21,14 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="nb" className={`${cormorant.variable} ${outfit.variable}`}>
-      <body className="antialiased">{children}</body>
+    <html
+      lang="nb-NO"
+      className={`${cormorant.variable} ${outfit.variable}`}
+      suppressHydrationWarning
+    >
+      <body className="antialiased" suppressHydrationWarning>
+        {children}
+      </body>
     </html>
   )
 }

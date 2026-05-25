@@ -28,6 +28,9 @@ const nextConfig: NextConfig = {
       },
     ]
   },
+  async redirects() {
+    return [{ source: '/behandling', destination: '/#behandlinger', permanent: true }]
+  },
 }
 
 export default nextConfig

@@ -7,7 +7,13 @@ export const bookingRequest = defineType({
   fields: [
     defineField({
       name: 'name',
-      title: 'Navn',
+      title: 'Fornavn',
+      type: 'string',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'lastName',
+      title: 'Etternavn',
       type: 'string',
       validation: (Rule) => Rule.required(),
     }),
@@ -90,13 +96,15 @@ export const bookingRequest = defineType({
   preview: {
     select: {
       title: 'name',
+      lastName: 'lastName',
       date: 'date',
       time: 'time',
       status: 'status',
     },
-    prepare({ title, date, time, status }) {
+    prepare({ title, lastName, date, time, status }) {
+      const fullName = [title, lastName].filter(Boolean).join(' ')
       return {
-        title: title ?? 'Ukjent',
+        title: fullName || 'Ukjent',
         subtitle: [date, time, status].filter(Boolean).join(' · '),
       }
     },

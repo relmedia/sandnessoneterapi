@@ -61,20 +61,20 @@ const components: PortableTextComponents = {
   types: {
     image: ({ value }: { value: SanityImage & { caption?: string } }) => {
       if (!value?.asset) return null
-      const src = urlFor(value).width(900).url()
+      const width = value.dimensions?.width ?? 1200
+      const height = value.dimensions?.height ?? Math.round(width * 0.625)
       return (
         <figure className="my-10">
-          <div className="relative w-full aspect-video rounded-2xl overflow-hidden">
-            <Image
-              src={src}
-              alt={value.alt ?? ''}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 900px"
-            />
-          </div>
+          <Image
+            src={urlFor(value).width(1200).url()}
+            alt={value.alt ?? ''}
+            width={width}
+            height={height}
+            className="h-auto w-full rounded-2xl"
+            sizes="(max-width: 768px) 100vw, 900px"
+          />
           {value.caption && (
-            <figcaption className="text-center text-sm text-muted mt-3 font-sans font-light italic">
+            <figcaption className="mt-3 text-center font-sans text-sm font-light italic text-muted">
               {value.caption}
             </figcaption>
           )}

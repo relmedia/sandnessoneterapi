@@ -23,6 +23,7 @@ const PHONE_PATTERN = /^[\d\s+()-]{8,16}$/
 
 export interface BookingPayload {
   name: string
+  lastName: string
   email: string
   phone: string
   service: string
@@ -39,28 +40,40 @@ export function formatDateIso(date: Date): string {
   return `${year}-${month}-${day}`
 }
 
-export function isWeekday(date: Date): boolean {
-  const day = date.getDay()
-  return day >= 1 && day <= 5
-}
-
-export function isBookableDate(date: Date, now = new Date()): boolean {
+export function isDateInPast(date: Date, now = new Date()): boolean {
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
   const candidate = new Date(date.getFullYear(), date.getMonth(), date.getDate())
-  const maxDate = new Date(today)
-  maxDate.setDate(maxDate.getDate() + 60)
-
-  return candidate >= today && candidate <= maxDate && isWeekday(candidate)
+  return candidate < today
 }
 
-export function getAvailableSlotsForDate(date: Date, bookedTimes: string[], now = new Date()): BookingTimeSlot[] {
-  if (!isBookableDate(date, now)) return []
+export function getDefaultAvailabilityRange(now = new Date()): { from: string; to: string } {
+  const from = formatDateIso(now)
+  const end = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  end.setDate(end.getDate() + 120)
+  return { from, to: formatDateIso(end) }
+}
 
+export function parseDateParam(value: string | null): string | null {
+  if (!value || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return null
+  const parsed = new Date(`${value}T12:00:00`)
+  if (Number.isNaN(parsed.getTime())) return null
+  return value
+}
+
+export function getAvailableSlotsForDate(
+  adminSlots: string[],
+  date: Date,
+  bookedTimes: string[],
+  now = new Date()
+): string[] {
+  if (isDateInPast(date, now) || adminSlots.length === 0) return []
+
+  const uniqueSlots = [...new Set(adminSlots)].sort()
   const isToday = formatDateIso(date) === formatDateIso(now)
   const currentHour = now.getHours()
   const currentMinute = now.getMinutes()
 
-  return BOOKING_TIME_SLOTS.filter((slot) => {
+  return uniqueSlots.filter((slot) => {
     if (bookedTimes.includes(slot)) return false
     if (!isToday) return true
 
@@ -69,7 +82,9 @@ export function getAvailableSlotsForDate(date: Date, bookedTimes: string[], now 
   })
 }
 
-export function validateBookingPayload(data: unknown): { ok: true; value: BookingPayload } | { ok: false; error: string } {
+export function validateBookingPayload(
+  data: unknown
+): { ok: true; value: BookingPayload } | { ok: false; error: string } {
   if (!data || typeof data !== 'object') {
     return { ok: false, error: 'Ugyldig forespørsel.' }
   }
@@ -81,6 +96,7 @@ export function validateBookingPayload(data: unknown): { ok: true; value: Bookin
   }
 
   const name = typeof payload.name === 'string' ? payload.name.trim() : ''
+  const lastName = typeof payload.lastName === 'string' ? payload.lastName.trim() : ''
   const email = typeof payload.email === 'string' ? payload.email.trim() : ''
   const phone = typeof payload.phone === 'string' ? payload.phone.trim() : ''
   const service = typeof payload.service === 'string' ? payload.service.trim() : ''
@@ -89,7 +105,11 @@ export function validateBookingPayload(data: unknown): { ok: true; value: Bookin
   const message = typeof payload.message === 'string' ? payload.message.trim() : ''
 
   if (name.length < 2 || name.length > 80) {
-    return { ok: false, error: 'Oppgi et gyldig navn.' }
+    return { ok: false, error: 'Oppgi et gyldig fornavn.' }
+  }
+
+  if (lastName.length < 2 || lastName.length > 80) {
+    return { ok: false, error: 'Oppgi et gyldig etternavn.' }
   }
 
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -108,12 +128,8 @@ export function validateBookingPayload(data: unknown): { ok: true; value: Bookin
     return { ok: false, error: 'Velg gyldig dato og klokkeslett.' }
   }
 
-  if (!BOOKING_TIME_SLOTS.includes(time as BookingTimeSlot)) {
-    return { ok: false, error: 'Ugyldig klokkeslett.' }
-  }
-
   const parsedDate = new Date(`${date}T12:00:00`)
-  if (Number.isNaN(parsedDate.getTime()) || !isBookableDate(parsedDate)) {
+  if (Number.isNaN(parsedDate.getTime()) || isDateInPast(parsedDate)) {
     return { ok: false, error: 'Datoen er ikke tilgjengelig for booking.' }
   }
 
@@ -123,7 +139,7 @@ export function validateBookingPayload(data: unknown): { ok: true; value: Bookin
 
   return {
     ok: true,
-    value: { name, email, phone, service, date, time, message: message || undefined },
+    value: { name, lastName, email, phone, service, date, time, message: message || undefined },
   }
 }
 

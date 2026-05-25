@@ -4,7 +4,8 @@ import { VisualEditing } from 'next-sanity/visual-editing'
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
 import { DisableDraftMode } from '@/components/DisableDraftMode'
-import { getSiteSettings, publishedQuery } from '@/lib/sanity'
+import { getServices, getSiteSettings, publishedQuery } from '@/lib/sanity'
+import { mapServiceNavItems } from '@/lib/service-fallbacks'
 import { SanityLive } from '@/lib/sanity-live'
 import '../globals.css'
 
@@ -42,11 +43,12 @@ export default async function SiteLayout({
   children: React.ReactNode
 }>) {
   const { isEnabled: isDraftMode } = await draftMode()
-  const settings = await getSiteSettings()
+  const [settings, services] = await Promise.all([getSiteSettings(), getServices()])
+  const serviceNavItems = mapServiceNavItems(services)
 
   return (
     <>
-      <Header settings={settings} />
+      <Header settings={settings} services={serviceNavItems} />
       <main>{children}</main>
       <Footer settings={settings} />
       <SanityLive includeDrafts={isDraftMode} />

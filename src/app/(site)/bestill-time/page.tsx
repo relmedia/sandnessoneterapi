@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { Phone } from 'lucide-react'
 import { BookingForm } from '@/components/BookingForm'
 import { getSiteSettings } from '@/lib/sanity'
 import { getPhoneDisplay, getPhoneTel } from '@/lib/utils'
@@ -19,27 +20,39 @@ export default async function BestillTimePage() {
   return (
     <div className="py-16 md:py-24">
       <div className="container-wide section-padding mx-auto">
-        <p className="font-sans font-light text-xs uppercase tracking-[0.3em] text-sage mb-4">
-          Timebestilling
-        </p>
-        <h1 className="font-serif text-display text-stone mb-4">Bestill time</h1>
-        <p className="font-sans font-light text-xl text-muted mb-12 max-w-2xl">
-          Velg ønsket dato og klokkeslett. Terje bekrefter timen og tar kontakt med deg.
-          Du kan også ringe{' '}
-          <a href={`tel:${phoneTel}`} className="text-sage-dark underline underline-offset-2">
-            {phoneDisplay}
-          </a>
-          .
-        </p>
+        <div className="mb-10 md:mb-14">
+          <p className="mb-3 font-sans text-xs font-light uppercase tracking-[0.3em] text-sage">
+            Timebestilling
+          </p>
+          <h1 className="mb-4 font-serif text-display text-stone">Bestill time</h1>
+          <p className="max-w-2xl font-sans text-lg font-light leading-relaxed text-muted">
+            Velg en ledig dato og klokkeslett. Terje bekrefter timen og tar kontakt med deg.
+          </p>
+        </div>
 
-        <BookingForm defaultPhone={settings?.phone} />
+        <div className="mb-8 grid gap-4 sm:grid-cols-2">
+          <div className="rounded-xl border border-stone/10 bg-sage-light/30 px-5 py-4">
+            <p className="mb-1 font-sans text-xs uppercase tracking-widest text-sage">Ring oss</p>
+            <a
+              href={`tel:${phoneTel}`}
+              className="inline-flex items-center gap-2 font-sans text-stone transition-colors hover:text-sage-dark"
+            >
+              <Phone className="h-4 w-4 shrink-0" aria-hidden />
+              {phoneDisplay}
+            </a>
+          </div>
+          <div className="rounded-xl border border-stone/10 bg-cream/60 px-5 py-4">
+            <p className="mb-1 font-sans text-xs uppercase tracking-widest text-sage">Avbestilling</p>
+            <Link
+              href="/avbestill"
+              className="font-sans text-sm font-light text-stone underline-offset-2 hover:text-sage-dark hover:underline"
+            >
+              Gå til avbestilling
+            </Link>
+          </div>
+        </div>
 
-        <p className="mt-12 text-sm font-sans font-light text-muted">
-          Må du avbestille?{' '}
-          <Link href="/avbestill" className="text-sage-dark underline underline-offset-2">
-            Gå til avbestilling
-          </Link>
-        </p>
+        <BookingForm />
       </div>
     </div>
   )

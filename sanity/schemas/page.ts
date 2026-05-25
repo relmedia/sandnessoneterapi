@@ -35,6 +35,23 @@ export const page = defineType({
       ],
     }),
     defineField({
+      name: 'sidebarImages',
+      title: 'Bilder i teksten',
+      description:
+        'Fullbredde bilder som vises i teksten. For bilder mellom avsnitt, legg dem direkte i sideinnholdet.',
+      type: 'array',
+      of: [
+        {
+          type: 'image',
+          options: { hotspot: true },
+          fields: [
+            { name: 'alt', type: 'string', title: 'Alt-tekst' },
+            { name: 'caption', type: 'string', title: 'Bildetekst' },
+          ],
+        },
+      ],
+    }),
+    defineField({
       name: 'priceList',
       title: 'Prisliste',
       description: 'Brukes på priser-siden (/priser). Legg til behandlinger og priser her.',

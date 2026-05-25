@@ -24,6 +24,27 @@ export function formatDateNb(dateString: string, options?: Intl.DateTimeFormatOp
   return new Date(dateString).toLocaleDateString('nb-NO', options)
 }
 
+export function formatCourseDateRange(startDate?: string, endDate?: string): string | null {
+  if (!startDate) return null
+
+  const start = formatDateNb(startDate, {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  })
+
+  if (!endDate || endDate === startDate) return start
+
+  const end = formatDateNb(endDate, {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  })
+
+  return `${start} – ${end}`
+}
+
 export function isSafeExternalUrl(url: string): boolean {
   try {
     const parsed = new URL(url)
@@ -31,4 +52,8 @@ export function isSafeExternalUrl(url: string): boolean {
   } catch {
     return false
   }
+}
+
+export function getGoogleMapsUrl(address: string): string {
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address.trim())}`
 }

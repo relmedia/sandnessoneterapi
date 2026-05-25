@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "sanity": "node --env-file=.env.local node_modules/sanity/bin/sanity dev --port 3333 --auto-updates",
-    "sanity:deploy": "node --env-file=.env.local node_modules/sanity/bin/sanity deploy"
+    "sanity:deploy": "node --env-file=.env.local node_modules/sanity/bin/sanity deploy",
+    "seed:service-images": "node --env-file=.env.local scripts/seed-service-images.mjs"
   },
   "dependencies": {
     "@portabletext/react": "^6.2.0",

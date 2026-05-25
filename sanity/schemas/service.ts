@@ -25,6 +25,24 @@ export const service = defineType({
       rows: 3,
     }),
     defineField({
+      name: 'image',
+      title: 'Hovedbilde',
+      description:
+        'Vises øverst på behandlingssiden og i kort på forsiden. Last opp et liggende bilde (ca. 16:9) – du kan justere utsnitt med hotspot.',
+      type: 'image',
+      options: { hotspot: true },
+      fields: [
+        {
+          name: 'alt',
+          type: 'string',
+          title: 'Alt-tekst',
+          description: 'Kort beskrivelse av bildet for synshemmede og søkemotorer.',
+          validation: (Rule) =>
+            Rule.required().warning('Legg inn alt-tekst når du laster opp bilde'),
+        },
+      ],
+    }),
+    defineField({
       name: 'body',
       title: 'Full beskrivelse',
       type: 'array',
@@ -39,13 +57,6 @@ export const service = defineType({
           ],
         },
       ],
-    }),
-    defineField({
-      name: 'image',
-      title: 'Bilde',
-      type: 'image',
-      options: { hotspot: true },
-      fields: [{ name: 'alt', type: 'string', title: 'Alt-tekst' }],
     }),
     defineField({
       name: 'order',

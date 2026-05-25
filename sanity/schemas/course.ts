@@ -46,10 +46,37 @@ export const course = defineType({
       rows: 3,
     }),
     defineField({
+      name: 'coverImage',
+      title: 'Hovedbilde',
+      description:
+        'Vises øverst på kurssiden og i oversikten. Anbefalt liggende bilde (ca. 16:9).',
+      type: 'image',
+      options: { hotspot: true },
+      fields: [
+        {
+          name: 'alt',
+          type: 'string',
+          title: 'Alt-tekst',
+          validation: (Rule) =>
+            Rule.required().warning('Legg inn alt-tekst når du laster opp bilde'),
+        },
+      ],
+    }),
+    defineField({
       name: 'body',
       title: 'Full kursbeskrivelse',
       type: 'array',
-      of: [{ type: 'block' }],
+      of: [
+        { type: 'block' },
+        {
+          type: 'image',
+          options: { hotspot: true },
+          fields: [
+            { name: 'alt', type: 'string', title: 'Alt-tekst' },
+            { name: 'caption', type: 'string', title: 'Bildetekst' },
+          ],
+        },
+      ],
     }),
     defineField({
       name: 'active',
@@ -59,6 +86,6 @@ export const course = defineType({
     }),
   ],
   preview: {
-    select: { title: 'title', subtitle: 'startDate' },
+    select: { title: 'title', subtitle: 'startDate', media: 'coverImage' },
   },
 })
