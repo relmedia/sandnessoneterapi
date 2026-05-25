@@ -26,6 +26,7 @@ export interface SiteSettings {
   tagline?: string
   heroHeading?: string
   heroBody?: string
+  heroImage?: SanityImage
   phone?: string
   email?: string
   address?: string

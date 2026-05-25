@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { ServiceCard } from '@/components/ServiceCard'
-import { getSiteSettings, getServices, getCourses } from '@/lib/sanity'
+import { getSiteSettings, getServices, getCourses, urlFor } from '@/lib/sanity'
 import { mapServiceCards } from '@/lib/service-fallbacks'
 import { formatDateNb, getPhoneDisplay, getPhoneTel } from '@/lib/utils'
 
@@ -18,6 +18,10 @@ export default async function HomePage() {
   const phoneTel = getPhoneTel(settings?.phone)
   const upcomingCourses = courses.slice(0, 3)
   const serviceCards = mapServiceCards(services)
+  const heroImage = settings?.heroImage
+  const heroImageWidth = heroImage?.dimensions?.width ?? 600
+  const heroImageHeight = heroImage?.dimensions?.height ?? 969
+  const heroImageAlt = heroImage?.alt ?? 'Terje Horpestad, soneterapeut'
 
   return (
     <>
@@ -67,10 +71,14 @@ export default async function HomePage() {
 
             <div className="relative z-10 mx-auto w-[160px] shrink-0 self-center sm:w-[190px] lg:mx-0 lg:w-[220px] xl:w-[240px]">
               <Image
-                src="/images/terje-horpestad.png"
-                alt="Terje Horpestad, soneterapeut"
-                width={600}
-                height={969}
+                src={
+                  heroImage
+                    ? urlFor(heroImage).width(480).url()
+                    : '/images/terje-horpestad.png'
+                }
+                alt={heroImageAlt}
+                width={heroImageWidth}
+                height={heroImageHeight}
                 className="h-auto w-full"
                 priority
                 sizes="(max-width: 640px) 160px, (max-width: 1024px) 190px, 240px"

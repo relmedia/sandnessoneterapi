@@ -30,6 +30,25 @@ export const siteSettings = defineType({
       rows: 3,
     }),
     defineField({
+      name: 'heroImage',
+      title: 'Profilbilde (forside)',
+      description:
+        'Portrettbilde som vises i velkomstseksjonen på forsiden. Last opp et stående bilde (ca. 2:3).',
+      type: 'image',
+      options: { hotspot: true },
+      fields: [
+        {
+          name: 'alt',
+          type: 'string',
+          title: 'Alt-tekst',
+          description: 'Kort beskrivelse av bildet for synshemmede og søkemotorer.',
+          initialValue: 'Terje Horpestad, soneterapeut',
+          validation: (Rule) =>
+            Rule.required().warning('Legg inn alt-tekst når du laster opp bilde'),
+        },
+      ],
+    }),
+    defineField({
       name: 'phone',
       title: 'Telefon',
       type: 'string',

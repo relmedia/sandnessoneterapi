@@ -60,6 +60,10 @@ const publishedQuery = { perspective: 'published' as const, stega: false }
 export const siteSettingsQuery = defineQuery(
   `*[_type == "siteSettings"][0]{
     _id, _type, title, tagline, heroHeading, heroBody,
+    heroImage{
+      ...,
+      "dimensions": asset->metadata.dimensions
+    },
     phone, email, address, nnh, facebookUrl, metaDescription
   }`
 )

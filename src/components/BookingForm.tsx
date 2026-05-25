@@ -165,7 +165,8 @@ export function BookingForm() {
         </div>
         <p className="mb-3 font-serif text-3xl text-stone">Takk for bestillingen!</p>
         <p className="mb-8 font-sans text-sm font-light leading-relaxed text-muted">
-          Timeforespørselen er mottatt. Terje tar kontakt for å bekrefte dato og tid.
+          Timeforespørselen er mottatt. Du får en bekreftelse på e-post med detaljer og
+          avbestillingskode. Terje tar kontakt for å bekrefte dato og tid.
         </p>
         {cancelToken && (
           <div className="mb-8 rounded-xl border border-stone/10 bg-cream/60 p-5 text-left">
