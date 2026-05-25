@@ -87,7 +87,7 @@ export const serviceBySlugQuery = defineQuery(
 )
 
 export const coursesQuery = defineQuery(
-  `*[_type == "course" && active == true] | order(startDate asc) {
+  `*[_type == "course" && active == true] | order(orderRank, startDate asc) {
     _id, title, slug, startDate, endDate, location, price, shortDescription,
     coverImage{
       ...,

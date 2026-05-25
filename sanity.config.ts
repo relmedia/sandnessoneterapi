@@ -5,6 +5,7 @@ import { structureTool } from 'sanity/structure'
 import { presentationTool } from 'sanity/presentation'
 import { visionTool } from '@sanity/vision'
 import { nbNOLocale } from '@sanity/locale-nb-no'
+import { orderableDocumentListDeskItem } from '@sanity/orderable-document-list'
 import { schemaTypes } from './sanity/schemas'
 import { resolve } from './sanity/presentation/resolve'
 import { draftModeCleanupPlugin } from './sanity/plugins/draftModeCleanup'
@@ -39,7 +40,7 @@ export default defineConfig({
     structureTool({
       name: 'innhold',
       title: 'Innhold',
-      structure: (S) =>
+      structure: (S, context) =>
         S.list()
           .title('Innhold')
           .items([
@@ -73,7 +74,7 @@ export default defineConfig({
                   .title('Foredrag')
               ),
             S.documentTypeListItem('page').title('Andre sider'),
-            S.documentTypeListItem('course').title('Kurs'),
+            orderableDocumentListDeskItem({ type: 'course', title: 'Kurs', S, context }),
             S.documentTypeListItem('book').title('Bøker'),
             S.divider(),
             S.documentTypeListItem('availabilityDay').title('Ledige dager'),
