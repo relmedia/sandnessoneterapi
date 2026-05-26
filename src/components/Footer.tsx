@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { Mail, MapPin, Phone } from 'lucide-react'
 import type { SiteSettings } from '@/lib/types'
-import { getPhoneDisplay, getPhoneTel, isSafeExternalUrl } from '@/lib/utils'
+import { getPhoneDisplay, getPhoneTel, getGoogleMapsUrl, isSafeExternalUrl } from '@/lib/utils'
 
 interface FooterProps {
   settings: Pick<
@@ -87,10 +87,15 @@ export function Footer({ settings }: FooterProps) {
               </a>
             )}
             {settings?.address && (
-              <span className="inline-flex items-center gap-2">
+              <a
+                href={getGoogleMapsUrl(settings.address)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 transition-colors hover:text-cream"
+              >
                 <MapPin className="size-4 shrink-0" aria-hidden="true" />
                 {settings.address}
-              </span>
+              </a>
             )}
             {facebookUrl && (
               <a

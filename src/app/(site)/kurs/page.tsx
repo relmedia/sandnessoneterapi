@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowRight, GraduationCap, MapPin } from 'lucide-react'
 import { getCourses, getSiteSettings, urlFor } from '@/lib/sanity'
-import { formatCourseDateRange, getGoogleMapsUrl, getPhoneDisplay, getPhoneTel } from '@/lib/utils'
+import { getGoogleMapsUrl, getPhoneDisplay, getPhoneTel } from '@/lib/utils'
 
 export const revalidate = 3600
 
@@ -31,7 +31,6 @@ export default async function KursPage() {
         {courses.length > 0 ? (
           <div className="flex flex-col gap-6">
             {courses.map((course) => {
-              const dateRange = formatCourseDateRange(course.startDate, course.endDate)
               const courseHref = `/kurs/${course.slug.current}`
 
               return (
@@ -65,11 +64,6 @@ export default async function KursPage() {
                   <div className="flex min-w-0 flex-1 flex-col justify-center gap-4 p-5 sm:p-6 md:p-8">
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <div className="min-w-0 space-y-2">
-                        {dateRange && (
-                          <p className="font-sans text-[11px] uppercase tracking-widest text-sage sm:text-xs">
-                            {dateRange}
-                          </p>
-                        )}
                         <h2 className="font-serif text-xl text-stone sm:text-2xl md:text-3xl">
                           <Link href={courseHref} className="transition-colors hover:text-sage-dark">
                             {course.title}

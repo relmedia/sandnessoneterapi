@@ -106,38 +106,37 @@ export function Header({ settings, services }: HeaderProps) {
           </span>
         </Link>
 
-        <nav
-          className="hidden flex-1 items-center justify-center gap-8 md:flex"
-          aria-label="Hovednavigasjon"
-        >
-          <BehandlingerDropdown services={services} />
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-sm font-sans font-light tracking-wide text-muted transition-colors hover:text-stone"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
+        <div className="flex items-center gap-8">
+          <nav className="hidden items-center gap-8 md:flex" aria-label="Hovednavigasjon">
+            <BehandlingerDropdown services={services} />
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-sm font-sans font-light tracking-wide text-muted transition-colors hover:text-stone"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
 
-        <button
-          type="button"
-          onClick={() => setOpen((prev) => !prev)}
-          className="flex shrink-0 flex-col gap-1.5 p-1 md:hidden"
-          aria-label={open ? 'Lukk meny' : 'Åpne meny'}
-          aria-expanded={open}
-          aria-controls="mobile-nav"
-        >
-          <span
-            className={`block h-px w-6 bg-stone transition-all ${open ? 'translate-y-2 rotate-45' : ''}`}
-          />
-          <span className={`block h-px w-6 bg-stone transition-all ${open ? 'opacity-0' : ''}`} />
-          <span
-            className={`block h-px w-6 bg-stone transition-all ${open ? '-translate-y-2 -rotate-45' : ''}`}
-          />
-        </button>
+          <button
+            type="button"
+            onClick={() => setOpen((prev) => !prev)}
+            className="flex shrink-0 flex-col gap-1.5 p-1 md:hidden"
+            aria-label={open ? 'Lukk meny' : 'Åpne meny'}
+            aria-expanded={open}
+            aria-controls="mobile-nav"
+          >
+            <span
+              className={`block h-px w-6 bg-stone transition-all ${open ? 'translate-y-2 rotate-45' : ''}`}
+            />
+            <span className={`block h-px w-6 bg-stone transition-all ${open ? 'opacity-0' : ''}`} />
+            <span
+              className={`block h-px w-6 bg-stone transition-all ${open ? '-translate-y-2 -rotate-45' : ''}`}
+            />
+          </button>
+        </div>
       </div>
 
       {open && (

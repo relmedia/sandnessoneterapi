@@ -46,15 +46,26 @@ export interface Service {
   order?: number
 }
 
+export interface CourseSession {
+  _key?: string
+  date: string
+  endDate?: string
+  startTime?: string
+  endTime?: string
+  capacity?: number
+}
+
 export interface Course {
   _id: string
   _type: 'course'
   title: string
   slug: SanitySlug
+  sessions?: CourseSession[]
   startDate?: string
   endDate?: string
   location?: string
   price?: number
+  registrationOpen?: boolean
   shortDescription?: string
   body?: PortableTextBlock[]
   coverImage?: SanityImage
@@ -113,6 +124,7 @@ export interface CourseListItem {
   _id: string
   title: string
   slug: SanitySlug
+  sessions?: CourseSession[]
   startDate?: string
   endDate?: string
   location?: string

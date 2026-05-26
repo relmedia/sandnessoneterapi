@@ -60,6 +60,11 @@ async function safeFetch<T>(
 }
 
 const publishedQuery = { perspective: 'published' as const, stega: false }
+const draftQuery = { perspective: 'drafts' as const, stega: true }
+
+export function getSanityQueryOptions(isDraftMode: boolean): SanityQueryOptions {
+  return isDraftMode ? draftQuery : publishedQuery
+}
 
 // ─── GROQ Queries ────────────────────────────────────────────────────────────
 
@@ -87,8 +92,9 @@ export const serviceBySlugQuery = defineQuery(
 )
 
 export const coursesQuery = defineQuery(
-  `*[_type == "course" && active == true] | order(orderRank, startDate asc) {
-    _id, title, slug, startDate, endDate, location, price, shortDescription,
+  `*[_type == "course" && active == true] | order(orderRank, coalesce(sessions[0].date, startDate) asc) {
+    _id, title, slug, startDate, endDate, location, price, registrationOpen, shortDescription,
+    sessions[]{ _key, date, endDate, startTime, endTime, capacity },
     coverImage{
       ...,
       "dimensions": asset->metadata.dimensions
@@ -98,7 +104,8 @@ export const coursesQuery = defineQuery(
 
 export const courseBySlugQuery = defineQuery(
   `*[_type == "course" && slug.current == $slug && active == true][0]{
-    _id, _type, title, slug, startDate, endDate, location, price, shortDescription, body,
+    _id, _type, title, slug, startDate, endDate, location, price, registrationOpen, shortDescription, body,
+    sessions[]{ _key, date, endDate, startTime, endTime, capacity },
     coverImage{
       ...,
       "dimensions": asset->metadata.dimensions

@@ -86,6 +86,14 @@ export default defineConfig({
                   .title('Timebestillinger')
                   .defaultOrdering([{ field: 'createdAt', direction: 'desc' }])
               ),
+            S.listItem()
+              .title('Kurspåmeldinger')
+              .schemaType('courseRegistration')
+              .child(
+                S.documentTypeList('courseRegistration')
+                  .title('Kurspåmeldinger')
+                  .defaultOrdering([{ field: 'createdAt', direction: 'desc' }])
+              ),
           ]),
     }),
     presentationTool({

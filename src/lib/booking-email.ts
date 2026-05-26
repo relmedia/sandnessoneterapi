@@ -1,6 +1,7 @@
 import 'server-only'
 
 import { formatDateNb, getPhoneDisplay } from '@/lib/utils'
+import { isEmailConfigured, sendTransactionalEmail } from '@/lib/email'
 
 export interface BookingEmailDetails {
   name: string
@@ -26,14 +27,6 @@ function escapeHtml(value: string): string {
     .replaceAll('<', '&lt;')
     .replaceAll('>', '&gt;')
     .replaceAll('"', '&quot;')
-}
-
-function getFromAddress(): string | null {
-  return process.env.BOOKING_FROM_EMAIL?.trim() || null
-}
-
-function getResendApiKey(): string | null {
-  return process.env.RESEND_API_KEY?.trim() || null
 }
 
 function formatBookingDate(date: string): string {
@@ -174,43 +167,7 @@ async function sendEmail(input: {
   html: string
   text: string
 }): Promise<boolean> {
-  const apiKey = getResendApiKey()
-  const from = getFromAddress()
-
-  if (!apiKey || !from) {
-    if (process.env.NODE_ENV === 'development') {
-      console.warn('[booking-email] RESEND_API_KEY or BOOKING_FROM_EMAIL is not configured.')
-    }
-    return false
-  }
-
-  try {
-    const response = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        from,
-        to: [input.to],
-        subject: input.subject,
-        html: input.html,
-        text: input.text,
-      }),
-    })
-
-    if (!response.ok) {
-      const errorBody = await response.text()
-      console.error('[booking-email] Failed to send email:', response.status, errorBody)
-      return false
-    }
-
-    return true
-  } catch (error) {
-    console.error('[booking-email] Failed to send email:', error)
-    return false
-  }
+  return sendTransactionalEmail(input, 'booking-email')
 }
 
 export async function sendBookingConfirmationEmails(
@@ -239,5 +196,5 @@ export async function sendBookingConfirmationEmails(
 }
 
 export function isBookingEmailConfigured(): boolean {
-  return Boolean(getResendApiKey() && getFromAddress())
+  return isEmailConfigured()
 }
