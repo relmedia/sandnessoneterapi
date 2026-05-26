@@ -2,7 +2,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowRight, GraduationCap, MapPin } from 'lucide-react'
 import { getSanityImageAspectStyle, urlFor } from '@/lib/sanity-image'
-import { formatCourseListingLabel, getCourseSessions } from '@/lib/utils'
 import type { CourseListItem } from '@/lib/types'
 
 type CourseCardProps = {
@@ -10,8 +9,6 @@ type CourseCardProps = {
 }
 
 export function CourseCard({ course }: CourseCardProps) {
-  const sessions = getCourseSessions(course)
-  const listingLabel = formatCourseListingLabel(sessions)
   const href = `/kurs/${course.slug.current}`
 
   return (
@@ -51,11 +48,6 @@ export function CourseCard({ course }: CourseCardProps) {
       )}
 
       <div className="flex flex-1 flex-col p-6 md:p-7">
-        {listingLabel && (
-          <p className="mb-2 font-sans text-[11px] uppercase tracking-widest text-sage sm:text-xs">
-            {listingLabel}
-          </p>
-        )}
         <h3 className="font-serif text-2xl font-normal text-stone transition-colors group-hover:text-sage-dark">
           {course.title}
         </h3>
