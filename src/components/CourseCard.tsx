@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowRight, GraduationCap, MapPin } from 'lucide-react'
-import { getSanityImageAspectStyle, urlFor } from '@/lib/sanity'
+import { getSanityImageAspectStyle, urlFor } from '@/lib/sanity-image'
 import { formatCourseListingLabel, getCourseSessions } from '@/lib/utils'
 import type { CourseListItem } from '@/lib/types'
 

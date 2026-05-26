@@ -1,8 +1,8 @@
 import { defineQuery } from 'next-sanity'
-import imageUrlBuilder from '@sanity/image-url'
 import { isSanityConfigured } from './env'
 import { client } from './sanity-client'
 import { sanityFetch } from './sanity-live'
+import { getSanityImageAspectStyle, urlFor } from './sanity-image'
 import { SANITY_CACHE_TAG } from './revalidate'
 import type {
   Article,
@@ -11,23 +11,12 @@ import type {
   Course,
   CourseListItem,
   Page,
-  SanityImage,
   Service,
   ServiceListItem,
   SiteSettings,
 } from './types'
 
-const builder = imageUrlBuilder(client)
-
-export function urlFor(source: SanityImage) {
-  return builder.image(source)
-}
-
-export function getSanityImageAspectStyle(image?: SanityImage): { aspectRatio: string } {
-  const width = image?.dimensions?.width ?? 1
-  const height = image?.dimensions?.height ?? 1
-  return { aspectRatio: `${width} / ${height}` }
-}
+export { getSanityImageAspectStyle, urlFor } from './sanity-image'
 
 export type SanityQueryOptions = {
   stega?: boolean
