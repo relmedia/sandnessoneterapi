@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import { getBooks, getSiteSettings, urlFor } from '@/lib/sanity'
 import { PortableTextRenderer } from '@/components/PortableText'
+import { ReadMore } from '@/components/ReadMore'
 import { formatDateNb, getPhoneDisplay, getPhoneTel } from '@/lib/utils'
 
 export const revalidate = 3600
@@ -35,26 +36,34 @@ export default async function BokerPage() {
                 key={book._id}
                 className="grid md:grid-cols-[280px_1fr] gap-10 items-start"
               >
-                {book.coverImage ? (
-                  <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-lg bg-sage-light">
-                    <Image
-                      src={urlFor(book.coverImage).width(560).height(747).url()}
-                      alt={book.coverImage.alt ?? book.title}
-                      fill
-                      className="object-cover"
-                      sizes="280px"
-                    />
-                  </div>
-                ) : (
-                  <div className="aspect-[3/4] rounded-2xl bg-sage-light flex items-center justify-center">
-                    <span className="text-5xl" aria-hidden="true">
-                      📖
-                    </span>
-                  </div>
-                )}
+                <div className="flex flex-col gap-4">
+                  {book.coverImage ? (
+                    <div className="relative aspect-[3/4] overflow-hidden rounded-2xl">
+                      <Image
+                        src={urlFor(book.coverImage).width(560).height(747).url()}
+                        alt={book.coverImage.alt ?? book.title}
+                        fill
+                        className="object-cover"
+                        sizes="280px"
+                      />
+                    </div>
+                  ) : (
+                    <div className="flex aspect-[3/4] items-center justify-center rounded-2xl bg-sage-light/40">
+                      <span className="text-5xl" aria-hidden="true">
+                        📖
+                      </span>
+                    </div>
+                  )}
+                  <a
+                    href={`tel:${phoneTel}`}
+                    className="inline-block w-full rounded-full bg-sage px-6 py-3 text-center font-sans text-sm font-light tracking-wide text-cream transition-colors hover:bg-sage-dark"
+                  >
+                    Bestill på tlf {phoneDisplay}
+                  </a>
+                </div>
                 <div>
-                  <h2 className="font-serif text-3xl md:text-4xl text-stone mb-3">{book.title}</h2>
-                  <div className="flex flex-wrap gap-4 text-xs font-sans font-light text-muted uppercase tracking-widest mb-6">
+                  <h2 className="mb-3 font-serif text-3xl text-stone md:text-4xl">{book.title}</h2>
+                  <div className="mb-6 flex flex-wrap gap-4 font-sans text-xs font-light uppercase tracking-widest text-muted">
                     {book.isbn && <span>ISBN {book.isbn}</span>}
                     {book.publishedDate && (
                       <span>
@@ -67,15 +76,15 @@ export default async function BokerPage() {
                       </span>
                     )}
                     {book.pages && <span>{book.pages} sider</span>}
-                    {book.price != null && <span className="text-sage-dark">{book.price} kr</span>}
+                    {book.price != null && (
+                      <span className="text-sage-dark">{book.price} kr</span>
+                    )}
                   </div>
-                  <PortableTextRenderer value={book.description} />
-                  <a
-                    href={`tel:${phoneTel}`}
-                    className="mt-6 inline-block px-6 py-3 bg-sage text-cream font-sans font-light text-sm rounded-full hover:bg-sage-dark transition-colors tracking-wide"
-                  >
-                    Bestill på tlf {phoneDisplay}
-                  </a>
+                  {book.description && book.description.length > 0 && (
+                    <ReadMore>
+                      <PortableTextRenderer value={book.description} />
+                    </ReadMore>
+                  )}
                 </div>
               </article>
             ))
