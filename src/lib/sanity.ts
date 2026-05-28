@@ -7,6 +7,7 @@ import { SANITY_CACHE_TAG } from './revalidate'
 import type {
   Article,
   ArticleListItem,
+  Book,
   BookListItem,
   Course,
   CourseListItem,
@@ -105,6 +106,19 @@ export const courseBySlugQuery = defineQuery(
 export const booksQuery = defineQuery(
   `*[_type == "book"] | order(order asc) {
     _id, _updatedAt, title, slug, isbn, price, publishedDate, description, pages,
+    "orderOnline": coalesce(orderOnline, false),
+    coverImage{
+      ...,
+      "dimensions": asset->metadata.dimensions,
+      "assetUpdatedAt": asset->_updatedAt
+    }
+  }`
+)
+
+export const bookByIdentifierQuery = defineQuery(
+  `*[_type == "book" && (slug.current == $identifier || _id == $identifier)][0]{
+    _id, _type, title, slug, isbn, price, publishedDate, description, pages,
+    "orderOnline": coalesce(orderOnline, false),
     coverImage{
       ...,
       "dimensions": asset->metadata.dimensions,
@@ -158,6 +172,13 @@ export async function getCourse(slug: string, options?: SanityQueryOptions): Pro
 
 export async function getBooks(options?: SanityQueryOptions): Promise<BookListItem[]> {
   return safeFetch<BookListItem[]>(booksQuery, {}, [], options)
+}
+
+export async function getBook(
+  identifier: string,
+  options?: SanityQueryOptions,
+): Promise<Book | null> {
+  return safeFetch<Book | null>(bookByIdentifierQuery, { identifier }, null, options)
 }
 
 export async function getArticles(options?: SanityQueryOptions): Promise<ArticleListItem[]> {

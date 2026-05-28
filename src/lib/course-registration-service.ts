@@ -360,7 +360,7 @@ async function cancelPendingRegistration(registrationId: string): Promise<void> 
   await promoteNextWaitlistEntry(registrationId)
 }
 
-export async function handleVippsWebhookEvent(event: {
+export async function handleCourseRegistrationVippsWebhook(event: {
   reference: string
   name: string
   success?: boolean

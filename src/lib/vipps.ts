@@ -97,11 +97,19 @@ export function formatPhoneForVipps(phone: string): string {
   return digits
 }
 
-export function createVippsPaymentReference(registrationId: string): string {
-  const sanitized = registrationId.replace(/[^a-zA-Z0-9-]/g, '').slice(0, 32)
+function createPrefixedPaymentReference(prefix: string, documentId: string): string {
+  const sanitized = documentId.replace(/[^a-zA-Z0-9-]/g, '').slice(0, 32)
   const suffix = randomUUID().replace(/-/g, '').slice(0, 12)
-  const reference = `course-${sanitized}-${suffix}`.slice(0, 64)
-  return reference.length >= 8 ? reference : `course-${suffix}`.slice(0, 64)
+  const reference = `${prefix}-${sanitized}-${suffix}`.slice(0, 64)
+  return reference.length >= 8 ? reference : `${prefix}-${suffix}`.slice(0, 64)
+}
+
+export function createVippsPaymentReference(registrationId: string): string {
+  return createPrefixedPaymentReference('course', registrationId)
+}
+
+export function createBookPaymentReference(orderId: string): string {
+  return createPrefixedPaymentReference('book', orderId)
 }
 
 function getSystemHeaders(config: VippsConfig): Record<string, string> {

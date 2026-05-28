@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { handleVippsWebhookEvent } from '@/lib/course-registration-service'
+import { handleVippsWebhookEvent } from '@/lib/vipps-webhook'
 import { getVippsWebhookSecret, verifyVippsWebhookRequest, type VippsWebhookEvent } from '@/lib/vipps'
 
 export const runtime = 'nodejs'

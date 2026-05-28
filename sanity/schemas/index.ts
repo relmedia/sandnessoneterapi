@@ -7,5 +7,6 @@ import { page } from './page'
 import { bookingRequest } from './bookingRequest'
 import { availabilityDay } from './availabilityDay'
 import { courseRegistration } from './courseRegistration'
+import { bookOrder } from './bookOrder'
 
-export const schemaTypes = [siteSettings, service, course, book, article, page, bookingRequest, availabilityDay, courseRegistration]
+export const schemaTypes = [siteSettings, service, course, book, article, page, bookingRequest, availabilityDay, courseRegistration, bookOrder]

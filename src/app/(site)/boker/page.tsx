@@ -9,6 +9,9 @@ import {
 } from '@/lib/sanity'
 import { PortableTextRenderer } from '@/components/PortableText'
 import { ReadMore } from '@/components/ReadMore'
+import { BokerBookActions } from '@/components/BokerBookActions'
+import { getBookShippingFeeNok, isBookOrderOnline } from '@/lib/book-order'
+import { isVippsConfigured } from '@/lib/vipps'
 import { formatDateNb, getPhoneDisplay, getPhoneTel } from '@/lib/utils'
 
 export const revalidate = 3600
@@ -27,6 +30,9 @@ export default async function BokerPage() {
   ])
   const phoneDisplay = getPhoneDisplay(settings?.phone)
   const phoneTel = getPhoneTel(settings?.phone)
+  const vippsEnabled = isVippsConfigured()
+  const shippingFee = getBookShippingFeeNok()
+  const hasOnlineBooks = books.some((book) => isBookOrderOnline(book))
 
   return (
     <div className="py-16 md:py-24">
@@ -36,8 +42,10 @@ export default async function BokerPage() {
         </p>
         <h1 className="font-serif text-display text-stone mb-4">Bøker</h1>
         <p className="font-sans font-light text-xl text-muted mb-16 max-w-xl">
-          Terje Horpestad har skrevet to bøker om soneterapi og ett hefte om tankefeltterapi. Kan
-          bestilles ved å ringe {phoneDisplay}.
+          Terje Horpestad har skrevet to bøker om soneterapi og ett hefte om tankefeltterapi.
+          {hasOnlineBooks
+            ? ' Bestill med Vipps online, eller ring oss.'
+            : ` Kan bestilles ved å ringe ${phoneDisplay}.`}
         </p>
 
         <div className="flex flex-col gap-16">
@@ -70,12 +78,16 @@ export default async function BokerPage() {
                       </span>
                     </div>
                   )}
-                  <a
-                    href={`tel:${phoneTel}`}
-                    className="inline-block w-full rounded-full bg-sage px-6 py-3 text-center font-sans text-sm font-light tracking-wide text-cream transition-colors hover:bg-sage-dark"
-                  >
-                    Bestill på tlf {phoneDisplay}
-                  </a>
+                  <BokerBookActions
+                    bookRef={book.slug?.current ?? book._id}
+                    bookTitle={book.title}
+                    bookPrice={book.price}
+                    orderOnline={book.orderOnline}
+                    vippsEnabled={vippsEnabled}
+                    phoneDisplay={phoneDisplay}
+                    phoneTel={phoneTel}
+                    shippingFee={shippingFee}
+                  />
                 </div>
                 <div>
                   <h2 className="mb-3 font-serif text-3xl text-stone md:text-4xl">{book.title}</h2>

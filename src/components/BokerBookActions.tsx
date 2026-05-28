@@ -1,0 +1,65 @@
+'use client'
+
+import { BookOrderTrigger } from '@/components/BookOrderModal'
+import { canShowBookOrderButton, DEFAULT_BOOK_SHIPPING_FEE_NOK } from '@/lib/book-order'
+
+type BokerBookActionsProps = {
+  bookRef: string
+  bookTitle: string
+  bookPrice?: number
+  orderOnline?: boolean
+  vippsEnabled: boolean
+  phoneDisplay: string
+  phoneTel: string
+  shippingFee?: number
+}
+
+export function BokerBookActions({
+  bookRef,
+  bookTitle,
+  bookPrice,
+  orderOnline,
+  vippsEnabled,
+  phoneDisplay,
+  phoneTel,
+  shippingFee = DEFAULT_BOOK_SHIPPING_FEE_NOK,
+}: BokerBookActionsProps) {
+  const canOrderOnline = canShowBookOrderButton(
+    { orderOnline, price: bookPrice },
+    bookRef,
+  )
+
+  return (
+    <div className="flex flex-col gap-3">
+      {canOrderOnline && typeof bookPrice === 'number' && (
+        <>
+          <BookOrderTrigger
+            bookRef={bookRef}
+            bookTitle={bookTitle}
+            bookPrice={bookPrice}
+            shippingFee={shippingFee}
+            phoneDisplay={phoneDisplay}
+            phoneTel={phoneTel}
+            vippsEnabled={vippsEnabled}
+          />
+          {!vippsEnabled && (
+            <p className="text-center font-sans text-xs font-light text-muted">
+              Vipps er ikke satt opp ennå. Legg inn Vipps-nøkler i miljøvariabler for å ta imot
+              betaling.
+            </p>
+          )}
+        </>
+      )}
+      <a
+        href={`tel:${phoneTel}`}
+        className={`inline-block w-full rounded-full px-6 py-3 text-center font-sans text-sm font-light tracking-wide transition-colors ${
+          canOrderOnline
+            ? 'border border-stone/15 bg-white text-stone hover:border-sage hover:text-sage-dark'
+            : 'bg-sage text-cream hover:bg-sage-dark'
+        }`}
+      >
+        Bestill på tlf {phoneDisplay}
+      </a>
+    </div>
+  )
+}

@@ -143,9 +143,14 @@ export interface BookListItem {
   coverImage?: SanityImage
   isbn?: string
   price?: number
+  orderOnline?: boolean
   publishedDate?: string
   description?: PortableTextBlock[]
   pages?: number
+}
+
+export interface Book extends BookListItem {
+  _type: 'book'
 }
 
 export interface ArticleListItem {

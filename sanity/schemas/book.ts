@@ -16,6 +16,7 @@ export const book = defineType({
       title: 'URL-slug',
       type: 'slug',
       options: { source: 'title', maxLength: 96 },
+      description: 'Klikk «Generate» for å lage slug. Valgfritt, men anbefalt for nettbestilling.',
     }),
     defineField({
       name: 'coverImage',
@@ -39,6 +40,14 @@ export const book = defineType({
       title: 'Pris (kr)',
       type: 'number',
       validation: (Rule) => Rule.min(0),
+    }),
+    defineField({
+      name: 'orderOnline',
+      title: 'Kan bestilles online med Vipps',
+      type: 'boolean',
+      initialValue: false,
+      description:
+        'Må være påslått og publisert for at «Kjøp med Vipps» vises på nettsiden. Skru av for kun telefonbestilling.',
     }),
     defineField({
       name: 'pages',
