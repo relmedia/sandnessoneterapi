@@ -2,7 +2,7 @@ import { defineQuery } from 'next-sanity'
 import { isSanityConfigured } from './env'
 import { client } from './sanity-client'
 import { sanityFetch } from './sanity-live'
-import { getSanityImageAspectStyle, urlFor } from './sanity-image'
+import { getSanityImageAspectStyle, getSanityImageUrl, urlFor } from './sanity-image'
 import { SANITY_CACHE_TAG } from './revalidate'
 import type {
   Article,
@@ -16,7 +16,7 @@ import type {
   SiteSettings,
 } from './types'
 
-export { getSanityImageAspectStyle, urlFor } from './sanity-image'
+export { getSanityImageAspectStyle, getSanityImageUrl, urlFor } from './sanity-image'
 
 export type SanityQueryOptions = {
   stega?: boolean
@@ -104,7 +104,12 @@ export const courseBySlugQuery = defineQuery(
 
 export const booksQuery = defineQuery(
   `*[_type == "book"] | order(order asc) {
-    _id, title, slug, coverImage, isbn, price, publishedDate, description, pages
+    _id, _updatedAt, title, slug, isbn, price, publishedDate, description, pages,
+    coverImage{
+      ...,
+      "dimensions": asset->metadata.dimensions,
+      "assetUpdatedAt": asset->_updatedAt
+    }
   }`
 )
 

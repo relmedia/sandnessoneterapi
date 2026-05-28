@@ -12,6 +12,8 @@ export interface SanityImage {
     width?: number
     height?: number
   }
+  /** From GROQ: asset->_updatedAt — used to bust Next.js image cache when asset changes */
+  assetUpdatedAt?: string
 }
 
 export interface SanitySlug {
@@ -135,6 +137,7 @@ export interface CourseListItem {
 
 export interface BookListItem {
   _id: string
+  _updatedAt?: string
   title: string
   slug?: SanitySlug
   coverImage?: SanityImage

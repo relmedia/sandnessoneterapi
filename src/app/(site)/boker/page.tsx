@@ -1,6 +1,12 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
-import { getBooks, getSiteSettings, urlFor } from '@/lib/sanity'
+import { draftMode } from 'next/headers'
+import {
+  getBooks,
+  getSanityImageUrl,
+  getSanityQueryOptions,
+  getSiteSettings,
+} from '@/lib/sanity'
 import { PortableTextRenderer } from '@/components/PortableText'
 import { ReadMore } from '@/components/ReadMore'
 import { formatDateNb, getPhoneDisplay, getPhoneTel } from '@/lib/utils'
@@ -13,7 +19,12 @@ export const metadata: Metadata = {
 }
 
 export default async function BokerPage() {
-  const [books, settings] = await Promise.all([getBooks(), getSiteSettings()])
+  const { isEnabled: isDraftMode } = await draftMode()
+  const sanityOptions = getSanityQueryOptions(isDraftMode)
+  const [books, settings] = await Promise.all([
+    getBooks(sanityOptions),
+    getSiteSettings(sanityOptions),
+  ])
   const phoneDisplay = getPhoneDisplay(settings?.phone)
   const phoneTel = getPhoneTel(settings?.phone)
 
@@ -40,7 +51,12 @@ export default async function BokerPage() {
                   {book.coverImage ? (
                     <div className="relative aspect-[3/4] overflow-hidden rounded-2xl">
                       <Image
-                        src={urlFor(book.coverImage).width(560).height(747).url()}
+                        key={`${book._id}-${book.coverImage.asset._ref}-${book.coverImage.assetUpdatedAt ?? book._updatedAt ?? ''}`}
+                        src={
+                          getSanityImageUrl(book.coverImage, (builder) =>
+                            builder.width(560).height(747),
+                          )!
+                        }
                         alt={book.coverImage.alt ?? book.title}
                         fill
                         className="object-cover"
