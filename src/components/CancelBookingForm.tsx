@@ -173,38 +173,42 @@ export function CancelBookingForm() {
           </dl>
         </div>
 
-        {!booking.canCancel && booking.status === 'cancelled' ? (
-          <p className="text-sm font-sans text-muted">Denne timen er allerede avbestilt.</p>
-        ) : !booking.canCancel ? (
-          <p className="text-sm font-sans text-muted">Timen kan ikke avbestilles online. Ring oss for hjelp.</p>
-        ) : (
+        <div className="flex flex-col items-start gap-4">
+          {!booking.canCancel && booking.status === 'cancelled' ? (
+            <p className="text-sm font-sans text-muted">Denne timen er allerede avbestilt.</p>
+          ) : !booking.canCancel ? (
+            <p className="text-sm font-sans text-muted">
+              Timen kan ikke avbestilles online. Ring oss for hjelp.
+            </p>
+          ) : (
+            <button
+              type="button"
+              onClick={() => void handleCancel()}
+              disabled={submitting}
+              className="px-8 py-4 bg-stone text-cream font-sans font-light text-sm rounded-full hover:bg-sage-dark transition-colors tracking-wide disabled:opacity-50"
+            >
+              {submitting ? 'Avbestiller …' : 'Avbestill timen'}
+            </button>
+          )}
+
+          {errorMessage && (
+            <p className="text-sm font-sans text-red-700" role="alert">
+              {errorMessage}
+            </p>
+          )}
+
           <button
             type="button"
-            onClick={() => void handleCancel()}
-            disabled={submitting}
-            className="px-8 py-4 bg-stone text-cream font-sans font-light text-sm rounded-full hover:bg-sage-dark transition-colors tracking-wide disabled:opacity-50"
+            onClick={() => {
+              setStep('form')
+              setBooking(null)
+              setErrorMessage(null)
+            }}
+            className="text-sm font-sans font-light text-sage-dark underline underline-offset-2"
           >
-            {submitting ? 'Avbestiller …' : 'Avbestill timen'}
+            Tilbake
           </button>
-        )}
-
-        {errorMessage && (
-          <p className="text-sm font-sans text-red-700" role="alert">
-            {errorMessage}
-          </p>
-        )}
-
-        <button
-          type="button"
-          onClick={() => {
-            setStep('form')
-            setBooking(null)
-            setErrorMessage(null)
-          }}
-          className="text-sm font-sans font-light text-sage-dark underline underline-offset-2"
-        >
-          Tilbake
-        </button>
+        </div>
       </div>
     )
   }

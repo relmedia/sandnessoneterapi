@@ -3,6 +3,7 @@ import { draftMode } from 'next/headers'
 import { VisualEditing } from 'next-sanity/visual-editing'
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
+import { CookieConsent } from '@/components/CookieConsent'
 import { DisableDraftMode } from '@/components/DisableDraftMode'
 import { getServices, getSiteSettings, publishedQuery } from '@/lib/sanity'
 import { mapServiceNavItems } from '@/lib/service-fallbacks'
@@ -51,6 +52,7 @@ export default async function SiteLayout({
       <Header settings={settings} services={serviceNavItems} />
       <main>{children}</main>
       <Footer settings={settings} />
+      <CookieConsent />
       <SanityLive includeDrafts={isDraftMode} />
       {isDraftMode && (
         <>

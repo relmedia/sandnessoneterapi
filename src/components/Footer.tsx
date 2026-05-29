@@ -22,6 +22,11 @@ const footerLinks = [
   ['/priser', 'Priser'],
 ] as const
 
+const legalLinks = [
+  ['/salgsvilkar', 'Salgsvilkår'],
+  ['/personvern', 'Personvern'],
+] as const
+
 export function Footer({ settings }: FooterProps) {
   const year = new Date().getFullYear()
   const phoneDisplay = settings?.phone ? getPhoneDisplay(settings.phone) : null
@@ -111,8 +116,21 @@ export function Footer({ settings }: FooterProps) {
         </div>
       </div>
 
-      <div className="border-t border-cream/10 py-6 section-padding text-center text-xs text-cream/30 font-sans font-light">
-        © {year} Sandnes Soneterapi · Terje Horpestad
+      <div className="border-t border-cream/10 py-6 section-padding">
+        <div className="container-wide mx-auto flex flex-col items-center gap-4 text-center text-xs font-sans font-light text-cream/30 sm:flex-row sm:justify-between">
+          <p>© {year} Sandnes Soneterapi · Terje Horpestad</p>
+          <nav className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 sm:gap-x-10" aria-label="Juridisk">
+            {legalLinks.map(([href, label]) => (
+              <Link
+                key={href}
+                href={href}
+                className="text-cream/50 transition-colors hover:text-cream/80"
+              >
+                {label}
+              </Link>
+            ))}
+          </nav>
+        </div>
       </div>
     </footer>
   )

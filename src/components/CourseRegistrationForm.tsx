@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useState } from 'react'
 import { Check, CheckCircle2, Loader2, ShieldCheck } from 'lucide-react'
 import { TurnstileWidget } from '@/components/TurnstileWidget'
@@ -302,6 +303,13 @@ export function CourseRegistrationForm({
         )}
 
         <div className={isFullWidth ? 'w-full sm:max-w-sm' : ''}>
+          <p className="mb-3 font-sans text-xs font-light leading-relaxed text-muted">
+            Ved å betale godtar du{' '}
+            <Link href="/salgsvilkar" className="text-sage-dark underline underline-offset-2">
+              salgsvilkårene
+            </Link>
+            .
+          </p>
           <button
             type="submit"
             disabled={formState === 'submitting' || !selectedSession || !captchaReady}

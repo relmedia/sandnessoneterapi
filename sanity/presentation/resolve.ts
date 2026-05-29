@@ -38,6 +38,9 @@ export const resolve: PresentationPluginOptions['resolve'] = {
         const knownRoutes: Record<string, string> = {
           priser: '/priser',
           foredrag: '/foredrag',
+          salgsvilkar: '/salgsvilkar',
+          personvern: '/personvern',
+          'om-meg': '/om-meg',
         }
         const href =
           (doc?.documentId && knownRoutes[doc.documentId]) ||

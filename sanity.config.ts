@@ -73,6 +73,24 @@ export default defineConfig({
                   .documentId('foredrag')
                   .title('Foredrag')
               ),
+            S.listItem()
+              .title('Salgsvilkår')
+              .id('salgsvilkar')
+              .child(
+                S.document()
+                  .schemaType('page')
+                  .documentId('salgsvilkar')
+                  .title('Salgsvilkår')
+              ),
+            S.listItem()
+              .title('Personvern')
+              .id('personvern')
+              .child(
+                S.document()
+                  .schemaType('page')
+                  .documentId('personvern')
+                  .title('Personvern')
+              ),
             S.documentTypeListItem('page').title('Andre sider'),
             orderableDocumentListDeskItem({ type: 'course', title: 'Kurs', S, context }),
             S.documentTypeListItem('book').title('Bøker'),
@@ -134,6 +152,24 @@ export default defineConfig({
         value: {
           title: 'Foredrag',
           slug: { _type: 'slug', current: 'foredrag' },
+        },
+      },
+      {
+        id: 'page-salgsvilkar',
+        title: 'Salgsvilkår-side',
+        schemaType: 'page',
+        value: {
+          title: 'Salgsvilkår',
+          slug: { _type: 'slug', current: 'salgsvilkar' },
+        },
+      },
+      {
+        id: 'page-personvern',
+        title: 'Personvern-side',
+        schemaType: 'page',
+        value: {
+          title: 'Personvern',
+          slug: { _type: 'slug', current: 'personvern' },
         },
       },
     ],

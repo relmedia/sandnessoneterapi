@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useState } from 'react'
 import { Loader2, ShieldCheck } from 'lucide-react'
 import { TurnstileWidget } from '@/components/TurnstileWidget'
@@ -241,6 +242,14 @@ export function BookOrderForm({
             <span className="font-serif text-xl">{totalPrice.toLocaleString('nb-NO')} kr</span>
           </div>
         </div>
+
+        <p className="mb-4 font-sans text-xs font-light leading-relaxed text-muted">
+          Ved å betale godtar du{' '}
+          <Link href="/salgsvilkar" className="text-sage-dark underline underline-offset-2">
+            salgsvilkårene
+          </Link>
+          .
+        </p>
 
         <button
           type="submit"
