@@ -1,5 +1,6 @@
 import { defineField, defineType, type StringRule } from 'sanity'
 import { orderRankField, orderRankOrdering } from '@sanity/orderable-document-list'
+import { courseTimeOptions } from './helpers/timeOptions'
 
 const timeValidation = (Rule: StringRule) =>
   Rule.regex(/^([01]\d|2[0-3]):[0-5]\d$/, { name: 'time' }).warning(
@@ -54,14 +55,20 @@ export const course = defineType({
               name: 'startTime',
               title: 'Starttid',
               type: 'string',
-              description: 'F.eks. 09:00',
+              options: {
+                list: courseTimeOptions,
+                layout: 'dropdown',
+              },
               validation: timeValidation,
             }),
             defineField({
               name: 'endTime',
               title: 'Sluttid',
               type: 'string',
-              description: 'F.eks. 16:00',
+              options: {
+                list: courseTimeOptions,
+                layout: 'dropdown',
+              },
               validation: timeValidation,
             }),
             defineField({
