@@ -37,35 +37,19 @@ export default async function HomePage() {
         />
 
         <div className="container-wide section-padding mx-auto py-24 md:py-36 relative">
-          <div className="grid items-center gap-10 lg:grid-cols-[1fr_auto] lg:gap-14">
-            <div className="max-w-2xl">
-              <p className="font-sans font-light text-xs uppercase tracking-[0.3em] text-sage mb-6">
-                Godkjent av NNH – Norske Naturterapeuters Hovedorganisasjon
-              </p>
-              <h1 className="font-serif text-display text-stone mb-8 leading-tight whitespace-pre-line">
-                {settings?.heroHeading ?? 'Naturlig helse\ngjennom berøring'}
-              </h1>
-              <p className="font-sans font-light text-lg md:text-xl text-muted leading-relaxed mb-10 max-w-lg">
-                {settings?.heroBody ??
-                  'Terje Horpestad er godkjent soneterapeut med over 40 års daglig erfaring. Han tilbyr soneterapi, øreakupunktur og tankefeltterapi i Sandnes.'}
-              </p>
-              <div className="flex flex-wrap gap-4">
-                <Link
-                  href="/bestill-time"
-                  className="px-8 py-4 bg-stone text-cream font-sans font-light text-sm rounded-full hover:bg-sage-dark transition-colors tracking-wide"
-                >
-                  Bestill time
-                </Link>
-                <Link
-                  href="#behandlinger"
-                  className="px-8 py-4 border border-stone/30 text-stone font-sans font-light text-sm rounded-full hover:border-sage hover:text-sage-dark transition-colors tracking-wide"
-                >
-                  Les mer om behandlinger
-                </Link>
-              </div>
-            </div>
+          <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center lg:gap-14 [&>*]:min-w-0">
+            <p className="font-sans font-light text-xs uppercase tracking-[0.3em] text-sage lg:col-start-1 lg:row-start-1">
+              Godkjent av NNH – Norske Naturterapeuters Hovedorganisasjon
+            </p>
+            <h1 className="font-serif text-display text-stone leading-tight whitespace-pre-line lg:col-start-1 lg:row-start-2">
+              {settings?.heroHeading ?? 'Naturlig helse\ngjennom berøring'}
+            </h1>
+            <p className="max-w-lg font-sans font-light text-lg leading-relaxed text-muted md:text-xl lg:col-start-1 lg:row-start-3">
+              {settings?.heroBody ??
+                'Terje Horpestad er godkjent soneterapeut med over 40 års daglig erfaring. Han tilbyr soneterapi, øreakupunktur og tankefeltterapi i Sandnes.'}
+            </p>
 
-            <div className="relative z-10 mx-auto hidden w-[220px] shrink-0 self-center lg:mx-0 lg:block xl:w-[240px]">
+            <div className="relative z-10 mx-auto w-[180px] shrink-0 sm:w-[200px] lg:col-start-2 lg:row-span-4 lg:row-start-1 lg:mx-0 lg:w-[220px] lg:self-center xl:w-[240px]">
               <Image
                 src={
                   heroImage
@@ -83,6 +67,21 @@ export default async function HomePage() {
                 aria-hidden
                 className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,transparent_55%,var(--color-cream)),linear-gradient(to_right,transparent_60%,var(--color-cream))]"
               />
+            </div>
+
+            <div className="flex flex-wrap gap-4 lg:col-start-1 lg:row-start-4">
+              <Link
+                href="/bestill-time"
+                className="rounded-full bg-stone px-8 py-4 font-sans text-sm font-light tracking-wide text-cream transition-colors hover:bg-sage-dark"
+              >
+                Bestill time
+              </Link>
+              <Link
+                href="#behandlinger"
+                className="rounded-full border border-stone/30 px-8 py-4 font-sans text-sm font-light tracking-wide text-stone transition-colors hover:border-sage hover:text-sage-dark"
+              >
+                Les mer om behandlinger
+              </Link>
             </div>
           </div>
         </div>
