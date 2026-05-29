@@ -1,4 +1,5 @@
 export const BOOKING_TIME_SLOTS = [
+  '08:00',
   '09:00',
   '10:00',
   '11:00',

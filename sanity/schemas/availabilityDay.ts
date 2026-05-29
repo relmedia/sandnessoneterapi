@@ -1,6 +1,7 @@
 import { defineField, defineType } from 'sanity'
 
 const TIME_SLOT_OPTIONS = [
+  { title: '08:00', value: '08:00' },
   { title: '09:00', value: '09:00' },
   { title: '10:00', value: '10:00' },
   { title: '11:00', value: '11:00' },
