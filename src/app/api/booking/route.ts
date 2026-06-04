@@ -3,6 +3,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { getAdminSlotsForDay, getAvailabilityDay } from '@/lib/booking-availability'
 import { sendBookingConfirmationEmails } from '@/lib/booking-email'
 import { getAvailableSlotsForDate, validateBookingPayload } from '@/lib/booking'
+import { getRequestIp, isTurnstileConfigured, verifyTurnstileToken } from '@/lib/turnstile'
 import { getSiteSettings } from '@/lib/sanity'
 import { client } from '@/lib/sanity'
 import { getSanityWriteClient } from '@/lib/sanity-write'
@@ -50,6 +51,18 @@ export async function POST(request: NextRequest) {
   const validation = validateBookingPayload(body)
   if (!validation.ok) {
     return NextResponse.json({ error: validation.error }, { status: 400 })
+  }
+
+  if (isTurnstileConfigured()) {
+    const token = validation.value.turnstileToken
+    if (!token) {
+      return NextResponse.json({ error: 'Bekreft at du ikke er en robot.' }, { status: 400 })
+    }
+
+    const isHuman = await verifyTurnstileToken(token, getRequestIp(request))
+    if (!isHuman) {
+      return NextResponse.json({ error: 'Sikkerhetskontrollen feilet. Prøv igjen.' }, { status: 400 })
+    }
   }
 
   const writeClient = getSanityWriteClient()

@@ -69,7 +69,7 @@ export function CourseRegistrationModal({
         aria-modal="true"
         aria-labelledby={titleId}
         aria-describedby={descriptionId}
-        className="relative z-10 flex h-full w-full flex-col bg-white sm:mx-auto sm:my-auto sm:h-auto sm:max-h-[min(90vh,900px)] sm:max-w-2xl sm:rounded-2xl sm:shadow-xl sm:ring-1 sm:ring-stone/10"
+        className="relative z-10 flex h-full w-full flex-col overflow-hidden bg-white sm:mx-auto sm:my-auto sm:h-auto sm:max-h-[min(90vh,900px)] sm:max-w-2xl sm:rounded-2xl sm:shadow-xl sm:ring-1 sm:ring-stone/10"
       >
         <div className="flex shrink-0 items-start justify-between gap-4 border-b border-warm-light px-5 py-4 sm:px-8 sm:py-6">
           <div className="min-w-0 pr-2">

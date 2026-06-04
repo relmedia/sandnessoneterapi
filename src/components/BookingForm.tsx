@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { CalendarDays, CheckCircle2, Clock, User } from 'lucide-react'
+import { TurnstileWidget } from '@/components/TurnstileWidget'
 import { DayPicker, getDefaultClassNames } from 'react-day-picker'
 import { nb } from 'react-day-picker/locale'
 import { startOfDay } from 'date-fns'
@@ -12,6 +13,8 @@ import 'react-day-picker/style.css'
 import './booking-calendar.css'
 
 type FormState = 'idle' | 'submitting' | 'success' | 'error'
+
+const turnstileEnabled = Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim())
 
 const inputClassName =
   'w-full rounded-xl border border-stone/10 bg-cream/40 px-4 py-3 font-sans text-sm font-light text-stone transition-colors focus:border-sage focus:outline-none focus:ring-2 focus:ring-sage/15'
@@ -42,6 +45,10 @@ export function BookingForm() {
   const [message, setMessage] = useState('')
   const [availableDates, setAvailableDates] = useState<Set<string>>(new Set())
   const [availabilityLoading, setAvailabilityLoading] = useState(true)
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null)
+
+  const captchaRequired = turnstileEnabled
+  const captchaReady = !captchaRequired || Boolean(turnstileToken)
 
   const defaultClassNames = getDefaultClassNames()
   const selectedDateIso = selectedDate ? formatDateIso(selectedDate) : null
@@ -122,8 +129,17 @@ export function BookingForm() {
       return
     }
 
+    if (captchaRequired && !turnstileToken) {
+      setErrorMessage('Bekreft at du ikke er en robot.')
+      setFormState('error')
+      return
+    }
+
     setFormState('submitting')
     setErrorMessage(null)
+
+    const formData = new FormData(event.currentTarget)
+    const website = typeof formData.get('website') === 'string' ? formData.get('website') : ''
 
     try {
       const response = await fetch('/api/booking', {
@@ -138,13 +154,15 @@ export function BookingForm() {
           date: selectedDateIso,
           time: selectedTime,
           message,
-          website: '',
+          website,
+          ...(turnstileToken ? { turnstileToken } : {}),
         }),
       })
 
       const data = (await response.json()) as { message?: string; error?: string; cancelToken?: string }
 
       if (!response.ok) {
+        setTurnstileToken(null)
         throw new Error(data.error ?? 'Noe gikk galt. Prøv igjen.')
       }
 
@@ -153,6 +171,7 @@ export function BookingForm() {
       setErrorMessage(null)
     } catch (error) {
       setFormState('error')
+      setTurnstileToken(null)
       setErrorMessage(error instanceof Error ? error.message : 'Noe gikk galt. Prøv igjen.')
     }
   }
@@ -402,6 +421,19 @@ export function BookingForm() {
               aria-hidden="true"
             />
 
+            {captchaRequired && (
+              <div className="mt-6">
+                <TurnstileWidget
+                  onToken={setTurnstileToken}
+                  onExpire={() => setTurnstileToken(null)}
+                  onError={() => {
+                    setTurnstileToken(null)
+                    setErrorMessage('Sikkerhetskontrollen kunne ikke lastes. Prøv igjen.')
+                  }}
+                />
+              </div>
+            )}
+
             {errorMessage && (
               <p className="mt-4 font-sans text-sm text-red-700" role="alert">
                 {errorMessage}
@@ -410,7 +442,9 @@ export function BookingForm() {
 
             <button
               type="submit"
-              disabled={formState === 'submitting' || !selectedDate || !selectedTime}
+              disabled={
+                formState === 'submitting' || !selectedDate || !selectedTime || !captchaReady
+              }
               className="mt-8 w-full rounded-full bg-stone px-8 py-4 font-sans text-sm font-light tracking-wide text-cream transition-colors hover:bg-sage-dark disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
             >
               {formState === 'submitting' ? 'Sender …' : 'Send timeforespørsel'}

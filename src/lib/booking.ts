@@ -32,6 +32,7 @@ export interface BookingPayload {
   time: string
   message?: string
   website?: string
+  turnstileToken?: string
 }
 
 export function formatDateIso(date: Date): string {
@@ -104,6 +105,8 @@ export function validateBookingPayload(
   const date = typeof payload.date === 'string' ? payload.date.trim() : ''
   const time = typeof payload.time === 'string' ? payload.time.trim() : ''
   const message = typeof payload.message === 'string' ? payload.message.trim() : ''
+  const turnstileToken =
+    typeof payload.turnstileToken === 'string' ? payload.turnstileToken.trim() : undefined
 
   if (name.length < 2 || name.length > 80) {
     return { ok: false, error: 'Oppgi et gyldig fornavn.' }
@@ -140,7 +143,17 @@ export function validateBookingPayload(
 
   return {
     ok: true,
-    value: { name, lastName, email, phone, service, date, time, message: message || undefined },
+    value: {
+      name,
+      lastName,
+      email,
+      phone,
+      service,
+      date,
+      time,
+      message: message || undefined,
+      turnstileToken: turnstileToken || undefined,
+    },
   }
 }
 
