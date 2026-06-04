@@ -2,11 +2,22 @@ import 'server-only'
 
 import { getPhoneDisplay } from '@/lib/utils'
 import { isEmailConfigured, sendTransactionalEmail } from '@/lib/email'
+import { renderEmail, type DetailRow, type EmailContact } from '@/lib/email-template'
 import {
   formatBookOrderStatus,
   formatShippingAddress,
   type BookOrderRecord,
 } from '@/lib/book-order'
+
+const PUBLIC_CONTACT: EmailContact = {
+  phone: '450 36 557',
+  email: 'terje@sandnessoneterapi.no',
+  address: 'Industrigata 1, 4307 Sandnes',
+}
+
+function formatNok(amount: number): string {
+  return `${amount.toLocaleString('nb-NO')} kr`
+}
 
 export interface BookOrderEmailDetails {
   name: string
@@ -28,14 +39,6 @@ interface BookOrderEmailContext {
   adminEmail: string
   siteName: string
   siteUrl: string
-}
-
-function escapeHtml(value: string): string {
-  return value
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
 }
 
 function getAdminEmail(fallback?: string | null): string | null {
@@ -94,27 +97,31 @@ function buildCustomerEmail(details: BookOrderEmailDetails, context: BookOrderEm
     context.siteName,
   ].join('\n')
 
-  const html = `
-    <div style="font-family:Arial,sans-serif;line-height:1.6;color:#3d3530;max-width:560px">
-      <p>Hei ${escapeHtml(details.name)},</p>
-      <p>Takk for bestillingen. Betalingen er <strong>mottatt via Vipps</strong>.</p>
-      <table style="width:100%;border-collapse:collapse;margin:24px 0">
-        <tbody>
-          <tr><td style="padding:8px 0;color:#7a6e68">Bok</td><td style="padding:8px 0">${escapeHtml(details.bookTitle)}</td></tr>
-          <tr><td style="padding:8px 0;color:#7a6e68">Bokpris</td><td style="padding:8px 0">${escapeHtml(`${details.bookPrice.toLocaleString('nb-NO')} kr`)}</td></tr>
-          <tr><td style="padding:8px 0;color:#7a6e68">Frakt</td><td style="padding:8px 0">${escapeHtml(`${details.shippingFee.toLocaleString('nb-NO')} kr`)}</td></tr>
-          ${
-            typeof details.amountPaid === 'number'
-              ? `<tr><td style="padding:8px 0;color:#7a6e68">Betalt</td><td style="padding:8px 0">${escapeHtml(`${details.amountPaid.toLocaleString('nb-NO')} kr`)}</td></tr>`
-              : ''
-          }
-          <tr><td style="padding:8px 0;color:#7a6e68">Leveres til</td><td style="padding:8px 0">${escapeHtml(formatShippingAddress(details))}</td></tr>
-        </tbody>
-      </table>
-      <p>Vi sender boken til adressen over så snart som mulig.</p>
-      <p style="margin-top:32px;color:#7a6e68">Med vennlig hilsen<br>${escapeHtml(context.siteName)}</p>
-    </div>
-  `
+  const detailRows: DetailRow[] = [
+    { label: 'Bok', value: details.bookTitle },
+    { label: 'Bokpris', value: formatNok(details.bookPrice) },
+    { label: 'Frakt', value: formatNok(details.shippingFee) },
+  ]
+  if (typeof details.amountPaid === 'number') {
+    detailRows.push({ label: 'Totalt betalt', value: formatNok(details.amountPaid) })
+  }
+  detailRows.push({ label: 'Leveres til', value: formatShippingAddress(details) })
+
+  const html = renderEmail({
+    siteName: context.siteName,
+    siteUrl: context.siteUrl,
+    preheader: `Betalingen for ${details.bookTitle} er mottatt – boken sendes snart.`,
+    badge: { label: 'Betalt med Vipps', tone: 'success' },
+    heading: 'Takk for bestillingen!',
+    intro: [
+      `Hei ${details.name}, vi har mottatt betalingen din via Vipps.`,
+      'Her er en oppsummering av bestillingen din.',
+    ],
+    detailTitle: 'Bestilling',
+    detailRows,
+    outro: ['Vi sender boken til adressen over så snart som mulig.'],
+    contact: PUBLIC_CONTACT,
+  })
 
   return {
     subject: `Bekreftelse: ${details.bookTitle}`,
@@ -132,12 +139,34 @@ function buildAdminEmail(details: BookOrderEmailDetails, context: BookOrderEmail
     context.siteUrl,
   ].join('\n')
 
-  const html = `
-    <div style="font-family:Arial,sans-serif;line-height:1.6;color:#3d3530;max-width:560px">
-      <p><strong>Ny bokbestilling</strong> (betalt via Vipps)</p>
-      <pre style="white-space:pre-wrap;font-family:Arial,sans-serif;background:#f7f4f1;padding:16px;border-radius:12px">${escapeHtml(buildDetailsText(details))}</pre>
-    </div>
-  `
+  const detailRows: DetailRow[] = [
+    { label: 'Navn', value: `${details.name} ${details.lastName}` },
+    { label: 'E-post', value: details.email },
+    { label: 'Telefon', value: getPhoneDisplay(details.phone) },
+    { label: 'Bok', value: details.bookTitle },
+    { label: 'Bokpris', value: formatNok(details.bookPrice) },
+    { label: 'Frakt', value: formatNok(details.shippingFee) },
+  ]
+  if (typeof details.amountPaid === 'number') {
+    detailRows.push({ label: 'Totalt betalt', value: formatNok(details.amountPaid) })
+  }
+  detailRows.push({ label: 'Leveres til', value: formatShippingAddress(details) })
+  detailRows.push({ label: 'Status', value: formatBookOrderStatus(details.status) })
+  if (details.message) {
+    detailRows.push({ label: 'Melding', value: details.message })
+  }
+
+  const html = renderEmail({
+    siteName: context.siteName,
+    siteUrl: context.siteUrl,
+    preheader: `${details.bookTitle} – ${details.name} ${details.lastName}`,
+    badge: { label: 'Betalt med Vipps', tone: 'success' },
+    heading: 'Ny bokbestilling',
+    intro: [`${details.name} ${details.lastName} har bestilt og betalt for en bok.`],
+    detailTitle: 'Bestilling',
+    detailRows,
+    signoff: false,
+  })
 
   return {
     subject: `Bokbestilling: ${details.bookTitle} – ${details.name} ${details.lastName}`,

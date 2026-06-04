@@ -2,8 +2,33 @@ import 'server-only'
 
 import { formatCourseSession, formatDateNb, getPhoneDisplay } from '@/lib/utils'
 import { isEmailConfigured, sendTransactionalEmail } from '@/lib/email'
+import { renderEmail, type DetailRow, type EmailContact } from '@/lib/email-template'
 import type { CourseRegistrationStatus } from '@/lib/course-registration'
 import { formatRegistrationStatus } from '@/lib/course-registration'
+
+const PUBLIC_CONTACT: EmailContact = {
+  phone: '450 36 557',
+  email: 'terje@sandnessoneterapi.no',
+  address: 'Industrigata 1, 4307 Sandnes',
+}
+
+function formatNok(amount: number): string {
+  return `${amount.toLocaleString('nb-NO')} kr`
+}
+
+function buildCourseDetailRows(details: CourseRegistrationEmailDetails): DetailRow[] {
+  const rows: DetailRow[] = [
+    { label: 'Kurs', value: details.courseTitle },
+    { label: 'Dato', value: details.sessionLabel },
+  ]
+  if (typeof details.amountPaid === 'number') {
+    rows.push({ label: 'Betalt', value: formatNok(details.amountPaid) })
+  }
+  if (details.waitlistPosition) {
+    rows.push({ label: 'Ventelistenummer', value: String(details.waitlistPosition) })
+  }
+  return rows
+}
 
 export interface CourseRegistrationEmailDetails {
   name: string
@@ -24,14 +49,6 @@ interface CourseEmailContext {
   adminEmail: string
   siteName: string
   siteUrl: string
-}
-
-function escapeHtml(value: string): string {
-  return value
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
 }
 
 function getAdminEmail(fallback?: string | null): string | null {
@@ -102,30 +119,27 @@ function buildConfirmationCustomerEmail(
     .filter(Boolean)
     .join('\n')
 
-  const html = `
-    <div style="font-family:Arial,sans-serif;line-height:1.6;color:#3d3530;max-width:560px">
-      <p>Hei ${escapeHtml(details.name)},</p>
-      <p>Takk for påmeldingen. Din plass er <strong>bekreftet</strong>.</p>
-      <table style="width:100%;border-collapse:collapse;margin:24px 0">
-        <tbody>
-          <tr><td style="padding:8px 0;color:#7a6e68">Kurs</td><td style="padding:8px 0">${escapeHtml(details.courseTitle)}</td></tr>
-          <tr><td style="padding:8px 0;color:#7a6e68">Dato</td><td style="padding:8px 0">${escapeHtml(details.sessionLabel)}</td></tr>
-          ${
-            typeof details.amountPaid === 'number'
-              ? `<tr><td style="padding:8px 0;color:#7a6e68">Betalt</td><td style="padding:8px 0">${escapeHtml(`${details.amountPaid.toLocaleString('nb-NO')} kr`)}</td></tr>`
-              : ''
-          }
-        </tbody>
-      </table>
-      <p>Vi gleder oss til å se deg på kurset.</p>
-      ${
-        cancelUrl
-          ? `<p style="margin-top:24px"><a href="${cancelUrl}" style="color:#4e6b58">Avbestill påmeldingen</a></p>`
-          : ''
-      }
-      <p>Med vennlig hilsen<br>${escapeHtml(context.siteName)}</p>
-    </div>
-  `
+  const html = renderEmail({
+    siteName: context.siteName,
+    siteUrl: context.siteUrl,
+    preheader: `Plassen din på ${details.courseTitle} er bekreftet.`,
+    badge: { label: 'Plass bekreftet', tone: 'success' },
+    heading: 'Påmelding bekreftet',
+    intro: [
+      `Hei ${details.name}, takk for påmeldingen.`,
+      'Plassen din er bekreftet, og vi gleder oss til å se deg på kurset.',
+    ],
+    detailTitle: 'Kursdetaljer',
+    detailRows: buildCourseDetailRows(details),
+    highlight: cancelUrl
+      ? {
+          title: 'Avbestilling',
+          description: 'Får du ikke deltatt likevel? Du kan avbestille påmeldingen her.',
+          link: { label: 'Avbestill påmeldingen', url: cancelUrl },
+        }
+      : undefined,
+    contact: PUBLIC_CONTACT,
+  })
 
   return {
     subject: `Påmelding bekreftet – ${details.courseTitle}`,
@@ -151,25 +165,21 @@ function buildWaitlistCustomerEmail(
     context.siteName,
   ].join('\n')
 
-  const html = `
-    <div style="font-family:Arial,sans-serif;line-height:1.6;color:#3d3530;max-width:560px">
-      <p>Hei ${escapeHtml(details.name)},</p>
-      <p>Kurset er fullt, men du står nå på <strong>ventelisten</strong>.</p>
-      <table style="width:100%;border-collapse:collapse;margin:24px 0">
-        <tbody>
-          <tr><td style="padding:8px 0;color:#7a6e68">Kurs</td><td style="padding:8px 0">${escapeHtml(details.courseTitle)}</td></tr>
-          <tr><td style="padding:8px 0;color:#7a6e68">Dato</td><td style="padding:8px 0">${escapeHtml(details.sessionLabel)}</td></tr>
-          ${
-            details.waitlistPosition
-              ? `<tr><td style="padding:8px 0;color:#7a6e68">Ventelistenummer</td><td style="padding:8px 0">${escapeHtml(String(details.waitlistPosition))}</td></tr>`
-              : ''
-          }
-        </tbody>
-      </table>
-      <p>Vi sender deg Vipps-lenke automatisk hvis en plass blir ledig.</p>
-      <p>Med vennlig hilsen<br>${escapeHtml(context.siteName)}</p>
-    </div>
-  `
+  const html = renderEmail({
+    siteName: context.siteName,
+    siteUrl: context.siteUrl,
+    preheader: `Du står nå på ventelisten for ${details.courseTitle}.`,
+    badge: { label: 'På venteliste', tone: 'pending' },
+    heading: 'Du står på ventelisten',
+    intro: [
+      `Hei ${details.name}, takk for interessen.`,
+      'Kurset er dessverre fullt, men du står nå på ventelisten.',
+    ],
+    detailTitle: 'Kursdetaljer',
+    detailRows: buildCourseDetailRows(details),
+    outro: ['Blir en plass ledig, sender vi deg automatisk en Vipps-lenke for betaling.'],
+    contact: PUBLIC_CONTACT,
+  })
 
   return {
     subject: `Venteliste – ${details.courseTitle}`,
@@ -197,24 +207,23 @@ function buildPaymentLinkCustomerEmail(
     .filter(Boolean)
     .join('\n')
 
-  const html = `
-    <div style="font-family:Arial,sans-serif;line-height:1.6;color:#3d3530;max-width:560px">
-      <p>Hei ${escapeHtml(details.name)},</p>
-      <p>En plass har blitt ledig. Fullfør betalingen med Vipps innen 30 minutter for å sikre plassen.</p>
-      <table style="width:100%;border-collapse:collapse;margin:24px 0">
-        <tbody>
-          <tr><td style="padding:8px 0;color:#7a6e68">Kurs</td><td style="padding:8px 0">${escapeHtml(details.courseTitle)}</td></tr>
-          <tr><td style="padding:8px 0;color:#7a6e68">Dato</td><td style="padding:8px 0">${escapeHtml(details.sessionLabel)}</td></tr>
-        </tbody>
-      </table>
-      ${
-        details.checkoutUrl
-          ? `<p><a href="${details.checkoutUrl}" style="display:inline-block;padding:12px 20px;border-radius:999px;background:#3d3530;color:#faf7f2;text-decoration:none">Betal med Vipps</a></p>`
-          : ''
-      }
-      <p>Med vennlig hilsen<br>${escapeHtml(context.siteName)}</p>
-    </div>
-  `
+  const html = renderEmail({
+    siteName: context.siteName,
+    siteUrl: context.siteUrl,
+    preheader: `En plass er ledig på ${details.courseTitle} – fullfør betalingen innen 30 minutter.`,
+    badge: { label: 'Plass ledig', tone: 'success' },
+    heading: 'En plass har blitt ledig!',
+    intro: [
+      `Hei ${details.name}, gode nyheter – en plass har blitt ledig.`,
+      'Fullfør betalingen med Vipps innen 30 minutter for å sikre plassen din.',
+    ],
+    detailTitle: 'Kursdetaljer',
+    detailRows: buildCourseDetailRows(details),
+    button: details.checkoutUrl
+      ? { label: 'Betal med Vipps', url: details.checkoutUrl, variant: 'vipps' }
+      : undefined,
+    contact: PUBLIC_CONTACT,
+  })
 
   return {
     subject: `Plass ledig – betal med Vipps for ${details.courseTitle}`,
@@ -241,19 +250,22 @@ function buildReminderCustomerEmail(
     context.siteName,
   ].join('\n')
 
-  const html = `
-    <div style="font-family:Arial,sans-serif;line-height:1.6;color:#3d3530;max-width:560px">
-      <p>Hei ${escapeHtml(details.name)},</p>
-      <p>Dette er en påminnelse om at kurset ditt starter <strong>${lead}</strong>.</p>
-      <table style="width:100%;border-collapse:collapse;margin:24px 0">
-        <tbody>
-          <tr><td style="padding:8px 0;color:#7a6e68">Kurs</td><td style="padding:8px 0">${escapeHtml(details.courseTitle)}</td></tr>
-          <tr><td style="padding:8px 0;color:#7a6e68">Dato</td><td style="padding:8px 0">${escapeHtml(details.sessionLabel)}</td></tr>
-        </tbody>
-      </table>
-      <p>Med vennlig hilsen<br>${escapeHtml(context.siteName)}</p>
-    </div>
-  `
+  const html = renderEmail({
+    siteName: context.siteName,
+    siteUrl: context.siteUrl,
+    preheader: `Påminnelse: ${details.courseTitle} starter ${lead}.`,
+    badge: { label: 'Påminnelse', tone: 'info' },
+    heading: `Kurset starter ${lead}`,
+    intro: [
+      `Hei ${details.name}, dette er en vennlig påminnelse om at kurset ditt starter ${lead}.`,
+    ],
+    detailTitle: 'Kursdetaljer',
+    detailRows: [
+      { label: 'Kurs', value: details.courseTitle },
+      { label: 'Dato', value: details.sessionLabel },
+    ],
+    contact: PUBLIC_CONTACT,
+  })
 
   return {
     subject: `Påminnelse: ${details.courseTitle} starter ${lead}`,
@@ -264,12 +276,36 @@ function buildReminderCustomerEmail(
 
 function buildAdminEmail(details: CourseRegistrationEmailDetails, context: CourseEmailContext) {
   const text = ['Ny kurspåmelding:', '', buildDetailsText(details)].join('\n')
-  const html = `
-    <div style="font-family:Arial,sans-serif;line-height:1.6;color:#3d3530;max-width:560px">
-      <h1 style="font-size:20px;margin:0 0 16px">Ny kurspåmelding</h1>
-      <pre style="white-space:pre-wrap;font-family:Arial,sans-serif">${escapeHtml(buildDetailsText(details))}</pre>
-    </div>
-  `
+
+  const detailRows: DetailRow[] = [
+    { label: 'Navn', value: `${details.name} ${details.lastName}` },
+    { label: 'E-post', value: details.email },
+    { label: 'Telefon', value: getPhoneDisplay(details.phone) },
+    { label: 'Kurs', value: details.courseTitle },
+    { label: 'Dato', value: details.sessionLabel },
+    { label: 'Status', value: formatRegistrationStatus(details.status) },
+  ]
+  if (typeof details.amountPaid === 'number') {
+    detailRows.push({ label: 'Betalt', value: formatNok(details.amountPaid) })
+  }
+  if (details.waitlistPosition) {
+    detailRows.push({ label: 'Ventelistenummer', value: String(details.waitlistPosition) })
+  }
+  if (details.message) {
+    detailRows.push({ label: 'Melding', value: details.message })
+  }
+
+  const html = renderEmail({
+    siteName: context.siteName,
+    siteUrl: context.siteUrl,
+    preheader: `${details.name} ${details.lastName} – ${details.courseTitle}`,
+    badge: { label: 'Ny påmelding', tone: 'info' },
+    heading: 'Ny kurspåmelding',
+    intro: [`${details.name} ${details.lastName} har meldt seg på et kurs.`],
+    detailTitle: 'Detaljer',
+    detailRows,
+    signoff: false,
+  })
 
   return {
     subject: `Ny kurspåmelding – ${details.name} ${details.lastName}`,
