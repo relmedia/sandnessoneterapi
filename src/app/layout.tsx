@@ -1,4 +1,5 @@
 import { Cormorant_Garamond, Outfit } from 'next/font/google'
+import { Analytics } from '@vercel/analytics/next'
 
 const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
@@ -28,6 +29,7 @@ export default function RootLayout({
     >
       <body className="antialiased" suppressHydrationWarning>
         {children}
+        <Analytics />
       </body>
     </html>
   )
