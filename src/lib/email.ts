@@ -1,6 +1,6 @@
 import 'server-only'
 
-import nodemailer, { type Transporter } from 'nodemailer'
+import { Resend } from 'resend'
 
 export interface TransactionalEmailInput {
   to: string
@@ -9,59 +9,35 @@ export interface TransactionalEmailInput {
   text: string
 }
 
-function getSmtpHost(): string | null {
-  return process.env.SMTP_HOST?.trim() || null
-}
-
-function getSmtpUser(): string | null {
-  return process.env.SMTP_USER?.trim() || null
-}
-
-function getSmtpPass(): string | null {
-  return process.env.SMTP_PASS?.trim() || null
+function getResendApiKey(): string | null {
+  return process.env.RESEND_API_KEY?.trim() || null
 }
 
 export function getFromAddress(): string | null {
-  return process.env.BOOKING_FROM_EMAIL?.trim() || null
-}
-
-function getSmtpPort(): number {
-  const port = Number(process.env.SMTP_PORT ?? 587)
-  return Number.isFinite(port) && port > 0 ? port : 587
-}
-
-function isSmtpSecure(): boolean {
-  const value = process.env.SMTP_SECURE?.trim().toLowerCase()
-  if (value === 'true') return true
-  if (value === 'false') return false
-  return getSmtpPort() === 465
+  return (
+    process.env.EMAIL_FROM?.trim() ||
+    process.env.BOOKING_FROM_EMAIL?.trim() ||
+    null
+  )
 }
 
 export function isEmailConfigured(): boolean {
-  return Boolean(getSmtpHost() && getSmtpUser() && getSmtpPass() && getFromAddress())
+  return Boolean(getResendApiKey() && getFromAddress())
 }
 
-let cachedTransporter: Transporter | null = null
+let cachedResend: Resend | null = null
 
-function getTransporter(): Transporter {
-  if (cachedTransporter) return cachedTransporter
-
-  const host = getSmtpHost()
-  const user = getSmtpUser()
-  const pass = getSmtpPass()
-
-  if (!host || !user || !pass) {
-    throw new Error('SMTP is not configured.')
+function getResendClient(): Resend {
+  const apiKey = getResendApiKey()
+  if (!apiKey) {
+    throw new Error('RESEND_API_KEY is not configured.')
   }
 
-  cachedTransporter = nodemailer.createTransport({
-    host,
-    port: getSmtpPort(),
-    secure: isSmtpSecure(),
-    auth: { user, pass },
-  })
+  if (!cachedResend) {
+    cachedResend = new Resend(apiKey)
+  }
 
-  return cachedTransporter
+  return cachedResend
 }
 
 export async function sendTransactionalEmail(
@@ -72,19 +48,25 @@ export async function sendTransactionalEmail(
 
   if (!isEmailConfigured() || !from) {
     if (process.env.NODE_ENV === 'development') {
-      console.warn(`[${logContext}] SMTP or BOOKING_FROM_EMAIL is not configured.`)
+      console.warn(`[${logContext}] RESEND_API_KEY or EMAIL_FROM is not configured.`)
     }
     return false
   }
 
   try {
-    await getTransporter().sendMail({
+    const { error } = await getResendClient().emails.send({
       from,
       to: input.to,
       subject: input.subject,
       html: input.html,
       text: input.text,
     })
+
+    if (error) {
+      console.error(`[${logContext}] Failed to send email:`, error)
+      return false
+    }
+
     return true
   } catch (error) {
     console.error(`[${logContext}] Failed to send email:`, error)

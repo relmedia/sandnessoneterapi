@@ -62,7 +62,7 @@ export default async function PersonvernPage() {
               <h2>Deling av opplysninger</h2>
               <p>
                 Vi deler opplysninger med databehandlere som hjelper oss å drifte nettsiden, e-post og
-                betaling (for eksempel Vercel, Sanity, SMTP-leverandør og Vipps MobilePay). Disse
+                betaling (for eksempel Vercel, Sanity, Resend og Vipps MobilePay). Disse
                 behandler data kun på våre vegne og etter avtale.
               </p>
 
