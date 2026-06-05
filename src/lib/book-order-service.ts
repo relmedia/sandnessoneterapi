@@ -7,15 +7,14 @@ import {
   type BookOrderPayload,
   type BookOrderRecord,
 } from '@/lib/book-order'
-import { sendBookOrderEmails } from '@/lib/book-order-email'
+import { sendBookOrderEmails, sendBookOrderPlacedEmails } from '@/lib/book-order-email'
 import {
   captureVippsPayment,
-  createBookPaymentReference,
-  createVippsPayment,
   getSiteBaseUrl,
   getVippsPayment,
   isVippsConfigured,
 } from '@/lib/vipps'
+import { getVippsNumberDisplay } from '@/lib/vipps-number'
 import { client, getBook } from '@/lib/sanity'
 import { getSanityWriteClient } from '@/lib/sanity-write'
 
@@ -23,7 +22,13 @@ export async function createBookOrder(input: {
   bookRef: string
   payload: BookOrderPayload
 }): Promise<
-  | { ok: true; checkoutUrl: string; status: 'pending_payment' }
+  | {
+      ok: true
+      orderId: string
+      totalNok: number
+      vippsNumber: string
+      status: 'pending_payment'
+    }
   | { ok: false; error: string; status?: number }
 > {
   const writeClient = getSanityWriteClient()
@@ -32,14 +37,6 @@ export async function createBookOrder(input: {
       ok: false,
       status: 503,
       error: 'Nettbestilling er ikke aktivert ennå. Ring oss for å bestille.',
-    }
-  }
-
-  if (!isVippsConfigured()) {
-    return {
-      ok: false,
-      status: 503,
-      error: 'Vipps-betaling er ikke satt opp ennå. Ring oss for å bestille.',
     }
   }
 
@@ -60,6 +57,7 @@ export async function createBookOrder(input: {
   const shippingFee = getBookShippingFeeNok()
   const totalNok = getBookOrderTotalNok(bookPrice, shippingFee)
   const now = new Date().toISOString()
+  const vippsNumber = getVippsNumberDisplay()
 
   const order = await writeClient.create({
     _type: 'bookOrder',
@@ -79,28 +77,80 @@ export async function createBookOrder(input: {
     createdAt: now,
   })
 
-  const paymentReference = createBookPaymentReference(order._id)
-  const amountOre = Math.round(totalNok * 100)
   const siteUrl = getSiteBaseUrl()
-  const returnUrl = `${siteUrl}/boker/bestilt?reference=${encodeURIComponent(paymentReference)}`
 
-  const payment = await createVippsPayment({
-    reference: paymentReference,
-    amountOre,
-    phoneNumber: input.payload.phone,
-    paymentDescription: `${book.title} + frakt`,
-    returnUrl,
-  })
+  await sendBookOrderPlacedEmails(
+    {
+      name: input.payload.name,
+      lastName: input.payload.lastName,
+      email: input.payload.email,
+      phone: input.payload.phone,
+      bookTitle: book.title,
+      bookPrice,
+      shippingFee,
+      totalNok,
+      vippsNumber,
+      status: 'pending_payment',
+      addressLine1: input.payload.addressLine1,
+      postalCode: input.payload.postalCode,
+      city: input.payload.city,
+      message: input.payload.message,
+    },
+    {
+      siteName: 'Sandnes Soneterapi',
+      siteUrl,
+    }
+  )
 
-  await writeClient
-    .patch(order._id)
-    .set({
-      vippsPaymentReference: payment.reference,
-      vippsPspReference: payment.pspReference,
-    })
-    .commit()
+  return {
+    ok: true,
+    orderId: order._id,
+    totalNok,
+    vippsNumber,
+    status: 'pending_payment',
+  }
+}
 
-  return { ok: true, status: 'pending_payment', checkoutUrl: payment.redirectUrl }
+export async function getBookOrderById(orderId: string): Promise<
+  | (Pick<
+      BookOrderRecord,
+      | 'bookTitle'
+      | 'bookPrice'
+      | 'shippingFee'
+      | 'status'
+      | 'name'
+      | 'lastName'
+    > & { totalNok: number })
+  | null
+> {
+  const order = await client.fetch<{
+    bookTitle?: string
+    bookPrice?: number
+    shippingFee?: number
+    status: BookOrderRecord['status']
+    name: string
+    lastName: string
+  } | null>(
+    `*[_type == "bookOrder" && _id == $id][0]{
+      bookTitle,
+      bookPrice,
+      shippingFee,
+      status,
+      name,
+      lastName
+    }`,
+    { id: orderId }
+  )
+
+  if (!order) return null
+
+  const bookPrice = order.bookPrice ?? 0
+  const shippingFee = order.shippingFee ?? getBookShippingFeeNok()
+
+  return {
+    ...order,
+    totalNok: getBookOrderTotalNok(bookPrice, shippingFee),
+  }
 }
 
 async function getBookOrderByPaymentReference(
@@ -192,6 +242,7 @@ async function markBookOrderPaid(
   )
 }
 
+/** Legacy ePayment confirmation for older orders that used Vipps Checkout. */
 export async function confirmBookOrderPayment(reference: string): Promise<boolean> {
   const writeClient = getSanityWriteClient()
   if (!writeClient || !isVippsConfigured()) return false

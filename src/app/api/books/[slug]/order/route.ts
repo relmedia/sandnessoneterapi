@@ -1,8 +1,8 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { createBookOrder } from '@/lib/book-order-service'
-import { getBookShippingFeeNok, isBookOrderOnline, validateBookOrderPayload } from '@/lib/book-order'
+import { getBookOrderTotalNok, getBookShippingFeeNok, isBookOrderOnline, validateBookOrderPayload } from '@/lib/book-order'
 import { getBook } from '@/lib/sanity'
-import { isVippsConfigured } from '@/lib/vipps'
+import { getVippsNumberDisplay } from '@/lib/vipps-number'
 import { getRequestIp, isTurnstileConfigured, verifyTurnstileToken } from '@/lib/turnstile'
 
 interface RouteContext {
@@ -21,10 +21,11 @@ export async function GET(_request: NextRequest, context: RouteContext) {
   const shippingFee = getBookShippingFeeNok()
 
   return NextResponse.json({
-    orderOnline: isBookOrderOnline(book) && isVippsConfigured(),
+    orderOnline: isBookOrderOnline(book),
     bookPrice,
     shippingFee,
     totalPrice: typeof bookPrice === 'number' ? bookPrice + shippingFee : null,
+    vippsNumber: getVippsNumberDisplay(),
   })
 }
 
@@ -66,7 +67,9 @@ export async function POST(request: NextRequest, context: RouteContext) {
 
   return NextResponse.json({
     ok: true,
-    status: 'pending_payment',
-    checkoutUrl: result.checkoutUrl,
+    status: result.status,
+    orderId: result.orderId,
+    totalNok: result.totalNok,
+    vippsNumber: result.vippsNumber,
   })
 }

@@ -1,28 +1,65 @@
 import Link from 'next/link'
+import { notFound } from 'next/navigation'
 import { CheckCircle2 } from 'lucide-react'
-import { confirmBookOrderPayment } from '@/lib/book-order-service'
+import { getBookOrderById, confirmBookOrderPayment } from '@/lib/book-order-service'
+import { getVippsNumberDisplay, getVippsPaymentInstructions } from '@/lib/vipps-number'
 import { client } from '@/lib/sanity'
 
 interface PageProps {
-  searchParams: Promise<{ reference?: string }>
+  searchParams: Promise<{ order?: string; reference?: string }>
 }
 
 export default async function BookOrderSuccessPage({ searchParams }: PageProps) {
-  const { reference } = await searchParams
-
-  let confirmed = false
-  let bookTitle: string | null = null
+  const { order: orderId, reference } = await searchParams
+  const vippsNumber = getVippsNumberDisplay()
 
   if (reference) {
-    confirmed = await confirmBookOrderPayment(reference)
-
-    const order = await client.fetch<{ bookTitle?: string } | null>(
+    const confirmed = await confirmBookOrderPayment(reference)
+    const legacyOrder = await client.fetch<{ bookTitle?: string } | null>(
       `*[_type == "bookOrder" && vippsPaymentReference == $reference][0]{ bookTitle }`,
       { reference }
     )
 
-    bookTitle = order?.bookTitle ?? null
+    return (
+      <article className="py-16 md:py-24">
+        <div className="container-wide section-padding mx-auto max-w-2xl">
+          <div className="rounded-2xl border border-stone/10 bg-white p-8 shadow-sm md:p-10">
+            <div className="mb-6 flex items-center gap-3 text-sage-dark">
+              <CheckCircle2 className="size-8 shrink-0" aria-hidden />
+              <h1 className="font-serif text-3xl text-stone">
+                {confirmed ? 'Bestilling bekreftet' : 'Takk for bestillingen'}
+              </h1>
+            </div>
+            <p className="font-sans text-base font-light leading-relaxed text-muted">
+              {confirmed
+                ? `Betalingen${legacyOrder?.bookTitle ? ` for ${legacyOrder.bookTitle}` : ''} er mottatt via Vipps. Du får bekreftelse på e-post, og vi sender boken til adressen du oppga.`
+                : `Vi behandler Vipps-betalingen${legacyOrder?.bookTitle ? ` for ${legacyOrder.bookTitle}` : ''}. Du får bekreftelse på e-post så snart betalingen er registrert.`}
+            </p>
+            <div className="mt-8 flex flex-wrap gap-4">
+              <Link
+                href="/boker"
+                className="inline-flex rounded-full bg-stone px-6 py-3 font-sans text-sm font-light tracking-wide text-cream transition-colors hover:bg-sage-dark"
+              >
+                Tilbake til bøker
+              </Link>
+            </div>
+          </div>
+        </div>
+      </article>
+    )
   }
+
+  if (!orderId) {
+    notFound()
+  }
+
+  const order = await getBookOrderById(orderId)
+  if (!order) {
+    notFound()
+  }
+
+  const instructions = getVippsPaymentInstructions(order.totalNok, order.bookTitle ?? 'Bok')
+  const isPaid = order.status === 'paid'
 
   return (
     <article className="py-16 md:py-24">
@@ -31,15 +68,50 @@ export default async function BookOrderSuccessPage({ searchParams }: PageProps) 
           <div className="mb-6 flex items-center gap-3 text-sage-dark">
             <CheckCircle2 className="size-8 shrink-0" aria-hidden />
             <h1 className="font-serif text-3xl text-stone">
-              {confirmed ? 'Bestilling bekreftet' : 'Takk for bestillingen'}
+              {isPaid ? 'Bestilling bekreftet' : 'Takk for bestillingen'}
             </h1>
           </div>
 
-          <p className="font-sans text-base font-light leading-relaxed text-muted">
-            {confirmed
-              ? `Betalingen${bookTitle ? ` for ${bookTitle}` : ''} er mottatt via Vipps. Du får bekreftelse på e-post, og vi sender boken til adressen du oppga.`
-              : `Vi behandler Vipps-betalingen${bookTitle ? ` for ${bookTitle}` : ''}. Du får bekreftelse på e-post så snart betalingen er registrert.`}
-          </p>
+          {isPaid ? (
+            <p className="font-sans text-base font-light leading-relaxed text-muted">
+              Betalingen{order.bookTitle ? ` for ${order.bookTitle}` : ''} er mottatt. Vi sender
+              boken til adressen du oppga så snart som mulig.
+            </p>
+          ) : (
+            <>
+              <p className="font-sans text-base font-light leading-relaxed text-muted">
+                Hei {order.name}, bestillingen{order.bookTitle ? ` av ${order.bookTitle}` : ''} er
+                mottatt. Fullfør betalingen med Vipps for at vi skal sende boken.
+              </p>
+
+              <div className="mt-8 rounded-2xl border border-[#ff5b24]/20 bg-[#ff5b24]/5 p-6">
+                <p className="mb-1 font-sans text-xs font-medium uppercase tracking-[0.2em] text-[#ff5b24]">
+                  Betal med Vipps
+                </p>
+                <p className="mb-4 font-serif text-3xl text-stone">
+                  {order.totalNok.toLocaleString('nb-NO')} kr
+                </p>
+                <p className="mb-6 font-sans text-2xl font-medium tracking-wide text-stone">
+                  {vippsNumber}
+                </p>
+                <ol className="space-y-3 font-sans text-sm font-light leading-relaxed text-muted">
+                  {instructions.map((step, index) => (
+                    <li key={step} className="flex gap-3">
+                      <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-stone text-xs text-cream">
+                        {index + 1}
+                      </span>
+                      <span>{step}</span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+
+              <p className="mt-6 font-sans text-sm font-light text-muted">
+                Du får også betalingsinstruksjoner på e-post. Vi sender boken når betalingen er
+                mottatt.
+              </p>
+            </>
+          )}
 
           <div className="mt-8 flex flex-wrap gap-4">
             <Link

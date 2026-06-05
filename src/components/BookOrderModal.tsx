@@ -14,7 +14,6 @@ type BookOrderModalProps = {
   shippingFee?: number
   phoneDisplay: string
   phoneTel: string
-  vippsEnabled?: boolean
 }
 
 export function BookOrderModal({
@@ -26,7 +25,6 @@ export function BookOrderModal({
   shippingFee = DEFAULT_BOOK_SHIPPING_FEE_NOK,
   phoneDisplay,
   phoneTel,
-  vippsEnabled = true,
 }: BookOrderModalProps) {
   const titleId = useId()
   const descriptionId = useId()
@@ -76,7 +74,8 @@ export function BookOrderModal({
               Bestill {bookTitle}
             </h2>
             <p id={descriptionId} className="mt-2 font-sans text-sm font-light text-muted">
-              Fyll inn opplysninger og leveringsadresse, og fullfør betalingen med Vipps.
+              Fyll inn opplysninger og leveringsadresse. Etter bestilling betaler du med Vipps til
+              vårt Vippsnummer.
             </p>
           </div>
           <button
@@ -95,7 +94,6 @@ export function BookOrderModal({
             bookTitle={bookTitle}
             bookPrice={bookPrice}
             shippingFee={shippingFee}
-            vippsEnabled={vippsEnabled}
           />
         </div>
 

@@ -8,7 +8,6 @@ type BokerBookActionsProps = {
   bookTitle: string
   bookPrice?: number
   orderOnline?: boolean
-  vippsEnabled: boolean
   phoneDisplay: string
   phoneTel: string
   shippingFee?: number
@@ -19,7 +18,6 @@ export function BokerBookActions({
   bookTitle,
   bookPrice,
   orderOnline,
-  vippsEnabled,
   phoneDisplay,
   phoneTel,
   shippingFee = DEFAULT_BOOK_SHIPPING_FEE_NOK,
@@ -32,23 +30,14 @@ export function BokerBookActions({
   return (
     <div className="flex flex-col gap-3">
       {canOrderOnline && typeof bookPrice === 'number' && (
-        <>
-          <BookOrderTrigger
-            bookRef={bookRef}
-            bookTitle={bookTitle}
-            bookPrice={bookPrice}
-            shippingFee={shippingFee}
-            phoneDisplay={phoneDisplay}
-            phoneTel={phoneTel}
-            vippsEnabled={vippsEnabled}
-          />
-          {!vippsEnabled && (
-            <p className="text-center font-sans text-xs font-light text-muted">
-              Vipps er ikke satt opp ennå. Legg inn Vipps-nøkler i miljøvariabler for å ta imot
-              betaling.
-            </p>
-          )}
-        </>
+        <BookOrderTrigger
+          bookRef={bookRef}
+          bookTitle={bookTitle}
+          bookPrice={bookPrice}
+          shippingFee={shippingFee}
+          phoneDisplay={phoneDisplay}
+          phoneTel={phoneTel}
+        />
       )}
       <a
         href={`tel:${phoneTel}`}

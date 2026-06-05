@@ -8,6 +8,7 @@ import {
   formatShippingAddress,
   type BookOrderRecord,
 } from '@/lib/book-order'
+import { getVippsPaymentInstructions } from '@/lib/vipps-number'
 
 const PUBLIC_CONTACT: EmailContact = {
   phone: '450 36 557',
@@ -33,6 +34,11 @@ export interface BookOrderEmailDetails {
   postalCode: string
   city: string
   message?: string
+}
+
+export interface BookOrderPlacedEmailDetails extends BookOrderEmailDetails {
+  totalNok: number
+  vippsNumber: string
 }
 
 interface BookOrderEmailContext {
@@ -175,6 +181,111 @@ function buildAdminEmail(details: BookOrderEmailDetails, context: BookOrderEmail
   }
 }
 
+function buildPlacedCustomerEmail(
+  details: BookOrderPlacedEmailDetails,
+  context: BookOrderEmailContext
+) {
+  const instructions = getVippsPaymentInstructions(details.totalNok, details.bookTitle)
+  const text = [
+    `Hei ${details.name},`,
+    '',
+    'Takk for bestillingen. For å fullføre, betal med Vipps:',
+    '',
+    ...instructions.map((step, index) => `${index + 1}. ${step}`),
+    '',
+    buildDetailsText(details),
+    '',
+    'Vi sender boken når betalingen er mottatt.',
+    '',
+    'Med vennlig hilsen',
+    context.siteName,
+  ].join('\n')
+
+  const detailRows: DetailRow[] = [
+    { label: 'Bok', value: details.bookTitle },
+    { label: 'Bokpris', value: formatNok(details.bookPrice) },
+    { label: 'Frakt', value: formatNok(details.shippingFee) },
+    { label: 'Totalt å betale', value: formatNok(details.totalNok) },
+    { label: 'Vippsnummer', value: details.vippsNumber },
+    { label: 'Leveres til', value: formatShippingAddress(details) },
+  ]
+
+  const html = renderEmail({
+    siteName: context.siteName,
+    siteUrl: context.siteUrl,
+    preheader: `Betal ${formatNok(details.totalNok)} til ${details.vippsNumber} for å fullføre bestillingen.`,
+    badge: { label: 'Venter betaling', tone: 'pending' },
+    heading: 'Fullfør betalingen med Vipps',
+    intro: [
+      `Hei ${details.name}, takk for bestillingen.`,
+      `Betal ${formatNok(details.totalNok)} til ${details.vippsNumber} i Vipps-appen for at vi skal sende boken.`,
+    ],
+    detailTitle: 'Bestilling',
+    detailRows,
+    highlight: {
+      title: 'Slik betaler du',
+      description: instructions.join(' '),
+    },
+    outro: ['Vi sender boken til adressen over når betalingen er mottatt.'],
+    contact: PUBLIC_CONTACT,
+  })
+
+  return {
+    subject: `Fullfør betaling: ${details.bookTitle}`,
+    html,
+    text,
+  }
+}
+
+function buildPlacedAdminEmail(
+  details: BookOrderPlacedEmailDetails,
+  context: BookOrderEmailContext
+) {
+  const text = [
+    `Ny bokbestilling – venter Vipps-betaling til ${details.vippsNumber}:`,
+    '',
+    buildDetailsText(details),
+    '',
+    `Forventet beløp: ${formatNok(details.totalNok)}`,
+    '',
+    context.siteUrl,
+  ].join('\n')
+
+  const detailRows: DetailRow[] = [
+    { label: 'Navn', value: `${details.name} ${details.lastName}` },
+    { label: 'E-post', value: details.email },
+    { label: 'Telefon', value: getPhoneDisplay(details.phone) },
+    { label: 'Bok', value: details.bookTitle },
+    { label: 'Totalt', value: formatNok(details.totalNok) },
+    { label: 'Vippsnummer', value: details.vippsNumber },
+    { label: 'Leveres til', value: formatShippingAddress(details) },
+    { label: 'Status', value: formatBookOrderStatus(details.status) },
+  ]
+  if (details.message) {
+    detailRows.push({ label: 'Melding', value: details.message })
+  }
+
+  const html = renderEmail({
+    siteName: context.siteName,
+    siteUrl: context.siteUrl,
+    preheader: `${details.bookTitle} – ${details.name} ${details.lastName}`,
+    badge: { label: 'Venter betaling', tone: 'pending' },
+    heading: 'Ny bokbestilling',
+    intro: [
+      `${details.name} ${details.lastName} har bestilt en bok og skal betale ${formatNok(details.totalNok)} til ${details.vippsNumber}.`,
+    ],
+    detailTitle: 'Detaljer',
+    detailRows,
+    signoff: false,
+  })
+
+  return {
+    subject: `Bokbestilling (venter Vipps): ${details.bookTitle} – ${details.name} ${details.lastName}`,
+    html,
+    text,
+  }
+}
+
 export function isBookOrderEmailConfigured(): boolean {
   return isEmailConfigured() && Boolean(getAdminEmail())
 }
@@ -204,6 +315,40 @@ export async function sendBookOrderEmails(
 
   if (adminEmail) {
     const adminEmailContent = buildAdminEmail(details, emailContext)
+    await sendEmail({
+      to: adminEmail,
+      subject: adminEmailContent.subject,
+      html: adminEmailContent.html,
+      text: adminEmailContent.text,
+    })
+  }
+}
+
+export async function sendBookOrderPlacedEmails(
+  details: BookOrderPlacedEmailDetails,
+  context: { siteName?: string; siteUrl: string; adminEmail?: string | null }
+): Promise<void> {
+  if (!isEmailConfigured()) return
+
+  const adminEmail = getAdminEmail(context.adminEmail)
+  const siteName = context.siteName ?? 'Sandnes Soneterapi'
+  const emailContext: BookOrderEmailContext = {
+    adminEmail: adminEmail ?? '',
+    siteName,
+    siteUrl: context.siteUrl,
+  }
+
+  const customerEmail = buildPlacedCustomerEmail(details, emailContext)
+
+  await sendEmail({
+    to: details.email,
+    subject: customerEmail.subject,
+    html: customerEmail.html,
+    text: customerEmail.text,
+  })
+
+  if (adminEmail) {
+    const adminEmailContent = buildPlacedAdminEmail(details, emailContext)
     await sendEmail({
       to: adminEmail,
       subject: adminEmailContent.subject,

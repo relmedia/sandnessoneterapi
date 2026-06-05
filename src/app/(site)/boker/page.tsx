@@ -11,7 +11,6 @@ import { PortableTextRenderer } from '@/components/PortableText'
 import { ReadMore } from '@/components/ReadMore'
 import { BokerBookActions } from '@/components/BokerBookActions'
 import { getBookShippingFeeNok, isBookOrderOnline } from '@/lib/book-order'
-import { isVippsConfigured } from '@/lib/vipps'
 import { formatDateNb, getPhoneDisplay, getPhoneTel } from '@/lib/utils'
 
 export const revalidate = 3600
@@ -30,7 +29,6 @@ export default async function BokerPage() {
   ])
   const phoneDisplay = getPhoneDisplay(settings?.phone)
   const phoneTel = getPhoneTel(settings?.phone)
-  const vippsEnabled = isVippsConfigured()
   const shippingFee = getBookShippingFeeNok()
   const hasOnlineBooks = books.some((book) => isBookOrderOnline(book))
 
@@ -44,7 +42,7 @@ export default async function BokerPage() {
         <p className="font-sans font-light text-xl text-muted mb-16 max-w-xl">
           Terje Horpestad har skrevet to bøker om soneterapi og ett hefte om tankefeltterapi.
           {hasOnlineBooks
-            ? ' Bestill med Vipps online, eller ring oss.'
+            ? ' Bestill online og betal med Vipps, eller ring oss.'
             : ` Kan bestilles ved å ringe ${phoneDisplay}.`}
         </p>
 
@@ -83,7 +81,6 @@ export default async function BokerPage() {
                     bookTitle={book.title}
                     bookPrice={book.price}
                     orderOnline={book.orderOnline}
-                    vippsEnabled={vippsEnabled}
                     phoneDisplay={phoneDisplay}
                     phoneTel={phoneTel}
                     shippingFee={shippingFee}

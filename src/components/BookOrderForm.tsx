@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
-import { Loader2, ShieldCheck } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 import { TurnstileWidget } from '@/components/TurnstileWidget'
 import { DEFAULT_BOOK_SHIPPING_FEE_NOK } from '@/lib/book-order'
 
@@ -18,7 +18,6 @@ type BookOrderFormProps = {
   bookTitle: string
   bookPrice: number
   shippingFee?: number
-  vippsEnabled?: boolean
 }
 
 export function BookOrderForm({
@@ -26,7 +25,6 @@ export function BookOrderForm({
   bookTitle,
   bookPrice,
   shippingFee = DEFAULT_BOOK_SHIPPING_FEE_NOK,
-  vippsEnabled = true,
 }: BookOrderFormProps) {
   const [name, setName] = useState('')
   const [lastName, setLastName] = useState('')
@@ -77,21 +75,16 @@ export function BookOrderForm({
       })
 
       const data = (await response.json()) as {
-        checkoutUrl?: string
+        orderId?: string
         error?: string
       }
 
-      if (!response.ok) {
+      if (!response.ok || !data.orderId) {
         setTurnstileToken(null)
         throw new Error(data.error ?? 'Kunne ikke fullføre bestillingen.')
       }
 
-      if (data.checkoutUrl) {
-        window.location.href = data.checkoutUrl
-        return
-      }
-
-      throw new Error('Kunne ikke starte betaling.')
+      window.location.href = `/boker/bestilt?order=${encodeURIComponent(data.orderId)}`
     } catch (error) {
       setFormState('error')
       setTurnstileToken(null)
@@ -244,36 +237,27 @@ export function BookOrderForm({
         </div>
 
         <p className="mb-4 font-sans text-xs font-light leading-relaxed text-muted">
-          Ved å betale godtar du{' '}
+          Ved å sende bestillingen godtar du{' '}
           <Link href="/salgsvilkar" className="text-sage-dark underline underline-offset-2">
             salgsvilkårene
           </Link>
-          .
+          . Du får betalingsinstruksjoner for Vipps på neste side.
         </p>
 
         <button
           type="submit"
-          disabled={formState === 'submitting' || !captchaReady || !vippsEnabled}
+          disabled={formState === 'submitting' || !captchaReady}
           className="flex w-full items-center justify-center gap-2 rounded-full bg-[#ff5b24] px-6 py-4 font-sans text-sm font-medium tracking-wide text-white shadow-sm transition-all hover:bg-[#e55220] hover:shadow disabled:cursor-not-allowed disabled:opacity-60"
         >
           {formState === 'submitting' ? (
             <>
               <Loader2 className="size-4 animate-spin" aria-hidden />
-              Sender til Vipps …
+              Sender bestilling …
             </>
-          ) : !vippsEnabled ? (
-            'Vipps er ikke satt opp'
           ) : (
-            'Betal med Vipps'
+            'Send bestilling'
           )}
         </button>
-        <p className="mt-3 flex flex-col items-center gap-2 text-center font-sans text-xs font-light text-muted sm:flex-row sm:justify-center">
-          <span>Du blir sendt til Vipps for å fullføre betalingen.</span>
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-[#ff5b24]/10 px-2.5 py-0.5 font-medium text-[#ff5b24]">
-            <ShieldCheck className="size-3" aria-hidden />
-            Sikker betaling
-          </span>
-        </p>
       </div>
     </form>
   )

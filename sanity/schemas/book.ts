@@ -47,7 +47,7 @@ export const book = defineType({
       type: 'boolean',
       initialValue: false,
       description:
-        'Må være påslått og publisert for at «Kjøp med Vipps» vises på nettsiden. Skru av for kun telefonbestilling.',
+        'Må være påslått og publisert for at «Kjøp med Vipps» vises. Kunden betaler til Vippsnummer #572429 etter bestilling.',
     }),
     defineField({
       name: 'pages',
