@@ -33,19 +33,19 @@ export function CookieConsent() {
       role="dialog"
       aria-labelledby="cookie-consent-title"
       aria-describedby="cookie-consent-description"
-      className="fixed inset-x-0 bottom-0 z-50 border-t border-stone/10 bg-stone/95 p-4 shadow-lg backdrop-blur-sm sm:p-6"
+      className="fixed inset-x-0 bottom-0 z-50 border-t border-stone/10 bg-stone/95 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] shadow-lg backdrop-blur-sm sm:p-6"
     >
-      <div className="container-wide section-padding mx-auto flex max-w-5xl flex-row items-center justify-between gap-3 sm:gap-6">
-        <div className="min-w-0 flex-1">
+      <div className="container-wide section-padding mx-auto flex max-w-5xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+        <div className="min-w-0 sm:flex-1">
           <p
             id="cookie-consent-title"
-            className="mb-1 font-sans text-sm font-medium tracking-wide text-cream sm:mb-2"
+            className="mb-2 font-sans text-sm font-medium tracking-wide text-cream"
           >
             Informasjonskapsler
           </p>
           <p
             id="cookie-consent-description"
-            className="font-sans text-xs font-light leading-relaxed text-cream/75 sm:text-sm"
+            className="font-sans text-sm font-light leading-relaxed text-cream/75"
           >
             Vi bruker nødvendige informasjonskapsler for at nettsiden skal fungere, for eksempel ved
             timebestilling og betaling. Valgfrie tjenester som sikkerhetskontroll (Turnstile) kan
@@ -57,18 +57,18 @@ export function CookieConsent() {
           </p>
         </div>
 
-        <div className="flex shrink-0 flex-row items-center gap-2">
+        <div className="flex w-full shrink-0 flex-row gap-2 sm:w-auto sm:gap-3">
           <button
             type="button"
             onClick={acceptEssential}
-            className="rounded-full border border-cream/25 px-3 py-2 font-sans text-xs font-light whitespace-nowrap text-cream/90 transition-colors hover:border-cream/50 hover:text-cream sm:px-5 sm:py-2.5 sm:text-sm"
+            className="flex-1 rounded-full border border-cream/25 px-4 py-3 font-sans text-sm font-light text-cream/90 transition-colors hover:border-cream/50 hover:text-cream sm:flex-none sm:px-5 sm:py-2.5"
           >
             Kun nødvendige
           </button>
           <button
             type="button"
             onClick={acceptAll}
-            className="rounded-full bg-cream px-3 py-2 font-sans text-xs font-light whitespace-nowrap text-stone transition-colors hover:bg-warm-light sm:px-5 sm:py-2.5 sm:text-sm"
+            className="flex-1 rounded-full bg-cream px-4 py-3 font-sans text-sm font-light text-stone transition-colors hover:bg-warm-light sm:flex-none sm:px-5 sm:py-2.5"
           >
             Godta alle
           </button>
