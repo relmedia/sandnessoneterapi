@@ -17,6 +17,7 @@ import {
   sendCourseRegistrationEmails,
   sendCourseReminderEmail,
 } from '@/lib/course-registration-email'
+import { getEmailSiteUrl } from '@/lib/site-url'
 import {
   captureVippsPayment,
   createVippsPayment,
@@ -186,7 +187,7 @@ export async function createCourseRegistration(input: {
       },
       {
         siteName: 'Sandnes Soneterapi',
-        siteUrl: getSiteBaseUrl(),
+        siteUrl: getEmailSiteUrl(),
       }
     )
 
@@ -333,7 +334,7 @@ async function markRegistrationConfirmed(
     },
     {
       siteName: 'Sandnes Soneterapi',
-      siteUrl: getSiteBaseUrl(),
+      siteUrl: getEmailSiteUrl(),
     }
   )
 }
@@ -486,7 +487,7 @@ export async function promoteNextWaitlistEntry(freedRegistrationId?: string): Pr
     },
     {
       siteName: 'Sandnes Soneterapi',
-      siteUrl: getSiteBaseUrl(),
+      siteUrl: getEmailSiteUrl(),
     }
   )
 }
@@ -568,7 +569,7 @@ async function sendRemindersForOffset(
       },
       {
         siteName: 'Sandnes Soneterapi',
-        siteUrl: getSiteBaseUrl(),
+        siteUrl: getEmailSiteUrl(),
       },
       daysUntil
     )

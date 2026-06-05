@@ -8,9 +8,9 @@ import {
   type BookOrderRecord,
 } from '@/lib/book-order'
 import { sendBookOrderEmails, sendBookOrderPlacedEmails } from '@/lib/book-order-email'
+import { getEmailSiteUrl } from '@/lib/site-url'
 import {
   captureVippsPayment,
-  getSiteBaseUrl,
   getVippsPayment,
   isVippsConfigured,
 } from '@/lib/vipps'
@@ -77,8 +77,6 @@ export async function createBookOrder(input: {
     createdAt: now,
   })
 
-  const siteUrl = getSiteBaseUrl()
-
   await sendBookOrderPlacedEmails(
     {
       name: input.payload.name,
@@ -98,7 +96,7 @@ export async function createBookOrder(input: {
     },
     {
       siteName: 'Sandnes Soneterapi',
-      siteUrl,
+      siteUrl: getEmailSiteUrl(),
     }
   )
 
@@ -237,7 +235,7 @@ async function markBookOrderPaid(
     },
     {
       siteName: 'Sandnes Soneterapi',
-      siteUrl: getSiteBaseUrl(),
+      siteUrl: getEmailSiteUrl(),
     }
   )
 }

@@ -5,6 +5,7 @@ import { sendBookingConfirmationEmails } from '@/lib/booking-email'
 import { getAvailableSlotsForDate, validateBookingPayload } from '@/lib/booking'
 import { isEmailConfigured, normalizeRecipientAddress } from '@/lib/email'
 import { getRequestIp, isTurnstileConfigured, verifyTurnstileToken } from '@/lib/turnstile'
+import { getEmailSiteUrl } from '@/lib/site-url'
 import { getSiteSettings } from '@/lib/sanity'
 import { client } from '@/lib/sanity'
 import { getSanityWriteClient } from '@/lib/sanity-write'
@@ -117,7 +118,7 @@ export async function POST(request: NextRequest) {
   const adminEmail =
     normalizeRecipientAddress(process.env.BOOKING_ADMIN_EMAIL ?? '') ||
     (settings?.email ? normalizeRecipientAddress(settings.email) : null)
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sandnessoneterapi.no'
+  const siteUrl = getEmailSiteUrl()
   const siteName = settings?.title ?? 'Sandnes Soneterapi'
 
   let emailsSent = false
