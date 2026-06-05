@@ -13,13 +13,16 @@ export function ReadMore({ children, maxHeight = 220, className }: ReadMoreProps
   const contentRef = useRef<HTMLDivElement>(null)
   const [expanded, setExpanded] = useState(false)
   const [isTruncated, setIsTruncated] = useState(false)
+  const [fullHeight, setFullHeight] = useState(0)
 
   useEffect(() => {
     const element = contentRef.current
     if (!element) return
 
     const checkOverflow = () => {
-      setIsTruncated(element.scrollHeight > maxHeight + 1)
+      const height = element.scrollHeight
+      setFullHeight(height)
+      setIsTruncated(height > maxHeight + 1)
     }
 
     checkOverflow()
@@ -28,7 +31,22 @@ export function ReadMore({ children, maxHeight = 220, className }: ReadMoreProps
     observer.observe(element)
 
     return () => observer.disconnect()
-  }, [maxHeight])
+  }, [maxHeight, children])
+
+  const collapsed = isTruncated && !expanded
+  const animatedMaxHeight = collapsed
+    ? maxHeight
+    : isTruncated
+      ? fullHeight || maxHeight
+      : undefined
+
+  function handleToggle() {
+    const element = contentRef.current
+    if (element) {
+      setFullHeight(element.scrollHeight)
+    }
+    setExpanded((value) => !value)
+  }
 
   return (
     <div className={className}>
@@ -36,22 +54,28 @@ export function ReadMore({ children, maxHeight = 220, className }: ReadMoreProps
         <div
           id={contentId}
           ref={contentRef}
-          className={!expanded && isTruncated ? 'overflow-hidden' : undefined}
-          style={!expanded && isTruncated ? { maxHeight } : undefined}
+          className={
+            isTruncated
+              ? 'overflow-hidden transition-[max-height] duration-500 ease-in-out motion-reduce:transition-none'
+              : undefined
+          }
+          style={animatedMaxHeight !== undefined ? { maxHeight: animatedMaxHeight } : undefined}
         >
           {children}
         </div>
-        {!expanded && isTruncated && (
+        {isTruncated && (
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-linear-to-t from-cream to-transparent"
+            className={`pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-linear-to-t from-cream to-transparent transition-opacity duration-500 ease-in-out motion-reduce:transition-none ${
+              expanded ? 'opacity-0' : 'opacity-100'
+            }`}
           />
         )}
       </div>
       {isTruncated && (
         <button
           type="button"
-          onClick={() => setExpanded((value) => !value)}
+          onClick={handleToggle}
           aria-expanded={expanded}
           aria-controls={contentId}
           className="mt-3 cursor-pointer font-sans text-sm font-light text-sage-dark transition-colors hover:text-stone"
