@@ -23,7 +23,7 @@ export interface BookingEmailDetails {
 }
 
 interface BookingEmailContext {
-  adminEmail: string
+  adminEmail?: string | null
   siteName: string
   siteUrl: string
 }
@@ -180,22 +180,26 @@ export async function sendBookingConfirmationEmails(
   context: BookingEmailContext
 ): Promise<{ customerSent: boolean; adminSent: boolean }> {
   const customerEmail = buildCustomerEmail(booking, context)
-  const adminEmailContent = buildAdminEmail(booking, context)
 
-  const [customerSent, adminSent] = await Promise.all([
-    sendEmail({
-      to: booking.email,
-      subject: customerEmail.subject,
-      html: customerEmail.html,
-      text: customerEmail.text,
-    }),
-    sendEmail({
-      to: context.adminEmail,
+  const customerSent = await sendEmail({
+    to: booking.email,
+    subject: customerEmail.subject,
+    html: customerEmail.html,
+    text: customerEmail.text,
+  })
+
+  let adminSent = false
+  const adminRecipient = context.adminEmail?.trim()
+
+  if (adminRecipient) {
+    const adminEmailContent = buildAdminEmail(booking, context)
+    adminSent = await sendEmail({
+      to: adminRecipient,
       subject: adminEmailContent.subject,
       html: adminEmailContent.html,
       text: adminEmailContent.text,
-    }),
-  ])
+    })
+  }
 
   return { customerSent, adminSent }
 }

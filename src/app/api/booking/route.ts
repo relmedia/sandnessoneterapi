@@ -3,6 +3,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { getAdminSlotsForDay, getAvailabilityDay } from '@/lib/booking-availability'
 import { sendBookingConfirmationEmails } from '@/lib/booking-email'
 import { getAvailableSlotsForDate, validateBookingPayload } from '@/lib/booking'
+import { isEmailConfigured, normalizeRecipientAddress } from '@/lib/email'
 import { getRequestIp, isTurnstileConfigured, verifyTurnstileToken } from '@/lib/turnstile'
 import { getSiteSettings } from '@/lib/sanity'
 import { client } from '@/lib/sanity'
@@ -114,13 +115,16 @@ export async function POST(request: NextRequest) {
 
   const settings = await getSiteSettings()
   const adminEmail =
-    process.env.BOOKING_ADMIN_EMAIL?.trim() || settings?.email?.trim() || null
+    normalizeRecipientAddress(process.env.BOOKING_ADMIN_EMAIL ?? '') ||
+    (settings?.email ? normalizeRecipientAddress(settings.email) : null)
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sandnessoneterapi.no'
   const siteName = settings?.title ?? 'Sandnes Soneterapi'
 
   let emailsSent = false
+  let customerEmailSent = false
+  let adminEmailSent = false
 
-  if (adminEmail) {
+  if (isEmailConfigured()) {
     const result = await sendBookingConfirmationEmails(
       {
         name,
@@ -139,9 +143,23 @@ export async function POST(request: NextRequest) {
         siteUrl,
       }
     )
-    emailsSent = result.customerSent && result.adminSent
-  } else if (process.env.NODE_ENV === 'development') {
-    console.warn('[booking] No admin email configured for booking notifications.')
+    customerEmailSent = result.customerSent
+    adminEmailSent = result.adminSent
+    emailsSent = customerEmailSent
+
+    if (!customerEmailSent) {
+      console.error('[booking] Customer confirmation email failed to send.')
+    }
+    if (adminEmail && !adminEmailSent) {
+      console.error('[booking] Admin notification email failed to send.')
+    }
+    if (!adminEmail) {
+      console.warn('[booking] No admin email configured – admin notification skipped.')
+    }
+  } else {
+    console.warn(
+      '[booking] Email not configured. Set RESEND_API_KEY and BOOKING_ADMIN_EMAIL (or EMAIL_FROM) in environment variables.',
+    )
   }
 
   return NextResponse.json({
@@ -151,5 +169,7 @@ export async function POST(request: NextRequest) {
       : 'Timeforespørselen er sendt. Terje tar kontakt for å bekrefte timen.',
     cancelToken,
     emailsSent,
+    customerEmailSent,
+    adminEmailSent,
   })
 }
