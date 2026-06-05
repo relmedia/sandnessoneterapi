@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -97,13 +98,23 @@ export function Header({ settings, services }: HeaderProps) {
   return (
     <header className="sticky top-0 z-50 bg-cream/90 backdrop-blur-sm border-b border-warm-light">
       <div className="container-wide section-padding mx-auto flex h-16 items-center justify-between gap-6">
-        <Link href="/" className="group flex shrink-0 flex-col leading-none">
-          <span className="font-serif text-xl font-normal tracking-tight text-stone transition-colors group-hover:text-sage-dark">
-            {settings?.title ?? 'Sandnes Soneterapi'}
-          </span>
-          <span className="font-sans text-[10px] font-light uppercase tracking-[0.2em] text-muted">
-            Terje Horpestad
-          </span>
+        <Link href="/" className="group flex shrink-0 items-center gap-2.5">
+          <Image
+            src="/images/logo.png"
+            alt=""
+            width={250}
+            height={259}
+            className="h-10 w-auto shrink-0"
+            priority
+          />
+          <div className="flex flex-col leading-none">
+            <span className="font-serif text-xl font-normal tracking-tight text-stone transition-colors group-hover:text-sage-dark">
+              {settings?.title ?? 'Sandnes Soneterapi'}
+            </span>
+            <span className="font-sans text-[10px] font-light uppercase tracking-[0.2em] text-muted">
+              Terje Horpestad
+            </span>
+          </div>
         </Link>
 
         <div className="flex items-center gap-8">

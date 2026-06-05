@@ -51,6 +51,8 @@ export interface EmailContact {
 export interface RenderEmailOptions {
   siteName: string
   siteUrl: string
+  /** Shown under site name in the header, e.g. practitioner name */
+  tagline?: string
   /** Short hidden preview text shown in inbox list */
   preheader?: string
   badge?: { label: string; tone?: BadgeTone }
@@ -203,6 +205,41 @@ function renderHighlight(highlight: EmailHighlight | undefined): string {
     </tr>`
 }
 
+function normalizeSiteUrl(siteUrl: string): string {
+  return siteUrl.replace(/\/$/, '')
+}
+
+function renderEmailHeader(options: Pick<RenderEmailOptions, 'siteName' | 'siteUrl' | 'tagline'>): string {
+  const homeUrl = normalizeSiteUrl(options.siteUrl)
+  const logoUrl = `${homeUrl}/images/logo.png`
+  const tagline = options.tagline ?? 'Terje Horpestad'
+
+  return `
+        <tr>
+          <td style="padding:18px 40px;background:${COLORS.cream};border-bottom:1px solid ${COLORS.border}">
+            <table role="presentation" cellpadding="0" cellspacing="0">
+              <tr>
+                <td style="padding-right:10px;vertical-align:middle">
+                  <a href="${homeUrl}" style="text-decoration:none">
+                    <img src="${logoUrl}" width="39" height="40" alt="" style="display:block;border:0;height:40px;width:auto;max-height:40px">
+                  </a>
+                </td>
+                <td style="vertical-align:middle">
+                  <a href="${homeUrl}" style="text-decoration:none">
+                    <span style="display:block;font-family:Georgia,'Times New Roman',Times,serif;font-size:20px;line-height:1.2;font-weight:400;color:${COLORS.stone}">${escapeHtml(
+                      options.siteName,
+                    )}</span>
+                    <span style="display:block;margin-top:3px;font-size:10px;font-weight:300;letter-spacing:0.2em;text-transform:uppercase;color:${COLORS.muted}">${escapeHtml(
+                      tagline,
+                    )}</span>
+                  </a>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>`
+}
+
 function renderContact(siteName: string, contact: EmailContact | undefined): string {
   const rows: string[] = []
   if (contact?.phone) {
@@ -261,13 +298,7 @@ ${preheader}
   <tr>
     <td align="center" style="padding:32px 16px">
       <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:600px;max-width:100%;background:${COLORS.white};border-radius:18px;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;box-shadow:0 6px 24px rgba(61,53,48,0.08)">
-        <tr>
-          <td style="background:${COLORS.stone};padding:26px 40px">
-            <span style="font-size:18px;font-weight:600;letter-spacing:0.04em;color:${COLORS.cream}">${escapeHtml(
-              options.siteName,
-            )}</span>
-          </td>
-        </tr>
+        ${renderEmailHeader(options)}
         <tr>
           <td style="height:4px;background:${COLORS.warm};font-size:0;line-height:0">&nbsp;</td>
         </tr>
