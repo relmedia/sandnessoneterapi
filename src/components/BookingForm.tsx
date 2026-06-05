@@ -1,6 +1,5 @@
 'use client'
 
-import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { CalendarDays, CheckCircle2, Clock, User } from 'lucide-react'
 import { TurnstileWidget } from '@/components/TurnstileWidget'
@@ -12,7 +11,7 @@ import { formatDateNb } from '@/lib/utils'
 import 'react-day-picker/style.css'
 import './booking-calendar.css'
 
-type FormState = 'idle' | 'submitting' | 'success' | 'error'
+type FormState = 'idle' | 'submitting' | 'error'
 
 const turnstileEnabled = Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim())
 
@@ -35,7 +34,6 @@ export function BookingForm() {
   const [slotsLoading, setSlotsLoading] = useState(false)
   const [formState, setFormState] = useState<FormState>('idle')
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const [cancelToken, setCancelToken] = useState<string | null>(null)
 
   const [name, setName] = useState('')
   const [lastName, setLastName] = useState('')
@@ -166,49 +164,16 @@ export function BookingForm() {
         throw new Error(data.error ?? 'Noe gikk galt. Prøv igjen.')
       }
 
-      setCancelToken(data.cancelToken ?? null)
-      setFormState('success')
-      setErrorMessage(null)
+      if (!data.cancelToken) {
+        throw new Error('Kunne ikke fullføre bestillingen.')
+      }
+
+      window.location.href = `/bestill-time/bekreftet?token=${encodeURIComponent(data.cancelToken)}`
     } catch (error) {
       setFormState('error')
       setTurnstileToken(null)
       setErrorMessage(error instanceof Error ? error.message : 'Noe gikk galt. Prøv igjen.')
     }
-  }
-
-  if (formState === 'success') {
-    return (
-      <div className="mx-auto max-w-lg overflow-hidden rounded-2xl border border-sage/20 bg-white p-10 text-center shadow-sm">
-        <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-sage-light">
-          <CheckCircle2 className="h-7 w-7 text-sage-dark" aria-hidden />
-        </div>
-        <p className="mb-3 font-serif text-3xl text-stone">Takk for bestillingen!</p>
-        <p className="mb-8 font-sans text-sm font-light leading-relaxed text-muted">
-          Timeforespørselen er mottatt. Du får en bekreftelse på e-post med detaljer og
-          avbestillingskode. Terje tar kontakt for å bekrefte dato og tid.
-        </p>
-        {cancelToken && (
-          <div className="mb-8 rounded-xl border border-stone/10 bg-cream/60 p-5 text-left">
-            <p className="mb-2 font-sans text-xs uppercase tracking-widest text-sage">Avbestilling</p>
-            <p className="mb-4 font-sans text-sm font-light text-muted">
-              Lagre denne lenken om du må avbestille senere:
-            </p>
-            <Link
-              href={`/avbestill?token=${encodeURIComponent(cancelToken)}`}
-              className="inline-block break-all font-sans text-sm text-sage-dark underline underline-offset-2"
-            >
-              Avbestill timen
-            </Link>
-          </div>
-        )}
-        <Link
-          href="/avbestill"
-          className="font-sans text-sm font-light text-muted transition-colors hover:text-sage-dark"
-        >
-          Avbestill uten lenke
-        </Link>
-      </div>
-    )
   }
 
   return (
