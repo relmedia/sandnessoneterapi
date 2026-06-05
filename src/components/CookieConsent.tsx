@@ -35,17 +35,17 @@ export function CookieConsent() {
       aria-describedby="cookie-consent-description"
       className="fixed inset-x-0 bottom-0 z-50 border-t border-stone/10 bg-stone/95 p-4 shadow-lg backdrop-blur-sm sm:p-6"
     >
-      <div className="container-wide section-padding mx-auto flex max-w-5xl flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <div className="max-w-3xl">
+      <div className="container-wide section-padding mx-auto flex max-w-5xl flex-row items-center justify-between gap-3 sm:gap-6">
+        <div className="min-w-0 flex-1">
           <p
             id="cookie-consent-title"
-            className="mb-2 font-sans text-sm font-medium tracking-wide text-cream"
+            className="mb-1 font-sans text-sm font-medium tracking-wide text-cream sm:mb-2"
           >
             Informasjonskapsler
           </p>
           <p
             id="cookie-consent-description"
-            className="font-sans text-sm font-light leading-relaxed text-cream/75"
+            className="font-sans text-xs font-light leading-relaxed text-cream/75 sm:text-sm"
           >
             Vi bruker nødvendige informasjonskapsler for at nettsiden skal fungere, for eksempel ved
             timebestilling og betaling. Valgfrie tjenester som sikkerhetskontroll (Turnstile) kan
@@ -57,18 +57,18 @@ export function CookieConsent() {
           </p>
         </div>
 
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+        <div className="flex shrink-0 flex-row items-center gap-2">
           <button
             type="button"
             onClick={acceptEssential}
-            className="rounded-full border border-cream/25 px-5 py-2.5 font-sans text-sm font-light text-cream/90 transition-colors hover:border-cream/50 hover:text-cream"
+            className="rounded-full border border-cream/25 px-3 py-2 font-sans text-xs font-light whitespace-nowrap text-cream/90 transition-colors hover:border-cream/50 hover:text-cream sm:px-5 sm:py-2.5 sm:text-sm"
           >
             Kun nødvendige
           </button>
           <button
             type="button"
             onClick={acceptAll}
-            className="rounded-full bg-cream px-5 py-2.5 font-sans text-sm font-light text-stone transition-colors hover:bg-warm-light"
+            className="rounded-full bg-cream px-3 py-2 font-sans text-xs font-light whitespace-nowrap text-stone transition-colors hover:bg-warm-light sm:px-5 sm:py-2.5 sm:text-sm"
           >
             Godta alle
           </button>
