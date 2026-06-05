@@ -69,16 +69,16 @@ export default async function HomePage() {
               />
             </div>
 
-            <div className="flex flex-wrap gap-4 lg:col-start-1 lg:row-start-4">
+            <div className="flex flex-row flex-nowrap items-center gap-2 sm:gap-4 lg:col-start-1 lg:row-start-4">
               <Link
                 href="/bestill-time"
-                className="rounded-full bg-stone px-8 py-4 font-sans text-sm font-light tracking-wide text-cream transition-colors hover:bg-sage-dark"
+                className="shrink-0 rounded-full bg-stone px-4 py-3 font-sans text-xs font-light tracking-wide whitespace-nowrap text-cream transition-colors hover:bg-sage-dark sm:px-8 sm:py-4 sm:text-sm"
               >
                 Bestill time
               </Link>
               <Link
                 href="#behandlinger"
-                className="rounded-full border border-stone/30 px-8 py-4 font-sans text-sm font-light tracking-wide text-stone transition-colors hover:border-sage hover:text-sage-dark"
+                className="shrink-0 rounded-full border border-stone/30 px-4 py-3 font-sans text-xs font-light tracking-wide whitespace-nowrap text-stone transition-colors hover:border-sage hover:text-sage-dark sm:px-8 sm:py-4 sm:text-sm"
               >
                 Les mer om behandlinger
               </Link>
