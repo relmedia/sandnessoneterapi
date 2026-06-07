@@ -3,6 +3,11 @@
 import { useEffect, useState } from 'react'
 import { CalendarDays, CheckCircle2, Clock, User } from 'lucide-react'
 import { TurnstileWidget } from '@/components/TurnstileWidget'
+import {
+  FloatingLabelField,
+  FloatingLabelSelect,
+  FloatingLabelTextarea,
+} from '@/components/FloatingLabelField'
 import { DayPicker, getDefaultClassNames } from 'react-day-picker'
 import { nb } from 'react-day-picker/locale'
 import { startOfDay } from 'date-fns'
@@ -15,8 +20,8 @@ type FormState = 'idle' | 'submitting' | 'error'
 
 const turnstileEnabled = Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim())
 
-const inputClassName =
-  'w-full rounded-xl border border-stone/10 bg-cream/40 px-4 py-3 font-sans text-sm font-normal text-stone transition-colors focus:border-sage focus:outline-none focus:ring-2 focus:ring-sage/15'
+const floatingFieldClassName =
+  'w-full rounded-xl border border-stone/10 bg-cream/40 px-4 pb-2.5 pt-6 font-sans text-base font-normal text-stone transition-colors focus:border-sage focus:outline-none focus:ring-2 focus:ring-sage/15'
 
 const panelClassName =
   'rounded-xl border border-stone/10 bg-cream/30 p-3 sm:p-4'
@@ -282,7 +287,7 @@ export function BookingForm() {
                     key={slot}
                     type="button"
                     onClick={() => setSelectedTime(slot)}
-                    className={`rounded-xl border px-3 py-2.5 font-sans text-sm font-normal transition-colors ${
+                    className={`cursor-pointer rounded-xl border px-3 py-2.5 font-sans text-sm font-normal transition-colors ${
                       selectedTime === slot
                         ? 'border-sage bg-sage text-cream'
                         : 'border-stone/10 bg-cream/40 text-stone hover:border-sage/30 hover:bg-sage-light/50'
@@ -302,79 +307,66 @@ export function BookingForm() {
             </p>
 
             <div className="grid gap-4 sm:grid-cols-2">
-              <label className="block">
-                <span className="mb-2 block text-body-sm">Fornavn *</span>
-                <input
-                  required
-                  value={name}
-                  onChange={(event) => setName(event.target.value)}
-                  className={inputClassName}
-                  autoComplete="given-name"
-                />
-              </label>
+              <FloatingLabelField
+                label="Fornavn *"
+                required
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+                fieldClassName={floatingFieldClassName}
+                autoComplete="given-name"
+              />
 
-              <label className="block">
-                <span className="mb-2 block text-body-sm">Etternavn *</span>
-                <input
-                  required
-                  value={lastName}
-                  onChange={(event) => setLastName(event.target.value)}
-                  className={inputClassName}
-                  autoComplete="family-name"
-                />
-              </label>
+              <FloatingLabelField
+                label="Etternavn *"
+                required
+                value={lastName}
+                onChange={(event) => setLastName(event.target.value)}
+                fieldClassName={floatingFieldClassName}
+                autoComplete="family-name"
+              />
 
-              <label className="block">
-                <span className="mb-2 block text-body-sm">Telefon *</span>
-                <input
-                  required
-                  value={phone}
-                  onChange={(event) => setPhone(event.target.value)}
-                  className={inputClassName}
-                  autoComplete="tel"
-                />
-              </label>
+              <FloatingLabelField
+                label="Telefon *"
+                required
+                value={phone}
+                onChange={(event) => setPhone(event.target.value)}
+                fieldClassName={floatingFieldClassName}
+                autoComplete="tel"
+              />
 
-              <label className="block">
-                <span className="mb-2 block text-body-sm">E-post *</span>
-                <input
-                  required
-                  type="email"
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
-                  className={inputClassName}
-                  autoComplete="email"
-                />
-              </label>
+              <FloatingLabelField
+                label="E-post *"
+                required
+                type="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                fieldClassName={floatingFieldClassName}
+                autoComplete="email"
+              />
 
-              <label className="block sm:col-span-2">
-                <span className="mb-2 block text-body-sm">Behandling *</span>
-                <select
-                  required
-                  value={service}
-                  onChange={(event) => setService(event.target.value)}
-                  className={inputClassName}
-                >
-                  {BOOKING_SERVICES.map((item) => (
-                    <option key={item.value} value={item.value}>
-                      {item.label}
-                    </option>
-                  ))}
-                </select>
-              </label>
+              <FloatingLabelSelect
+                label="Behandling *"
+                required
+                value={service}
+                onChange={(event) => setService(event.target.value)}
+                fieldClassName={floatingFieldClassName}
+                className="sm:col-span-2"
+              >
+                {BOOKING_SERVICES.map((item) => (
+                  <option key={item.value} value={item.value}>
+                    {item.label}
+                  </option>
+                ))}
+              </FloatingLabelSelect>
 
-              <label className="block sm:col-span-2">
-                <span className="mb-2 block text-body-sm">
-                  Melding (valgfritt)
-                </span>
-                <textarea
-                  value={message}
-                  onChange={(event) => setMessage(event.target.value)}
-                  rows={3}
-                  className={`${inputClassName} resize-y`}
-                  placeholder="Fortell gjerne kort hva du ønsker hjelp med …"
-                />
-              </label>
+              <FloatingLabelTextarea
+                label="Melding (valgfritt)"
+                value={message}
+                onChange={(event) => setMessage(event.target.value)}
+                rows={3}
+                fieldClassName={floatingFieldClassName}
+                className="sm:col-span-2"
+              />
             </div>
 
             <input
@@ -410,7 +402,7 @@ export function BookingForm() {
               disabled={
                 formState === 'submitting' || !selectedDate || !selectedTime || !captchaReady
               }
-              className="mt-8 w-full rounded-full bg-stone px-8 py-4 font-sans text-sm font-normal tracking-wide text-cream transition-colors hover:bg-sage-dark disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+              className="mt-8 w-full cursor-pointer rounded-full bg-stone px-8 py-4 font-sans text-sm font-normal tracking-wide text-cream transition-colors hover:bg-sage-dark disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
             >
               {formState === 'submitting' ? 'Sender …' : 'Send timeforespørsel'}
             </button>

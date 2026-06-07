@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { formatDateNb } from '@/lib/utils'
+import { FloatingLabelField } from '@/components/FloatingLabelField'
+import { FloatingLabelDateField } from '@/components/FloatingLabelDateField'
 
 type Step = 'form' | 'confirm' | 'success' | 'error'
 
@@ -246,15 +248,11 @@ export function CancelBookingForm() {
           }}
           className="space-y-4"
         >
-          <label className="block">
-            <span className="block text-sm text-body-sm mb-2">Avbestillingskode</span>
-            <input
-              value={token}
-              onChange={(event) => setToken(event.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-warm-light bg-cream font-sans font-normal text-stone focus:outline-none focus:border-sage"
-              placeholder="f.eks. a1b2c3d4-..."
-            />
-          </label>
+          <FloatingLabelField
+            label="Avbestillingskode"
+            value={token}
+            onChange={(event) => setToken(event.target.value)}
+          />
           <button
             type="submit"
             disabled={!token.trim() || submitting}
@@ -271,35 +269,25 @@ export function CancelBookingForm() {
           Oppgi samme e-post, telefon og dato som ved bestilling.
         </p>
         <form onSubmit={handleLookupSubmit} className="space-y-4">
-          <label className="block">
-            <span className="block text-sm text-body-sm mb-2">E-post</span>
-            <input
-              required
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-warm-light bg-cream font-sans font-normal text-stone focus:outline-none focus:border-sage"
-            />
-          </label>
-          <label className="block">
-            <span className="block text-sm text-body-sm mb-2">Telefon</span>
-            <input
-              required
-              value={phone}
-              onChange={(event) => setPhone(event.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-warm-light bg-cream font-sans font-normal text-stone focus:outline-none focus:border-sage"
-            />
-          </label>
-          <label className="block">
-            <span className="block text-sm text-body-sm mb-2">Dato for timen</span>
-            <input
-              required
-              type="date"
-              value={date}
-              onChange={(event) => setDate(event.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-warm-light bg-cream font-sans font-normal text-stone focus:outline-none focus:border-sage"
-            />
-          </label>
+          <FloatingLabelField
+            label="E-post"
+            required
+            type="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+          />
+          <FloatingLabelField
+            label="Telefon"
+            required
+            value={phone}
+            onChange={(event) => setPhone(event.target.value)}
+          />
+          <FloatingLabelDateField
+            label="Dato for timen"
+            required
+            value={date}
+            onChange={setDate}
+          />
           <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
           <button
             type="submit"
