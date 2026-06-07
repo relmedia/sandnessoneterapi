@@ -73,7 +73,7 @@ export default async function HomePage() {
                 Bestill time
               </Link>
               <Link
-                href="#behandlinger"
+                href="/#behandlinger"
                 className="shrink-0 rounded-full border border-stone/30 px-4 py-3 font-sans text-xs font-normal tracking-wide whitespace-nowrap text-stone transition-colors hover:border-sage hover:text-sage-dark sm:px-8 sm:py-4 sm:text-sm"
               >
                 Les mer om behandlinger
