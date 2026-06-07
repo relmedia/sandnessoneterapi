@@ -50,14 +50,14 @@ export default async function HomePage() {
                 src={
                   heroImage
                     ? urlFor(heroImage).width(480).url()
-                    : '/images/terje-horpestad.png'
+                    : '/images/terje_profil.png'
                 }
                 alt={heroImageAlt}
                 width={heroImageWidth}
                 height={heroImageHeight}
                 className="h-auto w-full"
                 priority
-                sizes="240px"
+                sizes="(max-width: 1024px) 200px, 240px"
               />
               <div
                 aria-hidden

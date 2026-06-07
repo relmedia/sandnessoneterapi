@@ -177,7 +177,7 @@ export function Header({ settings, services }: HeaderProps) {
   }, [pathname])
 
   return (
-    <header className="sticky top-0 z-50 bg-cream/90 backdrop-blur-sm border-b border-warm-light">
+    <header className="sticky top-0 z-50 border-b border-warm-light bg-cream/95 md:bg-cream/90 md:backdrop-blur-sm">
       <div className="container-wide section-padding mx-auto flex h-16 items-center justify-between gap-6">
         <Link href="/" className="group flex shrink-0 items-center gap-2.5">
           <Image

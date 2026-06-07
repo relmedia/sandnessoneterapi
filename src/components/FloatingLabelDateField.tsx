@@ -116,7 +116,7 @@ export function FloatingLabelDateField({
         >
           <span className={value ? 'text-stone' : 'text-transparent select-none'}>
             {selectedDate
-              ? formatDateNb(selectedDate, {
+              ? formatDateNb(formatDateIso(selectedDate), {
                   weekday: 'long',
                   day: 'numeric',
                   month: 'long',
