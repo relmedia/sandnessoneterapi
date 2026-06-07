@@ -68,6 +68,7 @@ function BehandlingerDropdown({
         setOpen(true)
         onItemHover(event.currentTarget)
       }}
+      onMouseLeave={() => setOpen(false)}
     >
       <button
         type="button"
