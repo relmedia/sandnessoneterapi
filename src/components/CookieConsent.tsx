@@ -47,9 +47,9 @@ export function CookieConsent() {
             id="cookie-consent-description"
             className="font-sans text-sm font-normal leading-relaxed text-cream/75"
           >
-            Vi bruker nødvendige informasjonskapsler for at nettsiden skal fungere, for eksempel ved
-            timebestilling og betaling. Valgfrie tjenester som sikkerhetskontroll (Turnstile) kan
-            sette egne cookies. Les mer i{' '}
+            Vi bruker nødvendige informasjonskapsler for drift av nettsiden, skjema og
+            sikkerhetskontroll (Cloudflare Turnstile). Med «Godta alle» samtykker du også til
+            anonymisert besøksstatistikk (Vercel Analytics). Les mer i{' '}
             <Link href="/personvern" className="text-cream underline underline-offset-2">
               personvernerklæringen
             </Link>

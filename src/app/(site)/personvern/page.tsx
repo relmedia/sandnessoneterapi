@@ -87,8 +87,14 @@ export default async function PersonvernPage() {
                   bestilling.
                 </li>
                 <li>
-                  <strong>Funksjonelle/sikkerhet:</strong> Cloudflare Turnstile kan sette cookies for
-                  å hindre misbruk av skjema når dette er aktivert.
+                  <strong>Sikkerhet:</strong> Cloudflare Turnstile kan sette cookies for å hindre
+                  misbruk av skjema. Dette regnes som nødvendig og lastes uansett valg i
+                  cookie-banneren.
+                </li>
+                <li>
+                  <strong>Statistikk (valgfritt):</strong> Vercel Analytics samler anonymiserte
+                  besøksdata for å forstå bruk av nettsiden. Dette aktiveres bare hvis du velger
+                  «Godta alle» i cookie-banneren.
                 </li>
                 <li>
                   <strong>Betaling:</strong> Vipps kan sette cookies i betalingsvinduet når du betaler
@@ -96,9 +102,9 @@ export default async function PersonvernPage() {
                 </li>
               </ul>
               <p>
-                Vi bruker ikke markedsførings- eller analyseverktøy som Google Analytics. Du kan når
-                som helst endre cookie-valget ved å slette lagret informasjon i nettleseren og laste
-                siden på nytt.
+                Vi bruker ikke markedsføringsverktøy eller tredjeparts analyser som Google Analytics
+                eller Meta Pixel. Du kan når som helst endre cookie-valget ved å slette lagret
+                informasjon i nettleseren og laste siden på nytt.
               </p>
 
               <h2>Kontakt</h2>
