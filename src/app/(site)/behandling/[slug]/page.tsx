@@ -45,7 +45,7 @@ export default async function ServicePage({ params }: PageProps) {
     <article className="py-16 md:py-24">
       <div className="container-narrow section-padding mx-auto">
         <nav
-          className="mb-12 flex items-center gap-2 font-sans text-xs font-light uppercase tracking-widest text-muted"
+          className="mb-12 flex items-center gap-2 text-caption uppercase tracking-widest"
           aria-label="Brødsmulesti"
         >
           <Link href="/" className="hover:text-stone transition-colors">
@@ -55,13 +55,13 @@ export default async function ServicePage({ params }: PageProps) {
           <span className="text-stone">{service.title}</span>
         </nav>
 
-        <p className="mb-4 font-sans text-xs font-light uppercase tracking-[0.3em] text-sage">
+        <p className="mb-4 text-label">
           Behandling
         </p>
-        <h1 className="mb-8 font-serif text-display text-stone">{service.title}</h1>
+        <h1 className="mb-8 text-heading-display">{service.title}</h1>
 
         {shortDescription && (
-          <p className="mb-12 max-w-3xl font-sans text-xl font-light leading-relaxed text-muted border-l-4 border-sage pl-6">
+          <p className="mb-12 max-w-3xl text-body-lg border-l-4 border-sage pl-6">
             {shortDescription}
           </p>
         )}
@@ -86,18 +86,18 @@ export default async function ServicePage({ params }: PageProps) {
         )}
 
         <div className="mt-16 rounded-2xl bg-sage-light p-10 text-center">
-          <h2 className="font-serif text-2xl text-stone mb-3">Ønsker du en time?</h2>
-          <p className="font-sans font-light text-muted mb-6">Bestill online eller ring Terje direkte.</p>
+          <h2 className="text-heading-section mb-3">Ønsker du en time?</h2>
+          <p className="text-body-sm mb-6">Bestill online eller ring Terje direkte.</p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link
               href="/bestill-time"
-              className="inline-block px-8 py-4 bg-sage text-cream font-sans font-light text-sm rounded-full hover:bg-sage-dark transition-colors tracking-wide"
+              className="inline-block px-8 py-4 bg-sage text-cream font-sans text-sm font-normal rounded-full hover:bg-sage-dark transition-colors tracking-wide"
             >
               Bestill time
             </Link>
             <a
               href={`tel:${phoneTel}`}
-              className="inline-block px-8 py-4 border border-sage/30 text-sage-dark font-sans font-light text-sm rounded-full hover:bg-sage-light transition-colors tracking-wide"
+              className="inline-block px-8 py-4 border border-sage/30 text-sage-dark font-sans text-sm font-normal rounded-full hover:bg-sage-light transition-colors tracking-wide"
             >
               Ring {phoneDisplay}
             </a>

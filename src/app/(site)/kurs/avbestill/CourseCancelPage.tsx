@@ -85,7 +85,7 @@ export default function CourseCancelPage() {
 
   return (
     <>
-      <h1 className="mb-6 font-serif text-3xl text-stone">Avbestill kurs</h1>
+      <h1 className="mb-6 text-heading-page">Avbestill kurs</h1>
 
       {step === 'form' && (
         <form
@@ -96,20 +96,20 @@ export default function CourseCancelPage() {
           className="space-y-4 rounded-2xl border border-stone/10 bg-white p-6 shadow-sm"
         >
           <label className="block">
-            <span className="mb-2 block font-sans text-sm font-light text-muted">
+            <span className="mb-2 block text-body-sm">
               Avbestillingskode fra e-post
             </span>
             <input
               required
               value={token}
               onChange={(event) => setToken(event.target.value)}
-              className="w-full rounded-xl border border-stone/10 bg-cream/40 px-4 py-3 font-sans text-sm font-light text-stone"
+              className="w-full rounded-xl border border-stone/10 bg-cream/40 px-4 py-3 font-sans text-sm font-normal text-stone"
             />
           </label>
           <button
             type="submit"
             disabled={loading}
-            className="rounded-full bg-stone px-6 py-3 font-sans text-sm font-light tracking-wide text-cream"
+            className="rounded-full bg-stone px-6 py-3 font-sans text-sm font-normal tracking-wide text-cream"
           >
             {loading ? 'Søker …' : 'Finn påmelding'}
           </button>
@@ -118,7 +118,7 @@ export default function CourseCancelPage() {
 
       {step === 'confirm' && registration && (
         <div className="space-y-4 rounded-2xl border border-stone/10 bg-white p-6 shadow-sm">
-          <p className="font-sans text-sm font-light text-muted">
+          <p className="text-body-sm">
             {registration.courseTitle}
             {registration.sessionDate ? ` · ${registration.sessionDate}` : ''}
           </p>
@@ -126,7 +126,7 @@ export default function CourseCancelPage() {
             type="button"
             onClick={() => void handleCancel()}
             disabled={submitting || !registration.canCancel}
-            className="rounded-full bg-stone px-6 py-3 font-sans text-sm font-light tracking-wide text-cream disabled:opacity-60"
+            className="rounded-full bg-stone px-6 py-3 font-sans text-sm font-normal tracking-wide text-cream disabled:opacity-60"
           >
             {submitting ? 'Avbestiller …' : 'Bekreft avbestilling'}
           </button>
@@ -135,14 +135,14 @@ export default function CourseCancelPage() {
 
       {step === 'success' && (
         <div className="rounded-2xl border border-sage/20 bg-sage-light/40 p-6">
-          <p className="font-sans text-base font-light text-stone">
+          <p className="font-sans text-base font-normal text-stone">
             Påmeldingen er avbestilt. Bekreftet betaling refunderes automatisk.
           </p>
         </div>
       )}
 
       {errorMessage && (
-        <p className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 font-sans text-sm font-light text-red-700">
+        <p className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 font-sans text-sm font-normal text-red-700">
           {errorMessage}
         </p>
       )}

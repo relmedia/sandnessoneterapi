@@ -3,7 +3,7 @@
 @theme {
   --color-cream: #faf7f2;
   --color-stone: #3d3530;
-  --color-muted: #7a6e68;
+  --color-muted: #5c524c;
   --color-sage: #6b8c76;
   --color-sage-light: #ebf0ec;
   --color-sage-dark: #4e6b58;
@@ -30,6 +30,7 @@ body {
   background-color: var(--color-cream);
   color: var(--color-stone);
   font-family: var(--font-sans);
+  font-weight: 400;
 }
 
 @utility section-padding {
@@ -74,12 +75,64 @@ body {
   @apply font-serif text-xl md:text-2xl font-normal text-stone mt-8 mb-3;
 }
 
+@utility text-readable {
+  @apply font-sans text-base md:text-lg font-normal leading-relaxed text-stone;
+}
+
+@utility text-label {
+  @apply font-sans text-xs font-normal uppercase tracking-[0.3em] text-sage;
+}
+
+@utility text-body {
+  @apply font-sans text-base font-normal leading-relaxed text-stone/90;
+}
+
+@utility text-body-lg {
+  @apply font-sans text-base md:text-lg font-normal leading-relaxed text-stone/90;
+}
+
+@utility text-body-sm {
+  @apply font-sans text-sm font-normal leading-relaxed text-stone/90;
+}
+
+@utility text-caption {
+  @apply font-sans text-sm font-normal text-stone/80;
+}
+
+@utility text-field-label {
+  @apply font-sans text-sm font-normal text-stone/90;
+}
+
+@utility text-heading-display {
+  @apply font-serif text-display font-normal text-stone;
+}
+
+@utility text-heading-hero {
+  @apply font-serif text-hero font-normal text-stone;
+}
+
+@utility text-heading-page {
+  @apply font-serif text-3xl font-normal text-stone;
+}
+
+@utility text-heading-card-title {
+  @apply font-serif text-2xl font-semibold text-stone;
+}
+
+@utility text-heading-section {
+  @apply font-serif text-2xl font-normal text-stone;
+}
+
+@utility text-heading-card {
+  @apply font-serif text-xl font-normal text-stone;
+}
+
 .prose-sanity p {
-  @apply text-base md:text-lg text-muted leading-relaxed mb-5 font-sans font-light;
+  @apply text-base md:text-lg text-stone/90 leading-relaxed mb-5 font-sans font-normal;
 }
 
 .prose-sanity ul {
-  @apply list-disc list-inside space-y-2 text-muted mb-5;
+  @apply list-disc list-inside space-y-2 text-stone/90 mb-5 font-sans font-normal;
 }
 
 .prose-sanity strong {

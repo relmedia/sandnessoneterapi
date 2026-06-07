@@ -17,10 +17,10 @@ export default async function ArtiklerPage() {
   return (
     <div className="py-16 md:py-24">
       <div className="container-wide section-padding mx-auto">
-        <p className="font-sans font-light text-xs uppercase tracking-[0.3em] text-sage mb-4">
+        <p className="text-label mb-4">
           Fagstoff
         </p>
-        <h1 className="font-serif text-display text-stone mb-16">Artikler om soneterapi</h1>
+        <h1 className="text-heading-display mb-16">Artikler om soneterapi</h1>
 
         {articles.length > 0 ? (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -52,11 +52,11 @@ export default async function ArtiklerPage() {
                     })}
                   </p>
                 )}
-                <h2 className="font-serif text-xl text-stone mb-2 group-hover:text-sage-dark transition-colors">
+                <h2 className="text-heading-card mb-2 group-hover:text-sage-dark transition-colors">
                   {article.title}
                 </h2>
                 {article.excerpt && (
-                  <p className="font-sans font-light text-sm text-muted leading-relaxed">
+                  <p className="text-body-sm">
                     {article.excerpt}
                   </p>
                 )}
@@ -67,7 +67,7 @@ export default async function ArtiklerPage() {
             ))}
           </div>
         ) : (
-          <p className="font-sans font-light text-muted text-lg">Artikler legges til snart.</p>
+          <p className="text-body-sm text-lg">Artikler legges til snart.</p>
         )}
       </div>
     </div>

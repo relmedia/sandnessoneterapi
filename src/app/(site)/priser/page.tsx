@@ -27,15 +27,15 @@ export default async function PriserPage() {
   return (
     <div className="py-16 md:py-24">
       <div className="container-narrow section-padding mx-auto">
-        <p className="font-sans font-light text-xs uppercase tracking-[0.3em] text-sage mb-4">
+        <p className="text-label mb-4">
           Oversikt
         </p>
-        <h1 className="font-serif text-display text-stone mb-12">{page?.title ?? 'Priser'}</h1>
+        <h1 className="text-heading-display mb-12">{page?.title ?? 'Priser'}</h1>
 
         <div className="divide-y divide-warm-light border-t border-b border-warm-light mb-12">
           {prices.map((item) => (
             <div key={item.label} className="flex justify-between items-center py-5 gap-4">
-              <span className="font-sans font-light text-stone">{item.label}</span>
+              <span className="font-sans font-normal text-stone">{item.label}</span>
               <span className="font-serif text-xl text-sage-dark text-right">{item.price}</span>
             </div>
           ))}
@@ -48,7 +48,7 @@ export default async function PriserPage() {
         )}
 
         {phoneDisplay && phoneTel && (
-          <p className="font-sans font-light text-muted text-sm inline-flex items-center gap-2 flex-wrap">
+          <p className="text-body-sm text-sm inline-flex items-center gap-2 flex-wrap">
             <Phone className="size-4 shrink-0" aria-hidden="true" />
             <span>
               Ring{' '}

@@ -16,10 +16,10 @@ export default async function OmMegPage() {
   return (
     <div className="py-16 md:py-24">
       <div className="container-narrow section-padding mx-auto">
-        <p className="font-sans font-light text-xs uppercase tracking-[0.3em] text-sage mb-4">
+        <p className="text-label mb-4">
           Om terapeuten
         </p>
-        <h1 className="font-serif text-display text-stone mb-12">{page?.title ?? 'Om meg'}</h1>
+        <h1 className="text-heading-display mb-12">{page?.title ?? 'Om meg'}</h1>
 
         {page?.body ? (
           <PortableTextRenderer value={page.body} />

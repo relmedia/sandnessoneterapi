@@ -18,11 +18,11 @@ export default async function CourseAvbestillPage() {
   return (
     <article className="py-16 md:py-24">
       <div className="container-wide section-padding mx-auto max-w-xl">
-        <Suspense fallback={<p className="font-sans text-sm font-light text-muted">Laster …</p>}>
+        <Suspense fallback={<p className="text-body-sm">Laster …</p>}>
           <CourseCancelPage />
         </Suspense>
 
-        <p className="mt-8 font-sans text-sm font-light text-muted">
+        <p className="mt-8 text-body-sm">
           Trenger du hjelp?{' '}
           <a href={`tel:${phoneTel}`} className="text-stone transition-colors hover:text-sage-dark">
             Ring {phoneDisplay}
@@ -31,7 +31,7 @@ export default async function CourseAvbestillPage() {
 
         <Link
           href="/kurs"
-          className="mt-4 inline-block font-sans text-sm font-light text-muted transition-colors hover:text-stone"
+          className="mt-4 inline-block text-body-sm transition-colors hover:text-stone"
         >
           ← Tilbake til kurs
         </Link>

@@ -18,11 +18,11 @@ export default async function KursPage() {
   return (
     <div className="py-16 md:py-24">
       <div className="container-wide section-padding mx-auto">
-        <p className="mb-4 font-sans text-xs font-light uppercase tracking-[0.3em] text-sage">
+        <p className="mb-4 text-label">
           Utdanning
         </p>
-        <h1 className="mb-4 font-serif text-display text-stone">Kurs</h1>
-        <p className="mb-10 max-w-xl font-sans text-xl font-light text-muted">
+        <h1 className="mb-4 text-heading-display">Kurs</h1>
+        <p className="mb-10 max-w-xl text-body-lg">
           Terje Horpestad har utdannet soneterapeuter i over 20 år. Her finner du kommende kurs.
         </p>
 
@@ -33,7 +33,7 @@ export default async function KursPage() {
             phoneTel={phoneTel}
           />
         ) : (
-          <p className="font-sans text-lg font-light text-muted">
+          <p className="text-body-lg">
             Ingen planlagte kurs for øyeblikket. Ring for mer informasjon: {phoneDisplay}.
           </p>
         )}

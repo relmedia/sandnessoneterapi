@@ -21,11 +21,11 @@ export default async function BestillTimePage() {
     <div className="py-16 md:py-24">
       <div className="container-wide section-padding mx-auto">
         <div className="mb-10 md:mb-14">
-          <p className="mb-3 font-sans text-xs font-light uppercase tracking-[0.3em] text-sage">
+          <p className="mb-3 text-label">
             Timebestilling
           </p>
-          <h1 className="mb-4 font-serif text-display text-stone">Bestill time</h1>
-          <p className="max-w-2xl font-sans text-lg font-light leading-relaxed text-muted">
+          <h1 className="mb-4 text-heading-display">Bestill time</h1>
+          <p className="max-w-2xl text-body-lg">
             Velg en ledig dato og klokkeslett. Terje bekrefter timen og tar kontakt med deg.
           </p>
         </div>
@@ -45,7 +45,7 @@ export default async function BestillTimePage() {
             <p className="mb-1 font-sans text-xs uppercase tracking-widest text-sage">Avbestilling</p>
             <Link
               href="/avbestill"
-              className="font-sans text-sm font-light text-stone underline-offset-2 hover:text-sage-dark hover:underline"
+              className="font-sans text-sm font-normal text-stone underline-offset-2 hover:text-sage-dark hover:underline"
             >
               Gå til avbestilling
             </Link>

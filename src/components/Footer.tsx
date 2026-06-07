@@ -40,10 +40,10 @@ export function Footer({ settings }: FooterProps) {
     <footer className="bg-stone text-cream/80">
       <div className="container-wide section-padding mx-auto py-16 grid md:grid-cols-3 gap-12">
         <div>
-          <h3 className="font-serif text-2xl font-light text-cream mb-3">
+          <h3 className="font-serif text-2xl font-normal text-cream mb-3">
             {settings?.title ?? 'Sandnes Soneterapi'}
           </h3>
-          <p className="font-sans font-light text-sm leading-relaxed text-cream/60">
+          <p className="font-sans text-sm font-normal leading-relaxed text-cream/60">
             Terje Horpestad – godkjent soneterapeut med over 40 års erfaring.
           </p>
           {settings?.nnh && (
@@ -62,7 +62,7 @@ export function Footer({ settings }: FooterProps) {
               <Link
                 key={href}
                 href={href}
-                className="text-sm font-sans font-light text-cream/70 hover:text-cream transition-colors"
+                className="text-sm font-sans font-normal text-cream/90 hover:text-cream transition-colors"
               >
                 {label}
               </Link>
@@ -72,7 +72,7 @@ export function Footer({ settings }: FooterProps) {
 
         <div>
           <h4 className="font-sans text-xs uppercase tracking-widest text-warm mb-4">Kontakt</h4>
-          <div className="flex flex-col gap-2 text-sm font-sans font-light text-cream/70">
+          <div className="flex flex-col gap-2 text-sm font-sans font-normal text-cream/90">
             {phoneDisplay && phoneTel && (
               <a
                 href={`tel:${phoneTel}`}
@@ -117,7 +117,7 @@ export function Footer({ settings }: FooterProps) {
       </div>
 
       <div className="border-t border-cream/10 py-6 section-padding">
-        <div className="container-wide mx-auto flex flex-col items-center gap-4 text-center text-xs font-sans font-light text-cream/30 sm:flex-row sm:justify-between">
+        <div className="container-wide mx-auto flex flex-col items-center gap-4 text-center text-xs font-sans font-normal text-cream/55 sm:flex-row sm:justify-between">
           <p>© {year} Sandnes Soneterapi · Terje Horpestad</p>
           <nav className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 sm:gap-x-10" aria-label="Juridisk">
             {legalLinks.map(([href, label]) => (

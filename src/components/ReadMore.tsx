@@ -78,7 +78,7 @@ export function ReadMore({ children, maxHeight = 220, className }: ReadMoreProps
           onClick={handleToggle}
           aria-expanded={expanded}
           aria-controls={contentId}
-          className="mt-3 cursor-pointer font-sans text-sm font-light text-sage-dark transition-colors hover:text-stone"
+          className="mt-3 cursor-pointer font-sans text-sm font-normal text-sage-dark transition-colors hover:text-stone"
         >
           {expanded ? 'Vis mindre' : 'Les mer'}
         </button>

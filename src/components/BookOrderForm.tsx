@@ -11,7 +11,7 @@ type FormState = 'idle' | 'submitting' | 'error'
 const turnstileEnabled = Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim())
 
 const inputClassName =
-  'w-full rounded-xl border-0 bg-cream/60 px-4 py-3 font-sans text-sm font-light text-stone ring-1 ring-stone/10 transition-shadow placeholder:text-muted/60 focus:bg-white focus:ring-2 focus:ring-sage/25 focus:outline-none'
+  'w-full rounded-xl border-0 bg-cream/60 px-4 py-3 font-sans text-sm font-normal text-stone ring-1 ring-stone/10 transition-shadow placeholder:text-muted/60 focus:bg-white focus:ring-2 focus:ring-sage/25 focus:outline-none'
 
 type BookOrderFormProps = {
   bookRef: string
@@ -95,10 +95,10 @@ export function BookOrderForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-8 md:space-y-10">
       <fieldset>
-        <legend className="mb-4 font-sans text-sm font-light text-stone">Dine opplysninger</legend>
+        <legend className="mb-4 font-sans text-sm font-normal text-stone">Dine opplysninger</legend>
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="block">
-            <span className="mb-2 block font-sans text-xs font-light text-muted">Fornavn</span>
+            <span className="mb-2 block text-caption">Fornavn</span>
             <input
               required
               value={name}
@@ -108,7 +108,7 @@ export function BookOrderForm({
             />
           </label>
           <label className="block">
-            <span className="mb-2 block font-sans text-xs font-light text-muted">Etternavn</span>
+            <span className="mb-2 block text-caption">Etternavn</span>
             <input
               required
               value={lastName}
@@ -118,7 +118,7 @@ export function BookOrderForm({
             />
           </label>
           <label className="block sm:col-span-1">
-            <span className="mb-2 block font-sans text-xs font-light text-muted">E-post</span>
+            <span className="mb-2 block text-caption">E-post</span>
             <input
               required
               type="email"
@@ -129,7 +129,7 @@ export function BookOrderForm({
             />
           </label>
           <label className="block sm:col-span-1">
-            <span className="mb-2 block font-sans text-xs font-light text-muted">Telefon</span>
+            <span className="mb-2 block text-caption">Telefon</span>
             <input
               required
               type="tel"
@@ -143,10 +143,10 @@ export function BookOrderForm({
       </fieldset>
 
       <fieldset>
-        <legend className="mb-4 font-sans text-sm font-light text-stone">Leveringsadresse</legend>
+        <legend className="mb-4 font-sans text-sm font-normal text-stone">Leveringsadresse</legend>
         <div className="grid gap-4">
           <label className="block">
-            <span className="mb-2 block font-sans text-xs font-light text-muted">Gateadresse</span>
+            <span className="mb-2 block text-caption">Gateadresse</span>
             <input
               required
               value={addressLine1}
@@ -157,7 +157,7 @@ export function BookOrderForm({
           </label>
           <div className="grid gap-4 sm:grid-cols-[140px_1fr]">
             <label className="block">
-              <span className="mb-2 block font-sans text-xs font-light text-muted">Postnummer</span>
+              <span className="mb-2 block text-caption">Postnummer</span>
               <input
                 required
                 inputMode="numeric"
@@ -170,7 +170,7 @@ export function BookOrderForm({
               />
             </label>
             <label className="block">
-              <span className="mb-2 block font-sans text-xs font-light text-muted">Poststed</span>
+              <span className="mb-2 block text-caption">Poststed</span>
               <input
                 required
                 value={city}
@@ -181,7 +181,7 @@ export function BookOrderForm({
             </label>
           </div>
           <label className="block">
-            <span className="mb-2 block font-sans text-xs font-light text-muted">
+            <span className="mb-2 block text-caption">
               Melding <span className="text-muted/60">(valgfritt)</span>
             </span>
             <textarea
@@ -215,13 +215,13 @@ export function BookOrderForm({
       )}
 
       {errorMessage && (
-        <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 font-sans text-sm font-light text-red-700">
+        <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 font-sans text-sm font-normal text-red-700">
           {errorMessage}
         </p>
       )}
 
       <div className="border-t border-warm-light pt-6 md:pt-8">
-        <div className="mb-5 space-y-2 font-sans text-sm font-light text-muted">
+        <div className="mb-5 space-y-2 text-body-sm">
           <div className="flex items-center justify-between gap-4">
             <span>{bookTitle}</span>
             <span>{bookPrice.toLocaleString('nb-NO')} kr</span>
@@ -236,7 +236,7 @@ export function BookOrderForm({
           </div>
         </div>
 
-        <p className="mb-4 font-sans text-xs font-light leading-relaxed text-muted">
+        <p className="mb-4 text-caption leading-relaxed">
           Ved å sende bestillingen godtar du{' '}
           <Link href="/salgsvilkar" className="text-sage-dark underline underline-offset-2">
             salgsvilkårene

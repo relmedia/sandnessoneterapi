@@ -49,15 +49,15 @@ export function CourseInfoSidebar({
     return (
       <div className={className}>
         <div className="mb-8 md:mb-10">
-          <p className="mb-3 font-sans text-xs font-light uppercase tracking-[0.3em] text-sage">
+          <p className="mb-3 text-label">
             Påmelding
           </p>
-          <h2 className="font-serif text-3xl text-stone md:text-4xl">Meld deg på kurset</h2>
-          <p className="mt-3 max-w-2xl font-sans text-base font-light leading-relaxed text-muted">
+          <h2 className="text-heading-page md:text-4xl">Meld deg på kurset</h2>
+          <p className="mt-3 max-w-2xl text-body-lg">
             Velg kursdato, fyll inn opplysningene dine og fullfør betalingen med Vipps.
           </p>
           {location && mapsUrl && (
-            <p className="mt-4 font-sans text-sm font-light text-muted">
+            <p className="mt-4 text-body-sm">
               <MapPin className="mr-1.5 inline size-4 -translate-y-px text-sage-dark" aria-hidden />
               Kurset holdes på{' '}
               <a
@@ -84,7 +84,7 @@ export function CourseInfoSidebar({
             />
           </div>
           <div className="border-t border-warm-light bg-cream/40 px-6 py-4 text-center md:px-10">
-            <p className="font-sans text-xs font-light text-muted">
+            <p className="text-caption">
               Spørsmål om påmelding?{' '}
               <a
                 href={`tel:${phoneTel}`}
@@ -103,8 +103,8 @@ export function CourseInfoSidebar({
     return (
       <div className={className}>
         <div className="mb-8">
-          <h2 className="font-serif text-3xl text-stone">Påmelding</h2>
-          <p className="mt-2 font-sans text-base font-light text-muted">
+          <h2 className="text-heading-page">Påmelding</h2>
+          <p className="mt-2 text-body">
             Ta kontakt for å melde deg på kurset.
           </p>
         </div>
@@ -112,7 +112,7 @@ export function CourseInfoSidebar({
           <div className="flex flex-wrap gap-3">
             <a
               href={`tel:${phoneTel}`}
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-stone px-6 py-3.5 font-sans text-sm font-light tracking-wide text-cream transition-colors hover:bg-sage-dark"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-stone px-6 py-3.5 font-sans text-sm font-normal tracking-wide text-cream transition-colors hover:bg-sage-dark"
             >
               <Phone className="size-4 shrink-0" aria-hidden />
               Ring {phoneDisplay}
@@ -120,7 +120,7 @@ export function CourseInfoSidebar({
             {email && (
               <a
                 href={`mailto:${email}?subject=${encodeURIComponent(`Påmelding: ${title}`)}`}
-                className="inline-flex items-center justify-center gap-2 rounded-full border border-stone/20 px-6 py-3.5 font-sans text-sm font-light tracking-wide text-stone transition-colors hover:border-sage hover:text-sage-dark"
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-stone/20 px-6 py-3.5 font-sans text-sm font-normal tracking-wide text-stone transition-colors hover:border-sage hover:text-sage-dark"
               >
                 <Mail className="size-4 shrink-0" aria-hidden />
                 Send e-post
@@ -138,14 +138,14 @@ export function CourseInfoSidebar({
     >
       {price != null && (
         <div className="border-b border-stone/10 bg-stone px-6 py-6 text-cream">
-          <p className="font-sans text-[11px] font-light uppercase tracking-[0.25em] text-cream/70">
+          <p className="font-sans text-xs font-normal uppercase tracking-[0.25em] text-cream/70">
             Kurspris
           </p>
           <p className="mt-1 font-serif text-4xl leading-none">
             {price.toLocaleString('nb-NO')} kr
           </p>
           {showOnlineRegistration && (
-            <p className="mt-3 font-sans text-sm font-light text-cream/80">
+            <p className="mt-3 font-sans text-sm font-normal text-cream/80">
               Sikker betaling med Vipps
             </p>
           )}
@@ -160,14 +160,14 @@ export function CourseInfoSidebar({
                 <MapPin className="size-4" aria-hidden />
               </span>
               <div>
-                <p className="font-sans text-[11px] font-light uppercase tracking-[0.25em] text-sage">
+                <p className="font-sans text-xs font-normal uppercase tracking-[0.25em] text-sage">
                   Sted
                 </p>
                 <a
                   href={mapsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-1 block font-sans text-sm font-light leading-relaxed text-stone transition-colors hover:text-sage-dark"
+                  className="mt-1 block font-sans text-sm font-normal leading-relaxed text-stone transition-colors hover:text-sage-dark"
                 >
                   {location}
                 </a>
@@ -181,7 +181,7 @@ export function CourseInfoSidebar({
                 <CalendarDays className="size-4" aria-hidden />
               </span>
               <div className="min-w-0 flex-1">
-                <p className="font-sans text-[11px] font-light uppercase tracking-[0.25em] text-sage">
+                <p className="font-sans text-xs font-normal uppercase tracking-[0.25em] text-sage">
                   Datoer
                 </p>
                 <ul className="mt-2 space-y-2">
@@ -192,7 +192,7 @@ export function CourseInfoSidebar({
                     return (
                       <li
                         key={`${session.date}-${session.startTime ?? index}`}
-                        className="rounded-xl border border-stone/10 bg-white px-4 py-2.5 font-sans text-sm font-light text-stone"
+                        className="rounded-xl border border-stone/10 bg-white px-4 py-2.5 font-sans text-sm font-normal text-stone"
                       >
                         {label}
                       </li>
@@ -208,8 +208,8 @@ export function CourseInfoSidebar({
       {showOnlineRegistration ? (
         <div className="px-6 py-6">
           <div className="mb-5">
-            <h2 className="font-serif text-xl text-stone">Meld deg på</h2>
-            <p className="mt-1 font-sans text-sm font-light text-muted">
+            <h2 className="text-heading-card">Meld deg på</h2>
+            <p className="mt-1 text-body-sm">
               Velg dato, fyll inn opplysninger og betal med Vipps.
             </p>
           </div>
@@ -224,13 +224,13 @@ export function CourseInfoSidebar({
         </div>
       ) : (
         <div className="space-y-3 px-6 py-6">
-          <h2 className="font-serif text-xl text-stone">Påmelding</h2>
-          <p className="font-sans text-sm font-light text-muted">
+          <h2 className="text-heading-card">Påmelding</h2>
+          <p className="text-body-sm">
             Ta kontakt for å melde deg på kurset.
           </p>
           <a
             href={`tel:${phoneTel}`}
-            className="flex w-full items-center justify-center gap-2 rounded-full bg-stone px-5 py-3.5 font-sans text-sm font-light tracking-wide text-cream transition-colors hover:bg-sage-dark"
+            className="flex w-full items-center justify-center gap-2 rounded-full bg-stone px-5 py-3.5 font-sans text-sm font-normal tracking-wide text-cream transition-colors hover:bg-sage-dark"
           >
             <Phone className="size-4 shrink-0" aria-hidden />
             Ring {phoneDisplay}
@@ -238,7 +238,7 @@ export function CourseInfoSidebar({
           {email && (
             <a
               href={`mailto:${email}?subject=${encodeURIComponent(`Påmelding: ${title}`)}`}
-              className="flex w-full items-center justify-center gap-2 rounded-full border border-stone/20 px-5 py-3.5 font-sans text-sm font-light tracking-wide text-stone transition-colors hover:border-sage hover:text-sage-dark"
+              className="flex w-full items-center justify-center gap-2 rounded-full border border-stone/20 px-5 py-3.5 font-sans text-sm font-normal tracking-wide text-stone transition-colors hover:border-sage hover:text-sage-dark"
             >
               <Mail className="size-4 shrink-0" aria-hidden />
               Send e-post
@@ -249,7 +249,7 @@ export function CourseInfoSidebar({
 
       {showOnlineRegistration && (
         <div className="border-t border-warm-light bg-cream/30 px-6 py-4 text-center">
-          <p className="font-sans text-xs font-light text-muted">
+          <p className="text-caption">
             Spørsmål?{' '}
             <a
               href={`tel:${phoneTel}`}

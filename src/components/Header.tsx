@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { ChevronDown } from 'lucide-react'
 import type { SiteSettings } from '@/lib/types'
 
@@ -26,7 +26,23 @@ interface HeaderProps {
   services: NavService[]
 }
 
-function BehandlingerDropdown({ services }: { services: NavService[] }) {
+const desktopNavItemClass =
+  'relative z-10 rounded-full px-3 py-1.5 text-base font-sans font-normal tracking-wide text-stone/90 transition-colors hover:text-stone'
+
+type HoverRect = {
+  left: number
+  top: number
+  width: number
+  height: number
+}
+
+function BehandlingerDropdown({
+  services,
+  onItemHover,
+}: {
+  services: NavService[]
+  onItemHover: (element: HTMLElement) => void
+}) {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
 
@@ -48,12 +64,14 @@ function BehandlingerDropdown({ services }: { services: NavService[] }) {
   return (
     <div
       className="relative"
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
+      onMouseEnter={(event) => {
+        setOpen(true)
+        onItemHover(event.currentTarget)
+      }}
     >
       <button
         type="button"
-        className="flex items-center gap-1 text-sm font-sans font-light text-muted transition-colors tracking-wide hover:text-stone"
+        className={`flex items-center gap-1 ${desktopNavItemClass}`}
         aria-haspopup="true"
         aria-expanded={open}
         onClick={() => setOpen((prev) => !prev)}
@@ -79,7 +97,7 @@ function BehandlingerDropdown({ services }: { services: NavService[] }) {
                 href={`/behandling/${service.slug}`}
                 role="menuitem"
                 onClick={() => setOpen(false)}
-                className="block px-4 py-2.5 font-sans text-sm font-light text-muted transition-colors hover:bg-sage-light/60 hover:text-stone"
+                className="block px-4 py-2.5 font-sans text-base font-normal text-stone/90 transition-colors hover:bg-sage-light/60 hover:text-stone"
               >
                 {service.title}
               </Link>
@@ -88,6 +106,62 @@ function BehandlingerDropdown({ services }: { services: NavService[] }) {
         </ul>
       </div>
     </div>
+  )
+}
+
+function DesktopNav({ services }: { services: NavService[] }) {
+  const navRef = useRef<HTMLElement>(null)
+  const [hoverRect, setHoverRect] = useState<HoverRect | null>(null)
+
+  const updateHoverRect = useCallback((element: HTMLElement) => {
+    const nav = navRef.current
+    if (!nav) return
+
+    const navBox = nav.getBoundingClientRect()
+    const itemBox = element.getBoundingClientRect()
+
+    setHoverRect({
+      left: itemBox.left - navBox.left,
+      top: itemBox.top - navBox.top,
+      width: itemBox.width,
+      height: itemBox.height,
+    })
+  }, [])
+
+  const clearHoverRect = useCallback(() => {
+    setHoverRect(null)
+  }, [])
+
+  return (
+    <nav
+      ref={navRef}
+      className="relative hidden items-center gap-2 md:flex"
+      aria-label="Hovednavigasjon"
+      onMouseLeave={clearHoverRect}
+    >
+      <span
+        aria-hidden
+        className="pointer-events-none absolute rounded-full bg-sage-light/70 transition-[left,top,width,height,opacity] duration-300 ease-in-out"
+        style={{
+          opacity: hoverRect ? 1 : 0,
+          left: hoverRect?.left ?? 0,
+          top: hoverRect?.top ?? 0,
+          width: hoverRect?.width ?? 0,
+          height: hoverRect?.height ?? 0,
+        }}
+      />
+      <BehandlingerDropdown services={services} onItemHover={updateHoverRect} />
+      {navLinks.map((link) => (
+        <Link
+          key={link.href}
+          href={link.href}
+          className={desktopNavItemClass}
+          onMouseEnter={(event) => updateHoverRect(event.currentTarget)}
+        >
+          {link.label}
+        </Link>
+      ))}
+    </nav>
   )
 }
 
@@ -111,25 +185,14 @@ export function Header({ settings, services }: HeaderProps) {
             <span className="font-serif text-xl font-normal tracking-tight text-stone transition-colors group-hover:text-sage-dark">
               {settings?.title ?? 'Sandnes Soneterapi'}
             </span>
-            <span className="font-sans text-[10px] font-light uppercase tracking-[0.2em] text-muted">
+            <span className="font-sans text-[11px] font-normal uppercase tracking-[0.2em] text-stone/80">
               Terje Horpestad
             </span>
           </div>
         </Link>
 
         <div className="flex items-center gap-8">
-          <nav className="hidden items-center gap-8 md:flex" aria-label="Hovednavigasjon">
-            <BehandlingerDropdown services={services} />
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-sm font-sans font-light tracking-wide text-muted transition-colors hover:text-stone"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
+          <DesktopNav services={services} />
 
           <button
             type="button"
@@ -160,7 +223,7 @@ export function Header({ settings, services }: HeaderProps) {
             <button
               type="button"
               onClick={() => setBehandlingerOpen((prev) => !prev)}
-              className="flex w-full items-center justify-between py-1 font-sans text-base font-light text-stone"
+              className="flex w-full items-center justify-between py-1 font-sans text-base font-normal text-stone"
               aria-expanded={behandlingerOpen}
             >
               Behandlinger
@@ -179,7 +242,7 @@ export function Header({ settings, services }: HeaderProps) {
                       setOpen(false)
                       setBehandlingerOpen(false)
                     }}
-                    className="py-1 font-sans text-sm font-light text-muted transition-colors hover:text-stone"
+                    className="py-1 font-sans text-base font-normal text-stone/90 transition-colors hover:text-stone"
                   >
                     {service.title}
                   </Link>
@@ -193,7 +256,7 @@ export function Header({ settings, services }: HeaderProps) {
               key={link.href}
               href={link.href}
               onClick={() => setOpen(false)}
-              className="border-b border-warm-light py-1 font-sans text-base font-light text-stone last:border-0"
+              className="border-b border-warm-light py-1 font-sans text-base font-normal text-stone last:border-0"
             >
               {link.label}
             </Link>

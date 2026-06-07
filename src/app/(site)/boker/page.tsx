@@ -35,11 +35,11 @@ export default async function BokerPage() {
   return (
     <div className="py-16 md:py-24">
       <div className="container-wide section-padding mx-auto">
-        <p className="font-sans font-light text-xs uppercase tracking-[0.3em] text-sage mb-4">
+        <p className="text-label mb-4">
           Litteratur
         </p>
-        <h1 className="font-serif text-display text-stone mb-4">Bøker</h1>
-        <p className="font-sans font-light text-xl text-muted mb-16 max-w-xl">
+        <h1 className="text-heading-display mb-4">Bøker</h1>
+        <p className="text-body-lg mb-16 max-w-xl">
           Terje Horpestad har skrevet to bøker om soneterapi og ett hefte om tankefeltterapi.
           {hasOnlineBooks
             ? ' Bestill online og betal med Vipps, eller ring oss.'
@@ -87,8 +87,8 @@ export default async function BokerPage() {
                   />
                 </div>
                 <div>
-                  <h2 className="mb-3 font-serif text-3xl text-stone md:text-4xl">{book.title}</h2>
-                  <div className="mb-6 flex flex-wrap gap-4 font-sans text-xs font-light uppercase tracking-widest text-muted">
+                  <h2 className="mb-3 text-heading-page md:text-4xl">{book.title}</h2>
+                  <div className="mb-6 flex flex-wrap gap-4 text-caption uppercase tracking-widest">
                     {book.isbn && <span>ISBN {book.isbn}</span>}
                     {book.publishedDate && (
                       <span>
@@ -114,7 +114,7 @@ export default async function BokerPage() {
               </article>
             ))
           ) : (
-            <p className="font-sans font-light text-muted">Bøker legges til snart.</p>
+            <p className="text-body-sm">Bøker legges til snart.</p>
           )}
         </div>
       </div>

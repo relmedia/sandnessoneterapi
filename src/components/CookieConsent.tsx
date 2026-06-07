@@ -45,7 +45,7 @@ export function CookieConsent() {
           </p>
           <p
             id="cookie-consent-description"
-            className="font-sans text-sm font-light leading-relaxed text-cream/75"
+            className="font-sans text-sm font-normal leading-relaxed text-cream/75"
           >
             Vi bruker nødvendige informasjonskapsler for at nettsiden skal fungere, for eksempel ved
             timebestilling og betaling. Valgfrie tjenester som sikkerhetskontroll (Turnstile) kan
@@ -61,14 +61,14 @@ export function CookieConsent() {
           <button
             type="button"
             onClick={acceptEssential}
-            className="flex-1 rounded-full border border-cream/25 px-4 py-3 font-sans text-sm font-light text-cream/90 transition-colors hover:border-cream/50 hover:text-cream sm:flex-none sm:px-5 sm:py-2.5"
+            className="flex-1 rounded-full border border-cream/25 px-4 py-3 font-sans text-sm font-normal text-cream/90 transition-colors hover:border-cream/50 hover:text-cream sm:flex-none sm:px-5 sm:py-2.5"
           >
             Kun nødvendige
           </button>
           <button
             type="button"
             onClick={acceptAll}
-            className="flex-1 rounded-full bg-cream px-4 py-3 font-sans text-sm font-light text-stone transition-colors hover:bg-warm-light sm:flex-none sm:px-5 sm:py-2.5"
+            className="flex-1 rounded-full bg-cream px-4 py-3 font-sans text-sm font-normal text-stone transition-colors hover:bg-warm-light sm:flex-none sm:px-5 sm:py-2.5"
           >
             Godta alle
           </button>

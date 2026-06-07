@@ -25,10 +25,10 @@ export default async function PersonvernPage() {
   return (
     <div className="py-16 md:py-24">
       <div className="container-narrow section-padding mx-auto">
-        <p className="mb-4 font-sans text-xs font-light uppercase tracking-[0.3em] text-sage">
+        <p className="mb-4 text-label">
           Juridisk
         </p>
-        <h1 className="mb-12 font-serif text-display text-stone">
+        <h1 className="mb-12 text-heading-display">
           {page?.title ?? 'Personvern'}
         </h1>
 

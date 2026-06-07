@@ -11,7 +11,7 @@ type FormState = 'idle' | 'submitting' | 'waitlist' | 'error'
 const turnstileEnabled = Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim())
 
 const inputClassName =
-  'w-full rounded-xl border-0 bg-cream/60 px-4 py-3 font-sans text-sm font-light text-stone ring-1 ring-stone/10 transition-shadow placeholder:text-muted/60 focus:bg-white focus:ring-2 focus:ring-sage/25 focus:outline-none'
+  'w-full rounded-xl border-0 bg-cream/60 px-4 py-3 font-sans text-sm font-normal text-stone ring-1 ring-stone/10 transition-shadow placeholder:text-muted/60 focus:bg-white focus:ring-2 focus:ring-sage/25 focus:outline-none'
 
 type CourseRegistrationFormProps = {
   courseSlug: string
@@ -124,9 +124,9 @@ export function CourseRegistrationForm({
       <div className="rounded-2xl border border-sage/20 bg-sage-light/30 p-6 md:p-8">
         <div className="mb-3 flex items-center gap-3 text-sage-dark">
           <CheckCircle2 className="size-6 shrink-0" aria-hidden />
-          <p className="font-serif text-xl text-stone md:text-2xl">Du står på ventelisten</p>
+          <p className="font-serif text-xl font-normal text-stone md:text-2xl">Du står på ventelisten</p>
         </div>
-        <p className="font-sans text-sm font-light leading-relaxed text-muted md:text-base">
+        <p className="text-body-sm md:text-base">
           {waitlistPosition
             ? `Du er nr. ${waitlistPosition} på ventelisten for ${courseTitle}. Vi sender Vipps-lenke på e-post hvis en plass blir ledig.`
             : `Vi har registrert deg på ventelisten for ${courseTitle}.`}
@@ -142,7 +142,7 @@ export function CourseRegistrationForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-8 md:space-y-10">
       <fieldset>
-        <legend className="mb-4 font-sans text-sm font-light text-stone">
+        <legend className="mb-4 font-sans text-sm font-normal text-stone">
           Velg kursdato
         </legend>
         <ul className={sessionGridClass}>
@@ -175,16 +175,16 @@ export function CourseRegistrationForm({
                     {isSelected && <Check className="size-3" strokeWidth={3} aria-hidden />}
                   </span>
                   <span className="min-w-0 flex-1">
-                    <span className="block font-sans text-sm font-light leading-snug text-stone md:text-base">
+                    <span className="block font-sans text-sm font-normal leading-snug text-stone md:text-base">
                       {session.label}
                     </span>
                     <span
-                      className={`mt-1.5 inline-block rounded-full px-2.5 py-0.5 font-sans text-xs font-light ${
+                      className={`mt-1.5 inline-block rounded-full px-2.5 py-0.5 font-sans text-xs font-normal ${
                         session.isFull
-                          ? 'bg-stone/10 text-muted'
+                          ? 'bg-stone/10 text-stone/80'
                           : session.spotsLeft <= 3
                             ? 'bg-amber-100/80 text-amber-900'
-                            : 'bg-white/80 text-muted'
+                            : 'bg-white/80 text-stone/80'
                       }`}
                     >
                       {spotsLabel}
@@ -198,14 +198,14 @@ export function CourseRegistrationForm({
       </fieldset>
 
       <fieldset>
-        <legend className="mb-4 font-sans text-sm font-light text-stone">
+        <legend className="mb-4 font-sans text-sm font-normal text-stone">
           Dine opplysninger
         </legend>
         <div
           className={`grid gap-4 ${isFullWidth ? 'sm:grid-cols-2' : 'gap-3 sm:grid-cols-2'}`}
         >
           <label className="block">
-            <span className="mb-2 block font-sans text-xs font-light text-muted">Fornavn</span>
+            <span className="mb-2 block text-caption">Fornavn</span>
             <input
               required
               value={name}
@@ -215,7 +215,7 @@ export function CourseRegistrationForm({
             />
           </label>
           <label className="block">
-            <span className="mb-2 block font-sans text-xs font-light text-muted">Etternavn</span>
+            <span className="mb-2 block text-caption">Etternavn</span>
             <input
               required
               value={lastName}
@@ -225,7 +225,7 @@ export function CourseRegistrationForm({
             />
           </label>
           <label className={`block ${isFullWidth ? 'sm:col-span-1' : 'sm:col-span-2'}`}>
-            <span className="mb-2 block font-sans text-xs font-light text-muted">E-post</span>
+            <span className="mb-2 block text-caption">E-post</span>
             <input
               required
               type="email"
@@ -236,7 +236,7 @@ export function CourseRegistrationForm({
             />
           </label>
           <label className={`block ${isFullWidth ? 'sm:col-span-1' : 'sm:col-span-2'}`}>
-            <span className="mb-2 block font-sans text-xs font-light text-muted">Telefon</span>
+            <span className="mb-2 block text-caption">Telefon</span>
             <input
               required
               type="tel"
@@ -247,7 +247,7 @@ export function CourseRegistrationForm({
             />
           </label>
           <label className={`block ${isFullWidth ? 'sm:col-span-2' : 'sm:col-span-2'}`}>
-            <span className="mb-2 block font-sans text-xs font-light text-muted">
+            <span className="mb-2 block text-caption">
               Melding <span className="text-muted/60">(valgfritt)</span>
             </span>
             <textarea
@@ -281,7 +281,7 @@ export function CourseRegistrationForm({
       )}
 
       {errorMessage && (
-        <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 font-sans text-sm font-light text-red-700">
+        <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 font-sans text-sm font-normal text-red-700">
           {errorMessage}
         </p>
       )}
@@ -295,15 +295,15 @@ export function CourseRegistrationForm({
       >
         {isFullWidth && (
           <div>
-            <p className="font-sans text-sm font-light text-muted">Totalt å betale</p>
-            <p className="mt-1 font-serif text-2xl text-stone md:text-3xl">
+            <p className="text-body-sm">Totalt å betale</p>
+            <p className="mt-1 text-heading-section md:text-3xl">
               {price.toLocaleString('nb-NO')} kr
             </p>
           </div>
         )}
 
         <div className={isFullWidth ? 'w-full sm:max-w-sm' : ''}>
-          <p className="mb-3 font-sans text-xs font-light leading-relaxed text-muted">
+          <p className="mb-3 text-caption leading-relaxed">
             Ved å betale godtar du{' '}
             <Link href="/salgsvilkar" className="text-sage-dark underline underline-offset-2">
               salgsvilkårene
@@ -326,7 +326,7 @@ export function CourseRegistrationForm({
               `Betal med Vipps`
             )}
           </button>
-          <p className="mt-3 flex flex-col items-center gap-2 text-center font-sans text-xs font-light text-muted sm:flex-row sm:justify-center">
+          <p className="mt-3 flex flex-col items-center gap-2 text-center text-caption sm:flex-row sm:justify-center">
             <span>Du blir sendt til Vipps for å fullføre betalingen.</span>
             {isFullWidth && (
               <span className="inline-flex items-center gap-1.5 rounded-full bg-[#ff5b24]/10 px-2.5 py-0.5 font-medium text-[#ff5b24]">

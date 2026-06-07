@@ -16,7 +16,7 @@ type FormState = 'idle' | 'submitting' | 'error'
 const turnstileEnabled = Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim())
 
 const inputClassName =
-  'w-full rounded-xl border border-stone/10 bg-cream/40 px-4 py-3 font-sans text-sm font-light text-stone transition-colors focus:border-sage focus:outline-none focus:ring-2 focus:ring-sage/15'
+  'w-full rounded-xl border border-stone/10 bg-cream/40 px-4 py-3 font-sans text-sm font-normal text-stone transition-colors focus:border-sage focus:outline-none focus:ring-2 focus:ring-sage/15'
 
 const panelClassName =
   'rounded-xl border border-stone/10 bg-cream/30 p-3 sm:p-4'
@@ -199,14 +199,14 @@ export function BookingForm() {
                     ? 'bg-sage text-cream'
                     : isActive
                       ? 'bg-stone text-cream'
-                      : 'bg-stone/10 text-muted'
+                      : 'bg-stone/10 text-stone/80'
                 }`}
               >
                 {isComplete ? <CheckCircle2 className="h-4 w-4" aria-hidden /> : id}
               </span>
               <span
                 className={`hidden font-sans text-xs uppercase tracking-wider sm:inline ${
-                  isActive ? 'text-stone' : 'text-muted'
+                  isActive ? 'text-stone' : 'text-stone/80'
                 }`}
               >
                 {label}
@@ -219,8 +219,8 @@ export function BookingForm() {
 
       <div className="grid gap-10 p-6 md:p-10 lg:grid-cols-[minmax(0,340px)_1fr] lg:gap-12">
         <section>
-          <h2 className="mb-1 font-serif text-xl text-stone">Velg dato</h2>
-          <p className="mb-5 font-sans text-sm font-light text-muted">
+          <h2 className="mb-1 text-heading-card">Velg dato</h2>
+          <p className="mb-5 text-body-sm">
             {availabilityLoading
               ? 'Henter ledige dager …'
               : availableDates.size > 0
@@ -238,8 +238,8 @@ export function BookingForm() {
               classNames={{
                 ...defaultClassNames,
                 root: `${defaultClassNames.root} mx-auto font-sans`,
-                month_caption: `${defaultClassNames.month_caption} mb-3 font-serif text-lg text-stone`,
-                weekday: `${defaultClassNames.weekday} text-muted text-[0.65rem] uppercase tracking-wider font-light`,
+                month_caption: `${defaultClassNames.month_caption} mb-3 font-serif text-lg font-normal text-stone`,
+                weekday: `${defaultClassNames.weekday} text-stone/80 text-[0.7rem] uppercase tracking-wider font-normal`,
                 day: `${defaultClassNames.day} rounded-full`,
                 day_button: `${defaultClassNames.day_button} text-stone hover:bg-sage-light/60 transition-colors`,
                 selected: `${defaultClassNames.selected}`,
@@ -255,17 +255,17 @@ export function BookingForm() {
 
         <div className={`space-y-10 ${panelClassName}`}>
           <section>
-            <h2 className="mb-1 font-serif text-xl text-stone">Velg klokkeslett</h2>
+            <h2 className="mb-1 text-heading-card">Velg klokkeslett</h2>
             {!selectedDate && (
-              <p className="font-sans text-sm font-light text-muted">
+              <p className="text-body-sm">
                 Velg en dato i kalenderen for å se ledige tider.
               </p>
             )}
             {selectedDate && slotsLoading && (
-              <p className="font-sans text-sm font-light text-muted">Henter ledige tider …</p>
+              <p className="text-body-sm">Henter ledige tider …</p>
             )}
             {selectedDate && !slotsLoading && slots.length === 0 && (
-              <p className="font-sans text-sm font-light text-muted">
+              <p className="text-body-sm">
                 Ingen ledige tider{' '}
                 {formatDateNb(selectedDateIso!, {
                   weekday: 'long',
@@ -282,7 +282,7 @@ export function BookingForm() {
                     key={slot}
                     type="button"
                     onClick={() => setSelectedTime(slot)}
-                    className={`rounded-xl border px-3 py-2.5 font-sans text-sm font-light transition-colors ${
+                    className={`rounded-xl border px-3 py-2.5 font-sans text-sm font-normal transition-colors ${
                       selectedTime === slot
                         ? 'border-sage bg-sage text-cream'
                         : 'border-stone/10 bg-cream/40 text-stone hover:border-sage/30 hover:bg-sage-light/50'
@@ -296,14 +296,14 @@ export function BookingForm() {
           </section>
 
           <section>
-            <h2 className="mb-1 font-serif text-xl text-stone">Dine opplysninger</h2>
-            <p className="mb-6 font-sans text-sm font-light text-muted">
+            <h2 className="mb-1 text-heading-card">Dine opplysninger</h2>
+            <p className="mb-6 text-body-sm">
               Terje bekrefter timen og tar kontakt med deg.
             </p>
 
             <div className="grid gap-4 sm:grid-cols-2">
               <label className="block">
-                <span className="mb-2 block font-sans text-sm font-light text-muted">Fornavn *</span>
+                <span className="mb-2 block text-body-sm">Fornavn *</span>
                 <input
                   required
                   value={name}
@@ -314,7 +314,7 @@ export function BookingForm() {
               </label>
 
               <label className="block">
-                <span className="mb-2 block font-sans text-sm font-light text-muted">Etternavn *</span>
+                <span className="mb-2 block text-body-sm">Etternavn *</span>
                 <input
                   required
                   value={lastName}
@@ -325,7 +325,7 @@ export function BookingForm() {
               </label>
 
               <label className="block">
-                <span className="mb-2 block font-sans text-sm font-light text-muted">Telefon *</span>
+                <span className="mb-2 block text-body-sm">Telefon *</span>
                 <input
                   required
                   value={phone}
@@ -336,7 +336,7 @@ export function BookingForm() {
               </label>
 
               <label className="block">
-                <span className="mb-2 block font-sans text-sm font-light text-muted">E-post *</span>
+                <span className="mb-2 block text-body-sm">E-post *</span>
                 <input
                   required
                   type="email"
@@ -348,7 +348,7 @@ export function BookingForm() {
               </label>
 
               <label className="block sm:col-span-2">
-                <span className="mb-2 block font-sans text-sm font-light text-muted">Behandling *</span>
+                <span className="mb-2 block text-body-sm">Behandling *</span>
                 <select
                   required
                   value={service}
@@ -364,7 +364,7 @@ export function BookingForm() {
               </label>
 
               <label className="block sm:col-span-2">
-                <span className="mb-2 block font-sans text-sm font-light text-muted">
+                <span className="mb-2 block text-body-sm">
                   Melding (valgfritt)
                 </span>
                 <textarea
@@ -410,7 +410,7 @@ export function BookingForm() {
               disabled={
                 formState === 'submitting' || !selectedDate || !selectedTime || !captchaReady
               }
-              className="mt-8 w-full rounded-full bg-stone px-8 py-4 font-sans text-sm font-light tracking-wide text-cream transition-colors hover:bg-sage-dark disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+              className="mt-8 w-full rounded-full bg-stone px-8 py-4 font-sans text-sm font-normal tracking-wide text-cream transition-colors hover:bg-sage-dark disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
             >
               {formState === 'submitting' ? 'Sender …' : 'Send timeforespørsel'}
             </button>

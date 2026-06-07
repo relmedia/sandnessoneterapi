@@ -36,7 +36,7 @@ export default async function ArticlePage({ params }: PageProps) {
     <article className="py-16 md:py-24">
       <div className="container-narrow section-padding mx-auto">
         <nav
-          className="flex items-center gap-2 text-xs font-sans font-light text-muted mb-12 uppercase tracking-widest"
+          className="flex items-center gap-2 text-xs text-body-sm mb-12 uppercase tracking-widest"
           aria-label="Brødsmulesti"
         >
           <Link href="/" className="hover:text-stone transition-colors">
@@ -59,10 +59,10 @@ export default async function ArticlePage({ params }: PageProps) {
             })}
           </p>
         )}
-        <h1 className="font-serif text-display text-stone mb-8">{article.title}</h1>
+        <h1 className="text-heading-display mb-8">{article.title}</h1>
 
         {article.excerpt && (
-          <p className="font-sans font-light text-xl text-muted leading-relaxed mb-12 border-l-4 border-sage pl-6">
+          <p className="text-body-lg leading-relaxed mb-12 border-l-4 border-sage pl-6">
             {article.excerpt}
           </p>
         )}
@@ -85,7 +85,7 @@ export default async function ArticlePage({ params }: PageProps) {
         <div className="mt-16 pt-8 border-t border-warm-light">
           <Link
             href="/artikler"
-            className="font-sans font-light text-sm text-muted hover:text-stone transition-colors"
+            className="font-sans text-sm font-normal text-stone/80 hover:text-stone transition-colors"
           >
             ← Tilbake til artikler
           </Link>

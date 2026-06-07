@@ -26,11 +26,11 @@ export default async function BookOrderSuccessPage({ searchParams }: PageProps) 
           <div className="rounded-2xl border border-stone/10 bg-white p-8 shadow-sm md:p-10">
             <div className="mb-6 flex items-center gap-3 text-sage-dark">
               <CheckCircle2 className="size-8 shrink-0" aria-hidden />
-              <h1 className="font-serif text-3xl text-stone">
+              <h1 className="text-heading-page">
                 {confirmed ? 'Bestilling bekreftet' : 'Takk for bestillingen'}
               </h1>
             </div>
-            <p className="font-sans text-base font-light leading-relaxed text-muted">
+            <p className="text-body-lg">
               {confirmed
                 ? `Betalingen${legacyOrder?.bookTitle ? ` for ${legacyOrder.bookTitle}` : ''} er mottatt via Vipps. Du får bekreftelse på e-post, og vi sender boken til adressen du oppga.`
                 : `Vi behandler Vipps-betalingen${legacyOrder?.bookTitle ? ` for ${legacyOrder.bookTitle}` : ''}. Du får bekreftelse på e-post så snart betalingen er registrert.`}
@@ -38,7 +38,7 @@ export default async function BookOrderSuccessPage({ searchParams }: PageProps) 
             <div className="mt-8 flex flex-wrap gap-4">
               <Link
                 href="/boker"
-                className="inline-flex rounded-full bg-stone px-6 py-3 font-sans text-sm font-light tracking-wide text-cream transition-colors hover:bg-sage-dark"
+                className="inline-flex rounded-full bg-stone px-6 py-3 font-sans text-sm font-normal tracking-wide text-cream transition-colors hover:bg-sage-dark"
               >
                 Tilbake til bøker
               </Link>
@@ -67,19 +67,19 @@ export default async function BookOrderSuccessPage({ searchParams }: PageProps) 
         <div className="rounded-2xl border border-stone/10 bg-white p-8 shadow-sm md:p-10">
           <div className="mb-6 flex items-center gap-3 text-sage-dark">
             <CheckCircle2 className="size-8 shrink-0" aria-hidden />
-            <h1 className="font-serif text-3xl text-stone">
+            <h1 className="text-heading-page">
               {isPaid ? 'Bestilling bekreftet' : 'Takk for bestillingen'}
             </h1>
           </div>
 
           {isPaid ? (
-            <p className="font-sans text-base font-light leading-relaxed text-muted">
+            <p className="text-body-lg">
               Betalingen{order.bookTitle ? ` for ${order.bookTitle}` : ''} er mottatt. Vi sender
               boken til adressen du oppga så snart som mulig.
             </p>
           ) : (
             <>
-              <p className="font-sans text-base font-light leading-relaxed text-muted">
+              <p className="text-body-lg">
                 Hei {order.name}, bestillingen{order.bookTitle ? ` av ${order.bookTitle}` : ''} er
                 mottatt. Fullfør betalingen med Vipps for at vi skal sende boken.
               </p>
@@ -88,13 +88,13 @@ export default async function BookOrderSuccessPage({ searchParams }: PageProps) 
                 <p className="mb-1 font-sans text-xs font-medium uppercase tracking-[0.2em] text-[#ff5b24]">
                   Betal med Vipps
                 </p>
-                <p className="mb-4 font-serif text-3xl text-stone">
+                <p className="mb-4 text-heading-page">
                   {order.totalNok.toLocaleString('nb-NO')} kr
                 </p>
                 <p className="mb-6 font-sans text-2xl font-medium tracking-wide text-stone">
                   {vippsNumber}
                 </p>
-                <ol className="space-y-3 font-sans text-sm font-light leading-relaxed text-muted">
+                <ol className="space-y-3 text-body-sm">
                   {instructions.map((step, index) => (
                     <li key={step} className="flex gap-3">
                       <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-stone text-xs text-cream">
@@ -106,7 +106,7 @@ export default async function BookOrderSuccessPage({ searchParams }: PageProps) 
                 </ol>
               </div>
 
-              <p className="mt-6 font-sans text-sm font-light text-muted">
+              <p className="mt-6 text-body-sm">
                 Du får også betalingsinstruksjoner på e-post. Vi sender boken når betalingen er
                 mottatt.
               </p>
@@ -116,13 +116,13 @@ export default async function BookOrderSuccessPage({ searchParams }: PageProps) 
           <div className="mt-8 flex flex-wrap gap-4">
             <Link
               href="/boker"
-              className="inline-flex rounded-full bg-stone px-6 py-3 font-sans text-sm font-light tracking-wide text-cream transition-colors hover:bg-sage-dark"
+              className="inline-flex rounded-full bg-stone px-6 py-3 font-sans text-sm font-normal tracking-wide text-cream transition-colors hover:bg-sage-dark"
             >
               Tilbake til bøker
             </Link>
             <Link
               href="/"
-              className="inline-flex rounded-full border border-stone/20 px-6 py-3 font-sans text-sm font-light tracking-wide text-stone transition-colors hover:border-sage hover:text-sage-dark"
+              className="inline-flex rounded-full border border-stone/20 px-6 py-3 font-sans text-sm font-normal tracking-wide text-stone transition-colors hover:border-sage hover:text-sage-dark"
             >
               Til forsiden
             </Link>

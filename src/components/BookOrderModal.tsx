@@ -67,13 +67,13 @@ export function BookOrderModal({
       >
         <div className="flex shrink-0 items-start justify-between gap-4 border-b border-warm-light px-5 py-4 sm:px-8 sm:py-6">
           <div className="min-w-0 pr-2">
-            <p className="mb-1 font-sans text-xs font-light uppercase tracking-[0.3em] text-sage">
+            <p className="mb-1 text-label">
               Bokbestilling
             </p>
-            <h2 id={titleId} className="font-serif text-2xl text-stone sm:text-3xl">
+            <h2 id={titleId} className="text-heading-section sm:text-3xl">
               Bestill {bookTitle}
             </h2>
-            <p id={descriptionId} className="mt-2 font-sans text-sm font-light text-muted">
+            <p id={descriptionId} className="mt-2 text-body-sm">
               Fyll inn opplysninger og leveringsadresse. Etter bestilling betaler du med Vipps til
               vårt Vippsnummer.
             </p>
@@ -81,7 +81,7 @@ export function BookOrderModal({
           <button
             type="button"
             onClick={onClose}
-            className="flex size-10 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:bg-cream hover:text-stone"
+            className="flex size-10 shrink-0 items-center justify-center rounded-full text-stone/70 transition-colors hover:bg-cream hover:text-stone"
             aria-label="Lukk"
           >
             <X className="size-5" aria-hidden />
@@ -98,7 +98,7 @@ export function BookOrderModal({
         </div>
 
         <div className="shrink-0 border-t border-warm-light bg-cream/40 px-5 py-4 text-center sm:px-8">
-          <p className="font-sans text-xs font-light text-muted">
+          <p className="text-caption">
             Foretrekker du telefon?{' '}
             <a
               href={`tel:${phoneTel}`}

@@ -41,7 +41,7 @@ export function BokerBookActions({
       )}
       <a
         href={`tel:${phoneTel}`}
-        className={`inline-block w-full rounded-full px-6 py-3 text-center font-sans text-sm font-light tracking-wide transition-colors ${
+        className={`inline-block w-full rounded-full px-6 py-3 text-center font-sans text-sm font-normal tracking-wide transition-colors ${
           canOrderOnline
             ? 'border border-stone/15 bg-white text-stone hover:border-sage hover:text-sage-dark'
             : 'bg-sage text-cream hover:bg-sage-dark'

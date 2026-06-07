@@ -28,15 +28,15 @@ export default async function BookingSuccessPage({ searchParams }: PageProps) {
           <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-sage-light">
             <CheckCircle2 className="h-7 w-7 text-sage-dark" aria-hidden />
           </div>
-          <h1 className="mb-3 font-serif text-3xl text-stone">Takk for bestillingen!</h1>
-          <p className="mb-8 font-sans text-sm font-light leading-relaxed text-muted">
+          <h1 className="mb-3 text-heading-page">Takk for bestillingen!</h1>
+          <p className="mb-8 text-body-sm">
             Timeforespørselen er mottatt. Du får en bekreftelse på e-post med detaljer og
             avbestillingskode. Terje tar kontakt for å bekrefte dato og tid.
           </p>
 
           <div className="mb-8 rounded-xl border border-stone/10 bg-cream/60 p-5 text-left">
             <p className="mb-2 font-sans text-xs uppercase tracking-widest text-sage">Avbestilling</p>
-            <p className="mb-4 font-sans text-sm font-light text-muted">
+            <p className="mb-4 text-body-sm">
               Lagre denne lenken om du må avbestille senere:
             </p>
             <Link
@@ -50,13 +50,13 @@ export default async function BookingSuccessPage({ searchParams }: PageProps) {
           <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
             <Link
               href="/bestill-time"
-              className="inline-flex rounded-full bg-stone px-6 py-3 font-sans text-sm font-light tracking-wide text-cream transition-colors hover:bg-sage-dark"
+              className="inline-flex rounded-full bg-stone px-6 py-3 font-sans text-sm font-normal tracking-wide text-cream transition-colors hover:bg-sage-dark"
             >
               Bestill ny time
             </Link>
             <Link
               href="/avbestill"
-              className="font-sans text-sm font-light text-muted transition-colors hover:text-sage-dark"
+              className="text-body-sm transition-colors hover:text-sage-dark"
             >
               Avbestill uten lenke
             </Link>

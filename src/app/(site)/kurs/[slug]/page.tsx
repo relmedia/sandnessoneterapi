@@ -70,13 +70,13 @@ export default async function CoursePage({ params }: PageProps) {
   }
 
   const outlineButtonClassName =
-    'inline-block cursor-pointer rounded-full border border-sage/30 px-8 py-4 font-sans text-sm font-light tracking-wide text-sage-dark transition-colors hover:bg-white/60'
+    'inline-block cursor-pointer rounded-full border border-sage/30 px-8 py-4 font-sans text-sm font-normal tracking-wide text-sage-dark transition-colors hover:bg-white/60'
 
   return (
     <article className="py-16 md:py-24">
       <div className="container-narrow section-padding mx-auto">
         <nav
-          className="mb-12 flex items-center gap-2 font-sans text-xs font-light uppercase tracking-widest text-muted"
+          className="mb-12 flex items-center gap-2 text-caption uppercase tracking-widest"
           aria-label="Brødsmulesti"
         >
           <Link href="/" className="transition-colors hover:text-stone">
@@ -90,9 +90,9 @@ export default async function CoursePage({ params }: PageProps) {
           <span className="text-stone">{course.title}</span>
         </nav>
 
-        <h1 className="mb-8 font-serif text-display text-stone">{course.title}</h1>
+        <h1 className="mb-8 text-heading-display">{course.title}</h1>
 
-        <div className="mb-10 flex flex-wrap items-center gap-4 font-sans text-sm font-light text-muted">
+        <div className="mb-10 flex flex-wrap items-center gap-4 text-body-sm">
           {course.location && mapsUrl && (
             <a
               href={mapsUrl}
@@ -112,7 +112,7 @@ export default async function CoursePage({ params }: PageProps) {
         </div>
 
         {course.shortDescription && (
-          <p className="mb-8 max-w-3xl border-l-4 border-sage pl-6 font-sans text-xl font-light leading-relaxed text-muted">
+          <p className="mb-8 max-w-3xl border-l-4 border-sage pl-6 text-body-lg">
             {course.shortDescription}
           </p>
         )}
@@ -140,21 +140,21 @@ export default async function CoursePage({ params }: PageProps) {
           <PortableTextRenderer value={course.body} />
         ) : (
           course.shortDescription && (
-            <p className="font-sans text-base font-light leading-relaxed text-muted">
+            <p className="text-body-lg">
               {course.shortDescription}
             </p>
           )
         )}
 
         <div className="mt-16 rounded-2xl bg-sage-light p-10 text-center">
-          <h2 className="mb-3 font-serif text-2xl text-stone">Interessert i kurset?</h2>
-          <p className="mb-6 font-sans font-light text-muted">
+          <h2 className="mb-3 text-heading-section">Interessert i kurset?</h2>
+          <p className="mb-6 text-body-sm">
             Ta kontakt med Terje for påmelding eller spørsmål.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <a
               href={`tel:${phoneTel}`}
-              className="inline-block rounded-full bg-sage px-8 py-4 font-sans text-sm font-light tracking-wide text-cream transition-colors hover:bg-sage-dark"
+              className="inline-block rounded-full bg-sage px-8 py-4 font-sans text-sm font-normal tracking-wide text-cream transition-colors hover:bg-sage-dark"
             >
               Ring {phoneDisplay}
             </a>
@@ -179,7 +179,7 @@ export default async function CoursePage({ params }: PageProps) {
         <div className="mt-10 border-t border-warm-light pt-8">
           <Link
             href="/kurs"
-            className="font-sans text-sm font-light text-muted transition-colors hover:text-stone"
+            className="text-body-sm transition-colors hover:text-stone"
           >
             ← Tilbake til kurs
           </Link>

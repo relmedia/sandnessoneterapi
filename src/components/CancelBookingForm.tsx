@@ -119,19 +119,19 @@ export function CancelBookingForm() {
   }
 
   if (loading) {
-    return <p className="font-sans font-light text-muted">Henter time …</p>
+    return <p className="text-body-sm">Henter time …</p>
   }
 
   if (step === 'success') {
     return (
       <div className="rounded-2xl border border-sage/30 bg-sage-light/40 p-10 text-center max-w-xl">
-        <p className="font-serif text-3xl text-stone mb-4">Timen er avbestilt</p>
-        <p className="font-sans font-light text-muted leading-relaxed mb-6">
+        <p className="text-heading-page mb-4">Timen er avbestilt</p>
+        <p className="text-body mb-6">
           Avbestillingen er registrert. Ta kontakt om du ønsker en ny time.
         </p>
         <Link
           href="/bestill-time"
-          className="inline-block px-8 py-4 bg-sage text-cream font-sans font-light text-sm rounded-full hover:bg-sage-dark transition-colors tracking-wide"
+          className="inline-block px-8 py-4 bg-sage text-cream font-sans text-sm font-normal rounded-full hover:bg-sage-dark transition-colors tracking-wide"
         >
           Bestill ny time
         </Link>
@@ -143,8 +143,8 @@ export function CancelBookingForm() {
     return (
       <div className="max-w-xl space-y-6">
         <div className="rounded-2xl border border-warm-light bg-cream p-8">
-          <h2 className="font-serif text-2xl text-stone mb-4">Bekreft avbestilling</h2>
-          <dl className="space-y-3 font-sans font-light text-muted">
+          <h2 className="text-heading-section mb-4">Bekreft avbestilling</h2>
+          <dl className="space-y-3 text-body-sm">
             {booking.service && (
               <div>
                 <dt className="text-xs uppercase tracking-widest text-sage">Behandling</dt>
@@ -175,9 +175,9 @@ export function CancelBookingForm() {
 
         <div className="flex flex-col items-start gap-4">
           {!booking.canCancel && booking.status === 'cancelled' ? (
-            <p className="text-sm font-sans text-muted">Denne timen er allerede avbestilt.</p>
+            <p className="text-body-sm">Denne timen er allerede avbestilt.</p>
           ) : !booking.canCancel ? (
-            <p className="text-sm font-sans text-muted">
+            <p className="text-body-sm">
               Timen kan ikke avbestilles online. Ring oss for hjelp.
             </p>
           ) : (
@@ -185,7 +185,7 @@ export function CancelBookingForm() {
               type="button"
               onClick={() => void handleCancel()}
               disabled={submitting}
-              className="px-8 py-4 bg-stone text-cream font-sans font-light text-sm rounded-full hover:bg-sage-dark transition-colors tracking-wide disabled:opacity-50"
+              className="px-8 py-4 bg-stone text-cream font-sans text-sm font-normal rounded-full hover:bg-sage-dark transition-colors tracking-wide disabled:opacity-50"
             >
               {submitting ? 'Avbestiller …' : 'Avbestill timen'}
             </button>
@@ -204,7 +204,7 @@ export function CancelBookingForm() {
               setBooking(null)
               setErrorMessage(null)
             }}
-            className="text-sm font-sans font-light text-sage-dark underline underline-offset-2"
+            className="text-sm font-sans font-normal text-sage-dark underline underline-offset-2"
           >
             Tilbake
           </button>
@@ -216,7 +216,7 @@ export function CancelBookingForm() {
   if (step === 'error' && initialToken) {
     return (
       <div className="max-w-xl space-y-6">
-        <p className="font-sans font-light text-muted">{errorMessage ?? 'Fant ikke timen.'}</p>
+        <p className="text-body-sm">{errorMessage ?? 'Fant ikke timen.'}</p>
         <button
           type="button"
           onClick={() => {
@@ -224,7 +224,7 @@ export function CancelBookingForm() {
             setErrorMessage(null)
             setToken('')
           }}
-          className="text-sm font-sans font-light text-sage-dark underline underline-offset-2"
+          className="text-sm font-sans font-normal text-sage-dark underline underline-offset-2"
         >
           Prøv på en annen måte
         </button>
@@ -235,8 +235,8 @@ export function CancelBookingForm() {
   return (
     <div className="grid lg:grid-cols-2 gap-12 max-w-4xl">
       <section>
-        <h2 className="font-serif text-2xl text-stone mb-4">Har du avbestillingskode?</h2>
-        <p className="font-sans font-light text-muted mb-6 text-sm leading-relaxed">
+        <h2 className="text-heading-section mb-4">Har du avbestillingskode?</h2>
+        <p className="text-body-sm mb-6 text-sm leading-relaxed">
           Koden vises etter du har bestilt time. Lim den inn her, eller bruk lenken fra bekreftelsen.
         </p>
         <form
@@ -247,18 +247,18 @@ export function CancelBookingForm() {
           className="space-y-4"
         >
           <label className="block">
-            <span className="block text-sm font-sans font-light text-muted mb-2">Avbestillingskode</span>
+            <span className="block text-sm text-body-sm mb-2">Avbestillingskode</span>
             <input
               value={token}
               onChange={(event) => setToken(event.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-warm-light bg-cream font-sans font-light text-stone focus:outline-none focus:border-sage"
+              className="w-full px-4 py-3 rounded-xl border border-warm-light bg-cream font-sans font-normal text-stone focus:outline-none focus:border-sage"
               placeholder="f.eks. a1b2c3d4-..."
             />
           </label>
           <button
             type="submit"
             disabled={!token.trim() || submitting}
-            className="px-6 py-3 bg-sage text-cream font-sans font-light text-sm rounded-full hover:bg-sage-dark transition-colors disabled:opacity-50"
+            className="px-6 py-3 bg-sage text-cream font-sans text-sm font-normal rounded-full hover:bg-sage-dark transition-colors disabled:opacity-50"
           >
             Finn time
           </button>
@@ -266,45 +266,45 @@ export function CancelBookingForm() {
       </section>
 
       <section>
-        <h2 className="font-serif text-2xl text-stone mb-4">Eller bruk e-post og dato</h2>
-        <p className="font-sans font-light text-muted mb-6 text-sm leading-relaxed">
+        <h2 className="text-heading-section mb-4">Eller bruk e-post og dato</h2>
+        <p className="text-body-sm mb-6 text-sm leading-relaxed">
           Oppgi samme e-post, telefon og dato som ved bestilling.
         </p>
         <form onSubmit={handleLookupSubmit} className="space-y-4">
           <label className="block">
-            <span className="block text-sm font-sans font-light text-muted mb-2">E-post</span>
+            <span className="block text-sm text-body-sm mb-2">E-post</span>
             <input
               required
               type="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-warm-light bg-cream font-sans font-light text-stone focus:outline-none focus:border-sage"
+              className="w-full px-4 py-3 rounded-xl border border-warm-light bg-cream font-sans font-normal text-stone focus:outline-none focus:border-sage"
             />
           </label>
           <label className="block">
-            <span className="block text-sm font-sans font-light text-muted mb-2">Telefon</span>
+            <span className="block text-sm text-body-sm mb-2">Telefon</span>
             <input
               required
               value={phone}
               onChange={(event) => setPhone(event.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-warm-light bg-cream font-sans font-light text-stone focus:outline-none focus:border-sage"
+              className="w-full px-4 py-3 rounded-xl border border-warm-light bg-cream font-sans font-normal text-stone focus:outline-none focus:border-sage"
             />
           </label>
           <label className="block">
-            <span className="block text-sm font-sans font-light text-muted mb-2">Dato for timen</span>
+            <span className="block text-sm text-body-sm mb-2">Dato for timen</span>
             <input
               required
               type="date"
               value={date}
               onChange={(event) => setDate(event.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-warm-light bg-cream font-sans font-light text-stone focus:outline-none focus:border-sage"
+              className="w-full px-4 py-3 rounded-xl border border-warm-light bg-cream font-sans font-normal text-stone focus:outline-none focus:border-sage"
             />
           </label>
           <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
           <button
             type="submit"
             disabled={submitting}
-            className="px-6 py-3 border border-stone/30 text-stone font-sans font-light text-sm rounded-full hover:border-sage hover:text-sage-dark transition-colors disabled:opacity-50"
+            className="px-6 py-3 border border-stone/30 text-stone font-sans text-sm font-normal rounded-full hover:border-sage hover:text-sage-dark transition-colors disabled:opacity-50"
           >
             {submitting ? 'Søker …' : 'Finn time'}
           </button>

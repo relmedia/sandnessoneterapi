@@ -20,11 +20,11 @@ export default async function AvbestillPage() {
   return (
     <div className="py-16 md:py-24">
       <div className="container-wide section-padding mx-auto">
-        <p className="font-sans font-light text-xs uppercase tracking-[0.3em] text-sage mb-4">
+        <p className="text-label mb-4">
           Timebestilling
         </p>
-        <h1 className="font-serif text-display text-stone mb-4">Avbestill time</h1>
-        <p className="font-sans font-light text-xl text-muted mb-12 max-w-2xl">
+        <h1 className="text-heading-display mb-4">Avbestill time</h1>
+        <p className="text-body-lg mb-12 max-w-2xl">
           Bruk avbestillingskoden fra bestillingen, eller oppgi e-post, telefon og dato. Du kan også ringe{' '}
           <a href={`tel:${phoneTel}`} className="text-sage-dark underline underline-offset-2">
             {phoneDisplay}
@@ -32,11 +32,11 @@ export default async function AvbestillPage() {
           .
         </p>
 
-        <Suspense fallback={<p className="font-sans font-light text-muted">Laster …</p>}>
+        <Suspense fallback={<p className="text-body-sm">Laster …</p>}>
           <CancelBookingForm />
         </Suspense>
 
-        <p className="mt-12 text-sm font-sans font-light text-muted">
+        <p className="mt-12 text-sm text-body-sm">
           <Link href="/bestill-time" className="text-sage-dark underline underline-offset-2">
             Bestill ny time
           </Link>

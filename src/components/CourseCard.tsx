@@ -48,15 +48,15 @@ export function CourseCard({ course }: CourseCardProps) {
       )}
 
       <div className="flex flex-1 flex-col p-6 md:p-7">
-        <h3 className="font-serif text-2xl font-normal text-stone transition-colors group-hover:text-sage-dark">
+        <h3 className="text-heading-card-title transition-colors group-hover:text-sage-dark">
           {course.title}
         </h3>
         {course.shortDescription && (
-          <p className="mt-3 flex-1 font-sans text-sm font-light leading-relaxed text-muted line-clamp-3">
+          <p className="text-body mt-3 flex-1 line-clamp-3">
             {course.shortDescription}
           </p>
         )}
-        <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 font-sans text-xs font-light text-muted">
+        <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-caption">
           {course.location && (
             <span className="inline-flex items-center gap-1.5">
               <MapPin className="size-3.5 shrink-0" aria-hidden />
@@ -65,7 +65,7 @@ export function CourseCard({ course }: CourseCardProps) {
           )}
           {course.price != null && <span>{course.price.toLocaleString('nb-NO')} kr</span>}
         </div>
-        <span className="mt-6 inline-flex items-center gap-2 font-sans text-sm font-light text-sage-dark">
+        <span className="mt-6 inline-flex items-center gap-2 font-sans text-sm font-normal text-sage-dark">
           Les mer
           <ArrowRight
             className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"

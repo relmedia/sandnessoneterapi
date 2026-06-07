@@ -73,17 +73,17 @@ export function CourseRegistrationModal({
       >
         <div className="flex shrink-0 items-start justify-between gap-4 border-b border-warm-light px-5 py-4 sm:px-8 sm:py-6">
           <div className="min-w-0 pr-2">
-            <p className="mb-1 font-sans text-xs font-light uppercase tracking-[0.3em] text-sage">
+            <p className="mb-1 text-label">
               Påmelding
             </p>
-            <h2 id={titleId} className="font-serif text-2xl text-stone sm:text-3xl">
+            <h2 id={titleId} className="text-heading-section sm:text-3xl">
               Meld deg på kurset
             </h2>
-            <p id={descriptionId} className="mt-2 font-sans text-sm font-light text-muted">
+            <p id={descriptionId} className="mt-2 text-body-sm">
               Velg kursdato, fyll inn opplysningene dine og fullfør betalingen med Vipps.
             </p>
             {location && mapsUrl && (
-              <p className="mt-3 font-sans text-sm font-light text-muted">
+              <p className="mt-3 text-body-sm">
                 <MapPin className="mr-1.5 inline size-4 -translate-y-px text-sage-dark" aria-hidden />
                 Kurset holdes på{' '}
                 <a
@@ -100,7 +100,7 @@ export function CourseRegistrationModal({
           <button
             type="button"
             onClick={onClose}
-            className="flex size-10 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:bg-cream hover:text-stone"
+            className="flex size-10 shrink-0 items-center justify-center rounded-full text-stone/70 transition-colors hover:bg-cream hover:text-stone"
             aria-label="Lukk"
           >
             <X className="size-5" aria-hidden />
@@ -119,7 +119,7 @@ export function CourseRegistrationModal({
         </div>
 
         <div className="shrink-0 border-t border-warm-light bg-cream/40 px-5 py-4 text-center sm:px-8">
-          <p className="font-sans text-xs font-light text-muted">
+          <p className="text-caption">
             Spørsmål om påmelding?{' '}
             <a
               href={`tel:${phoneTel}`}
@@ -151,7 +151,7 @@ export function CourseRegistrationTrigger({
         onClick={() => setOpen(true)}
         className={
           className ??
-          'cursor-pointer rounded-full bg-stone px-8 py-4 font-sans text-sm font-light tracking-wide text-cream transition-colors hover:bg-sage-dark'
+          'cursor-pointer rounded-full bg-stone px-8 py-4 font-sans text-sm font-normal tracking-wide text-cream transition-colors hover:bg-sage-dark'
         }
       >
         Meld deg på

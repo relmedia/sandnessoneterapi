@@ -39,7 +39,7 @@ export default async function ForedragPage() {
 
         <div className="container-wide section-padding relative mx-auto py-12 md:py-16 lg:py-20">
           <nav
-            className="mb-10 flex items-center gap-2 font-sans text-xs font-light uppercase tracking-widest text-muted md:mb-12"
+            className="mb-10 flex items-center gap-2 text-caption uppercase tracking-widest md:mb-12"
             aria-label="Brødsmulesti"
           >
             <Link href="/" className="transition-colors hover:text-stone">
@@ -50,19 +50,19 @@ export default async function ForedragPage() {
           </nav>
 
           <div className="max-w-2xl">
-            <p className="mb-5 font-sans text-xs font-light uppercase tracking-[0.3em] text-sage">
+            <p className="mb-5 text-label">
               Formidling
             </p>
-            <h1 className="font-serif text-hero leading-[1.12] text-stone md:text-[clamp(2.25rem,4vw,3.5rem)]">
+            <h1 className="text-heading-hero leading-[1.12] md:text-[clamp(2.25rem,4vw,3.5rem)]">
               {pageTitle}
             </h1>
-            <p className="mt-6 max-w-lg font-sans text-base font-light leading-relaxed text-muted md:text-lg">
+            <p className="mt-6 max-w-lg text-body-lg md:text-lg">
               Inspirerende og praktiske foredrag om soneterapi og helse — tilpasset bedrifter,
               foreninger og fagmiljøer.
             </p>
             <a
               href="#bestill-foredrag"
-              className="mt-8 inline-flex items-center rounded-full bg-stone px-7 py-3.5 font-sans text-sm font-light tracking-wide text-cream transition-colors hover:bg-sage-dark"
+              className="mt-8 inline-flex items-center rounded-full bg-stone px-7 py-3.5 font-sans text-sm font-normal tracking-wide text-cream transition-colors hover:bg-sage-dark"
             >
               Kontakt for foredrag
             </a>
@@ -132,7 +132,7 @@ export default async function ForedragPage() {
                 />
               </div>
               {image.caption && (
-                <figcaption className="mt-3 font-sans text-sm font-light italic text-muted">
+                <figcaption className="mt-3 font-sans text-sm font-normal italic text-stone/80">
                   {image.caption}
                 </figcaption>
               )}
@@ -142,8 +142,8 @@ export default async function ForedragPage() {
           <div id="bestill-foredrag" className="mt-16 overflow-hidden rounded-2xl bg-stone">
             <div className="flex flex-col items-start gap-6 p-8 md:flex-row md:items-center md:justify-between md:p-10">
               <div>
-                <h2 className="font-serif text-2xl text-cream md:text-3xl">Bestill foredrag</h2>
-                <p className="mt-2 max-w-md font-sans text-sm font-light leading-relaxed text-cream/75 md:text-base">
+                <h2 className="font-serif text-2xl font-normal text-cream md:text-3xl">Bestill foredrag</h2>
+                <p className="mt-2 max-w-md font-sans text-sm font-normal leading-relaxed text-cream/75 md:text-base">
                   Ta kontakt for tilbud, tilgjengelighet og praktisk gjennomføring. Terje tilpasser
                   innhold og lengde etter deres behov.
                 </p>
@@ -152,7 +152,7 @@ export default async function ForedragPage() {
               <div className="flex flex-wrap gap-3">
                 <a
                   href={`tel:${phoneTel}`}
-                  className="inline-flex items-center gap-2 rounded-full bg-cream px-6 py-3 font-sans text-sm font-light tracking-wide text-stone transition-colors hover:bg-warm-light"
+                  className="inline-flex items-center gap-2 rounded-full bg-cream px-6 py-3 font-sans text-sm font-normal tracking-wide text-stone transition-colors hover:bg-warm-light"
                 >
                   <Phone className="size-4 shrink-0" aria-hidden />
                   {phoneDisplay}
@@ -160,7 +160,7 @@ export default async function ForedragPage() {
                 {settings?.email && (
                   <a
                     href={`mailto:${settings.email}?subject=${encodeURIComponent('Forespørsel om foredrag')}`}
-                    className="inline-flex items-center gap-2 rounded-full border border-cream/30 px-6 py-3 font-sans text-sm font-light tracking-wide text-cream transition-colors hover:bg-cream/10"
+                    className="inline-flex items-center gap-2 rounded-full border border-cream/30 px-6 py-3 font-sans text-sm font-normal tracking-wide text-cream transition-colors hover:bg-cream/10"
                   >
                     <Mail className="size-4 shrink-0" aria-hidden />
                     Send e-post

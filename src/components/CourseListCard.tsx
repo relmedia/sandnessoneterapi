@@ -42,20 +42,20 @@ export function CourseListCard({ course, phoneDisplay, phoneTel }: CourseListCar
       <div className="flex min-w-0 flex-1 flex-col justify-center gap-4 p-5 sm:p-6 md:p-8">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="min-w-0 space-y-2">
-            <h2 className="font-serif text-xl text-stone sm:text-2xl md:text-3xl">
+            <h2 className="font-serif text-xl font-normal text-stone sm:text-2xl md:text-3xl">
               <Link href={courseHref} className="transition-colors hover:text-sage-dark">
                 {course.title}
               </Link>
             </h2>
           </div>
           {course.price != null && (
-            <span className="shrink-0 rounded-full border border-sage/30 px-3 py-1 font-sans text-xs font-light text-sage-dark sm:text-sm">
+            <span className="shrink-0 rounded-full border border-sage/30 px-3 py-1 font-sans text-xs font-normal text-sage-dark sm:text-sm">
               {course.price.toLocaleString('nb-NO')} kr
             </span>
           )}
         </div>
 
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-sans text-xs font-light text-muted sm:text-sm">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-caption sm:text-sm">
           {course.location && (
             <a
               href={getGoogleMapsUrl(course.location)}
@@ -70,7 +70,7 @@ export function CourseListCard({ course, phoneDisplay, phoneTel }: CourseListCar
         </div>
 
         {course.shortDescription && (
-          <p className="line-clamp-3 font-sans text-sm font-light leading-relaxed text-muted sm:text-base">
+          <p className="line-clamp-3 text-body-sm sm:text-base">
             {course.shortDescription}
           </p>
         )}
@@ -78,14 +78,14 @@ export function CourseListCard({ course, phoneDisplay, phoneTel }: CourseListCar
         <div className="flex flex-wrap items-center gap-3 border-t border-warm-light pt-4 sm:gap-4">
           <Link
             href={courseHref}
-            className="inline-flex items-center gap-2 font-sans text-sm font-light text-sage-dark transition-colors hover:text-stone"
+            className="inline-flex items-center gap-2 font-sans text-sm font-normal text-sage-dark transition-colors hover:text-stone"
           >
             Les mer
             <ArrowRight className="h-4 w-4" aria-hidden />
           </Link>
           <a
             href={`tel:${phoneTel}`}
-            className="inline-block rounded-full bg-sage px-4 py-2 font-sans text-xs font-light tracking-wide text-cream transition-colors hover:bg-sage-dark sm:px-6 sm:py-2.5 sm:text-sm"
+            className="inline-block rounded-full bg-sage px-4 py-2 font-sans text-xs font-normal tracking-wide text-cream transition-colors hover:bg-sage-dark sm:px-6 sm:py-2.5 sm:text-sm"
           >
             Kontakt – {phoneDisplay}
           </a>

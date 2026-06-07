@@ -25,12 +25,12 @@ const blockComponents: Record<string, PortableTextBlockComponent> = {
     <h4 className="font-serif text-lg font-normal text-stone mt-6 mb-2">{children}</h4>
   ),
   normal: ({ children }) => (
-    <p className="font-sans font-light text-base md:text-lg text-muted leading-relaxed mb-5">
+    <p className="text-body-lg leading-relaxed mb-5">
       {replaceEmojiWithIcons(children)}
     </p>
   ),
   blockquote: ({ children }) => (
-    <blockquote className="border-l-4 border-sage pl-6 my-8 italic font-serif text-xl text-stone/80">
+    <blockquote className="border-l-4 border-sage pl-6 my-8 italic text-heading-card/80">
       {children}
     </blockquote>
   ),
@@ -74,7 +74,7 @@ const components: PortableTextComponents = {
             sizes="(max-width: 768px) 100vw, 900px"
           />
           {value.caption && (
-            <figcaption className="mt-3 text-center font-sans text-sm font-light italic text-muted">
+            <figcaption className="mt-3 text-center font-sans text-sm font-normal italic text-stone/80">
               {value.caption}
             </figcaption>
           )}
@@ -84,12 +84,12 @@ const components: PortableTextComponents = {
   },
   list: {
     bullet: ({ children }) => (
-      <ul className="list-disc list-inside space-y-2 text-muted mb-5 font-sans font-light">
+      <ul className="list-disc list-inside space-y-2 text-stone/90 mb-5 font-sans font-normal">
         {children}
       </ul>
     ),
     number: ({ children }) => (
-      <ol className="list-decimal list-inside space-y-2 text-muted mb-5 font-sans font-light">
+      <ol className="list-decimal list-inside space-y-2 text-stone/90 mb-5 font-sans font-normal">
         {children}
       </ol>
     ),

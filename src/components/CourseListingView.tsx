@@ -55,10 +55,10 @@ export function CourseListingView({ courses, phoneDisplay, phoneTel }: CourseLis
             type="button"
             onClick={() => updateView('list')}
             aria-pressed={view === 'list'}
-            className={`inline-flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 font-sans text-xs font-light tracking-wide transition-colors sm:text-sm ${
+            className={`inline-flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 font-sans text-xs font-normal tracking-wide transition-colors sm:text-sm ${
               view === 'list'
                 ? 'bg-stone text-cream'
-                : 'text-muted hover:text-stone'
+                : 'text-stone/80 hover:text-stone'
             }`}
           >
             <Rows3 className="size-4 shrink-0" aria-hidden />
@@ -68,10 +68,10 @@ export function CourseListingView({ courses, phoneDisplay, phoneTel }: CourseLis
             type="button"
             onClick={() => updateView('grid')}
             aria-pressed={view === 'grid'}
-            className={`inline-flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 font-sans text-xs font-light tracking-wide transition-colors sm:text-sm ${
+            className={`inline-flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 font-sans text-xs font-normal tracking-wide transition-colors sm:text-sm ${
               view === 'grid'
                 ? 'bg-stone text-cream'
-                : 'text-muted hover:text-stone'
+                : 'text-stone/80 hover:text-stone'
             }`}
           >
             <LayoutGrid className="size-4 shrink-0" aria-hidden />
