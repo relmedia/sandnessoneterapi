@@ -117,19 +117,35 @@ export function Footer({ settings }: FooterProps) {
       </div>
 
       <div className="border-t border-cream/10 py-6 section-padding">
-        <div className="container-wide mx-auto flex flex-col items-center gap-4 text-center text-xs font-sans font-normal text-cream/55 sm:flex-row sm:justify-between">
+        <div className="container-wide mx-auto flex flex-col items-center gap-4 text-center text-xs font-sans font-normal text-cream/55 sm:flex-row sm:justify-between sm:text-left">
           <p>© {year} Sandnes Soneterapi · Terje Horpestad</p>
-          <nav className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 sm:gap-x-10" aria-label="Juridisk">
-            {legalLinks.map(([href, label]) => (
-              <Link
-                key={href}
-                href={href}
-                className="text-cream/50 transition-colors hover:text-cream/80"
+          <div className="flex flex-col items-center gap-3 sm:flex-row sm:items-center sm:gap-8">
+            <nav
+              className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 sm:gap-x-10"
+              aria-label="Juridisk"
+            >
+              {legalLinks.map(([href, label]) => (
+                <Link
+                  key={href}
+                  href={href}
+                  className="text-cream/50 transition-colors hover:text-cream/80"
+                >
+                  {label}
+                </Link>
+              ))}
+            </nav>
+            <p className="text-cream/50">
+              Nettside av{' '}
+              <a
+                href="https://relmedia.no"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-cream/70 transition-colors hover:text-cream"
               >
-                {label}
-              </Link>
-            ))}
-          </nav>
+                relmedia.no
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </footer>
