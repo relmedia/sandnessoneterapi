@@ -169,6 +169,12 @@ function DesktopNav({ services }: { services: NavService[] }) {
 export function Header({ settings, services }: HeaderProps) {
   const [open, setOpen] = useState(false)
   const [behandlingerOpen, setBehandlingerOpen] = useState(false)
+  const pathname = usePathname()
+
+  useEffect(() => {
+    setOpen(false)
+    setBehandlingerOpen(false)
+  }, [pathname])
 
   return (
     <header className="sticky top-0 z-50 bg-cream/90 backdrop-blur-sm border-b border-warm-light">
@@ -204,66 +210,84 @@ export function Header({ settings, services }: HeaderProps) {
             aria-controls="mobile-nav"
           >
             <span
-              className={`block h-px w-6 bg-stone transition-all ${open ? 'translate-y-2 rotate-45' : ''}`}
+              className={`block h-px w-6 bg-stone transition-all duration-300 ${open ? 'translate-y-2 rotate-45' : ''}`}
             />
-            <span className={`block h-px w-6 bg-stone transition-all ${open ? 'opacity-0' : ''}`} />
             <span
-              className={`block h-px w-6 bg-stone transition-all ${open ? '-translate-y-2 -rotate-45' : ''}`}
+              className={`block h-px w-6 bg-stone transition-all duration-300 ${open ? 'opacity-0' : ''}`}
+            />
+            <span
+              className={`block h-px w-6 bg-stone transition-all duration-300 ${open ? '-translate-y-2 -rotate-45' : ''}`}
             />
           </button>
         </div>
       </div>
 
-      {open && (
-        <nav
-          id="mobile-nav"
-          className="flex flex-col gap-4 border-t border-warm-light bg-cream px-6 py-4 md:hidden"
-          aria-label="Mobilnavigasjon"
-        >
-          <div className="border-b border-warm-light pb-4">
-            <button
-              type="button"
-              onClick={() => setBehandlingerOpen((prev) => !prev)}
-              className="flex w-full items-center justify-between py-1 font-sans text-base font-normal text-stone"
-              aria-expanded={behandlingerOpen}
-            >
-              Behandlinger
-              <ChevronDown
-                className={`h-4 w-4 transition-transform ${behandlingerOpen ? 'rotate-180' : ''}`}
-                aria-hidden
-              />
-            </button>
-            {behandlingerOpen && (
-              <div className="mt-2 flex flex-col gap-2 pl-3">
-                {services.map((service) => (
-                  <Link
-                    key={service.slug}
-                    href={`/behandling/${service.slug}`}
-                    onClick={() => {
-                      setOpen(false)
-                      setBehandlingerOpen(false)
-                    }}
-                    className="py-1 font-sans text-base font-normal text-stone/90 transition-colors hover:text-stone"
-                  >
-                    {service.title}
-                  </Link>
-                ))}
+      <div
+        className={`grid transition-[grid-template-rows] duration-300 ease-in-out md:hidden ${
+          open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+        }`}
+      >
+        <div className="overflow-hidden">
+          <nav
+            id="mobile-nav"
+            inert={!open}
+            className={`flex flex-col gap-4 border-t border-warm-light bg-cream px-6 py-4 transition-opacity duration-300 ${
+              open ? 'opacity-100' : 'pointer-events-none opacity-0'
+            }`}
+            aria-label="Mobilnavigasjon"
+            aria-hidden={!open}
+          >
+            <div className="border-b border-warm-light pb-4">
+              <button
+                type="button"
+                onClick={() => setBehandlingerOpen((prev) => !prev)}
+                className="flex w-full items-center justify-between py-1 font-sans text-base font-normal text-stone"
+                aria-expanded={behandlingerOpen}
+              >
+                Behandlinger
+                <ChevronDown
+                  className={`h-4 w-4 transition-transform duration-300 ${behandlingerOpen ? 'rotate-180' : ''}`}
+                  aria-hidden
+                />
+              </button>
+              <div
+                className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${
+                  behandlingerOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+                }`}
+              >
+                <div className="overflow-hidden">
+                  <div className="mt-2 flex flex-col gap-2 pl-3">
+                    {services.map((service) => (
+                      <Link
+                        key={service.slug}
+                        href={`/behandling/${service.slug}`}
+                        onClick={() => {
+                          setOpen(false)
+                          setBehandlingerOpen(false)
+                        }}
+                        className="py-1 font-sans text-base font-normal text-stone/90 transition-colors hover:text-stone"
+                      >
+                        {service.title}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
               </div>
-            )}
-          </div>
+            </div>
 
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onClick={() => setOpen(false)}
-              className="border-b border-warm-light py-1 font-sans text-base font-normal text-stone last:border-0"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-      )}
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setOpen(false)}
+                className="border-b border-warm-light py-1 font-sans text-base font-normal text-stone last:border-0"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
+      </div>
     </header>
   )
 }
