@@ -29,10 +29,6 @@ export default async function HomePage() {
       <section className="relative overflow-hidden bg-cream">
         <div
           aria-hidden="true"
-          className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-sage-light opacity-60 blur-3xl pointer-events-none"
-        />
-        <div
-          aria-hidden="true"
           className="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-warm-light opacity-40 blur-2xl pointer-events-none"
         />
 
