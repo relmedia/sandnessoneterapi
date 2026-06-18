@@ -12,21 +12,11 @@ const ConsentAwareAnalytics = dynamic(
   { ssr: false }
 )
 
-const SanityLive = dynamic(
-  () => import('@/lib/sanity-live').then((mod) => mod.SanityLive),
-  { ssr: false }
-)
-
-interface SiteClientExtrasProps {
-  showLive: boolean
-}
-
-export function SiteClientExtras({ showLive }: SiteClientExtrasProps) {
+export function SiteClientExtras() {
   return (
     <>
       <CookieConsent />
       <ConsentAwareAnalytics />
-      {showLive && <SanityLive includeDrafts />}
     </>
   )
 }

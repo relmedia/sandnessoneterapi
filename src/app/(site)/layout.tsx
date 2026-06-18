@@ -6,6 +6,7 @@ import { Footer } from '@/components/Footer'
 import { SiteClientExtras } from '@/components/SiteClientExtras'
 import { DisableDraftMode } from '@/components/DisableDraftMode'
 import { getServices, getSiteSettings, getSanityQueryOptions, publishedQuery } from '@/lib/sanity'
+import { SanityLive } from '@/lib/sanity-live'
 import { mapServiceNavItems } from '@/lib/service-fallbacks'
 import '../globals.css'
 
@@ -55,7 +56,9 @@ export default async function SiteLayout({
       <Header settings={settings} services={serviceNavItems} />
       <main>{children}</main>
       <Footer settings={settings} />
-      <SiteClientExtras showLive={isDraftMode} />
+      <SiteClientExtras />
+      {/* Always mounted so published edits propagate live to all visitors. */}
+      <SanityLive includeDrafts={isDraftMode} />
       {isDraftMode && (
         <>
           <VisualEditing />
