@@ -60,11 +60,17 @@ export function getSanityQueryOptions(isDraftMode: boolean): SanityQueryOptions 
 
 export const siteSettingsQuery = defineQuery(
   `*[_type == "siteSettings"][0]{
-    _id, _type, title, tagline, heroHeading, heroBody,
+    _id, _type, title, tagline,
+    heroEyebrow, heroHeading, heroBody,
     heroImage{
       ...,
       "dimensions": asset->metadata.dimensions
     },
+    servicesLabel, servicesHeading, servicesBody,
+    aboutLabel, aboutHeading, aboutParagraphs, aboutLinkLabel,
+    stats[]{ label, description },
+    coursesLabel, coursesHeading, coursesLinkLabel,
+    ctaHeading, ctaBody,
     phone, email, address, nnh, facebookUrl, metaDescription
   }`
 )

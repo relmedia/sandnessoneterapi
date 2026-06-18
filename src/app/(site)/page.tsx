@@ -19,6 +19,23 @@ export default async function HomePage() {
   const phoneTel = getPhoneTel(settings?.phone)
   const upcomingCourses = courses.slice(0, 3)
   const serviceCards = mapServiceCards(services)
+
+  const aboutParagraphs =
+    settings?.aboutParagraphs && settings.aboutParagraphs.length > 0
+      ? settings.aboutParagraphs
+      : [
+          'Terje Horpestad har over 40 års daglig erfaring innen soneterapi og alternativ medisin. Han er godkjent av Norske Naturterapeuters Hovedorganisasjon (NNH) og har utdannet terapeuter gjennom Soneterapiskolen i over 20 år.',
+          'Han har skrevet to bøker om soneterapi og et hefte om tankefeltterapi og meridianlære, og holder foredrag om soneterapi, helse og kroppen i bevegelse.',
+        ]
+  const stats =
+    settings?.stats && settings.stats.length > 0
+      ? settings.stats
+      : [
+          { label: '40+', description: 'Års daglig erfaring' },
+          { label: '20+', description: 'År som utdanner' },
+          { label: 'NNH', description: 'Godkjent terapeut' },
+        ]
+
   const heroImage = settings?.heroImage
   const heroImageWidth = heroImage?.dimensions?.width ?? 600
   const heroImageHeight = heroImage?.dimensions?.height ?? 969
@@ -35,7 +52,8 @@ export default async function HomePage() {
         <div className="container-wide section-padding mx-auto py-24 md:py-36 relative">
           <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center lg:gap-14 [&>*]:min-w-0">
             <p className="text-label lg:col-start-1 lg:row-start-1">
-              Godkjent av NNH – Norske Naturterapeuters Hovedorganisasjon
+              {settings?.heroEyebrow ??
+                'Godkjent av NNH – Norske Naturterapeuters Hovedorganisasjon'}
             </p>
             <h1 className="text-heading-display leading-tight whitespace-pre-line lg:col-start-1 lg:row-start-2">
               {settings?.heroHeading ?? 'Naturlig helse\ngjennom berøring'}
@@ -89,12 +107,14 @@ export default async function HomePage() {
         <div className="container-wide section-padding mx-auto">
           <div className="mb-14 max-w-2xl">
             <p className="mb-3 text-label">
-              Behandlinger
+              {settings?.servicesLabel ?? 'Behandlinger'}
             </p>
-            <h2 className="text-heading-hero">Hva kan jeg hjelpe deg med?</h2>
+            <h2 className="text-heading-hero">
+              {settings?.servicesHeading ?? 'Hva kan jeg hjelpe deg med?'}
+            </h2>
             <p className="text-readable mt-4 text-stone/90">
-              Skånsomme, erfaringsbaserte metoder tilpasset dine behov — enten du søker avspenning,
-              balanse eller støtte i en utfordrende periode.
+              {settings?.servicesBody ??
+                'Skånsomme, erfaringsbaserte metoder tilpasset dine behov — enten du søker avspenning, balanse eller støtte i en utfordrende periode.'}
             </p>
           </div>
 
@@ -116,34 +136,33 @@ export default async function HomePage() {
         <div className="container-wide section-padding mx-auto grid md:grid-cols-2 gap-16 items-center">
           <div>
             <p className="text-label mb-4">
-              Om terapeuten
+              {settings?.aboutLabel ?? 'Om terapeuten'}
             </p>
-            <h2 className="text-heading-hero mb-6">40 år med daglig erfaring</h2>
-            <p className="text-readable mb-4 text-stone/90">
-              Terje Horpestad har over 40 års daglig erfaring innen soneterapi og alternativ medisin.
-              Han er godkjent av Norske Naturterapeuters Hovedorganisasjon (NNH) og har utdannet
-              terapeuter gjennom Soneterapiskolen i over 20 år.
-            </p>
-            <p className="text-readable mb-8 text-stone/90">
-              Han har skrevet to bøker om soneterapi og et hefte om tankefeltterapi og meridianlære,
-              og holder foredrag om soneterapi, helse og kroppen i bevegelse.
-            </p>
+            <h2 className="text-heading-hero mb-6">
+              {settings?.aboutHeading ?? '40 år med daglig erfaring'}
+            </h2>
+            {aboutParagraphs.map((paragraph, index) => (
+              <p
+                key={index}
+                className={`text-readable text-stone/90 ${
+                  index === aboutParagraphs.length - 1 ? 'mb-8' : 'mb-4'
+                }`}
+              >
+                {paragraph}
+              </p>
+            ))}
             <Link
               href="/om-meg"
               className="inline-block px-6 py-3 border border-stone/40 text-stone text-sm font-sans font-normal rounded-full hover:bg-stone hover:text-cream transition-colors tracking-wide"
             >
-              Mer om Terje →
+              {settings?.aboutLinkLabel ?? 'Mer om Terje'} →
             </Link>
           </div>
           <div className="flex flex-col gap-6">
-            {[
-              { label: '40+', desc: 'Års daglig erfaring' },
-              { label: '20+', desc: 'År som utdanner' },
-              { label: 'NNH', desc: 'Godkjent terapeut' },
-            ].map((stat) => (
-              <div key={stat.label} className="flex items-center gap-6 p-6 bg-cream rounded-2xl">
+            {stats.map((stat, index) => (
+              <div key={index} className="flex items-center gap-6 p-6 bg-cream rounded-2xl">
                 <span className="font-serif text-4xl text-sage-dark font-normal">{stat.label}</span>
-                <span className="font-sans text-base font-normal text-stone/90">{stat.desc}</span>
+                <span className="font-sans text-base font-normal text-stone/90">{stat.description}</span>
               </div>
             ))}
           </div>
@@ -156,15 +175,17 @@ export default async function HomePage() {
             <div className="flex items-end justify-between mb-14">
               <div>
                 <p className="text-label mb-3">
-                  Kommende kurs
+                  {settings?.coursesLabel ?? 'Kommende kurs'}
                 </p>
-                <h2 className="text-heading-hero">Kurs og utdanning</h2>
+                <h2 className="text-heading-hero">
+                  {settings?.coursesHeading ?? 'Kurs og utdanning'}
+                </h2>
               </div>
               <Link
                 href="/kurs"
                 className="hidden md:block text-body-sm font-sans hover:text-stone transition-colors"
               >
-                Se alle kurs →
+                {settings?.coursesLinkLabel ?? 'Se alle kurs'} →
               </Link>
             </div>
 
@@ -179,9 +200,12 @@ export default async function HomePage() {
 
       <section className="bg-sage pt-20 md:pt-28">
         <div className="container-wide section-padding mx-auto pb-16 md:pb-20 text-center">
-          <h2 className="text-heading-display text-cream mb-6">Klar for en behandling?</h2>
+          <h2 className="text-heading-display text-cream mb-6">
+            {settings?.ctaHeading ?? 'Klar for en behandling?'}
+          </h2>
           <p className="font-sans font-normal text-cream/95 text-lg mb-10 max-w-md mx-auto">
-            Bestill time online eller ring for å avtale. Velkommen til Industrigata 1 i Sandnes.
+            {settings?.ctaBody ??
+              'Bestill time online eller ring for å avtale. Velkommen til Industrigata 1 i Sandnes.'}
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link

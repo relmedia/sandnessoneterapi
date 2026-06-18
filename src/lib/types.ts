@@ -21,14 +21,33 @@ export interface SanitySlug {
   current: string
 }
 
+export interface SiteSettingsStat {
+  label?: string
+  description?: string
+}
+
 export interface SiteSettings {
   _id: string
   _type: 'siteSettings'
   title?: string
   tagline?: string
+  heroEyebrow?: string
   heroHeading?: string
   heroBody?: string
   heroImage?: SanityImage
+  servicesLabel?: string
+  servicesHeading?: string
+  servicesBody?: string
+  aboutLabel?: string
+  aboutHeading?: string
+  aboutParagraphs?: string[]
+  aboutLinkLabel?: string
+  stats?: SiteSettingsStat[]
+  coursesLabel?: string
+  coursesHeading?: string
+  coursesLinkLabel?: string
+  ctaHeading?: string
+  ctaBody?: string
   phone?: string
   email?: string
   address?: string
