@@ -13,6 +13,91 @@ import { DeleteBookingAction } from './sanity/plugins/bookingRequestActions'
 
 const singletonTypes = new Set(['siteSettings'])
 
+type PtSpan = { text: string; marks?: string[] }
+
+function ptBlock(
+  key: string,
+  text: string,
+  style: 'normal' | 'h2' = 'normal'
+) {
+  return {
+    _type: 'block',
+    _key: key,
+    style,
+    markDefs: [],
+    children: [{ _type: 'span', _key: `${key}-s`, text, marks: [] as string[] }],
+  }
+}
+
+function ptBullet(key: string, spans: PtSpan[]) {
+  return {
+    _type: 'block',
+    _key: key,
+    style: 'normal',
+    listItem: 'bullet',
+    level: 1,
+    markDefs: [],
+    children: spans.map((span, index) => ({
+      _type: 'span',
+      _key: `${key}-s${index}`,
+      text: span.text,
+      marks: span.marks ?? [],
+    })),
+  }
+}
+
+// Startinnhold for «Om meg»-siden, slik at teksten kan redigeres i Studio.
+const omMegBody = [
+  ptBlock(
+    'om-meg-1',
+    'Terje Horpestad har gjennom 35 års daglig erfaring med soneterapibehandlinger utviklet et unikt og detaljert sonesystem som har resultert i 3 fagbøker i soneterapi og 1 stk fagbok i tankefeltterapi.'
+  ),
+  ptBlock(
+    'om-meg-2',
+    'I 1998 startet han Soneterapiskolen hvor han har vært lærer og rektor. Skolen har vært godkjent av Norske Naturterapeuters Hovedorganisasjon siden 1998.'
+  ),
+  ptBlock(
+    'om-meg-3',
+    'Terje er eksaminert soneterapeut v/Naturheilschule i 1986. Han har videreutdanning i fotsoneterapi v/Charles Ersdal. I tillegg til eksamener fra Naturheilschule i øreakupunktur, urtemedisin, anatomi og fysiologi. Eksamen i tankefeltterapi: Alternativet i Stavanger.'
+  ),
+  ptBlock(
+    'om-meg-4',
+    'Sandnes Soneterapi har bedriftsavtaler med flere større bedrifter i Rogaland (blandt annet Coop på Bryne). Terje har tidligere i flere år vært leder i forskningskomiteen til NNH.'
+  ),
+  ptBlock('om-meg-boker', 'Bøker utgitt av Terje', 'h2'),
+  ptBullet('om-meg-bok-1', [
+    { text: 'Ny kunnskap i Soneterapi', marks: ['em'] },
+    { text: ' — ISBN 978-82-997412-2-4' },
+  ]),
+  ptBullet('om-meg-bok-2', [
+    { text: 'New knowledge in reflexotherapy', marks: ['em'] },
+    { text: ' — ISBN 978-82-997412-5-5' },
+  ]),
+  ptBullet('om-meg-bok-3', [
+    { text: 'Tankefeltterapi, akupunktur og meridianlære', marks: ['em'] },
+    { text: ' — ISBN 978-82-997412-4-8' },
+  ]),
+  ptBullet('om-meg-bok-4', [
+    { text: 'Soneterapi i tekst og bilder', marks: ['em'] },
+    { text: ' — ISBN 978-82-997412-8-6' },
+  ]),
+  ptBlock('om-meg-kurs', 'Kurser som Terje har undervist i', 'h2'),
+  ptBullet('om-meg-kurs-1', [
+    { text: 'Faglærer ved Sirius Naturterapeutiske skole i Haugesund' },
+  ]),
+  ptBullet('om-meg-kurs-2', [
+    { text: 'Faglærer i soneterapi i Tromsø på Akademiet Helbred' },
+  ]),
+  ptBullet('om-meg-kurs-3', [
+    { text: 'Fagkurs i soneterapi for terapeuter i Sandnes, Oslo og Tromsø' },
+  ]),
+  ptBullet('om-meg-kurs-4', [
+    {
+      text: 'Grunnkurs i soneterapi for elever som ønsker å lære soneterapi i lokalene til Sandnes Soneterapi',
+    },
+  ]),
+]
+
 export default defineConfig({
   name: 'default',
   title: 'Sandnes Soneterapi',
@@ -90,6 +175,16 @@ export default defineConfig({
                   .schemaType('page')
                   .documentId('personvern')
                   .title('Personvern')
+              ),
+            S.listItem()
+              .title('Om meg')
+              .id('om-meg')
+              .child(
+                S.document()
+                  .schemaType('page')
+                  .documentId('om-meg')
+                  .title('Om meg')
+                  .initialValueTemplate('page-om-meg')
               ),
             S.documentTypeListItem('page').title('Andre sider'),
             orderableDocumentListDeskItem({ type: 'course', title: 'Kurs', S, context }),
@@ -170,6 +265,16 @@ export default defineConfig({
         value: {
           title: 'Personvern',
           slug: { _type: 'slug', current: 'personvern' },
+        },
+      },
+      {
+        id: 'page-om-meg',
+        title: 'Om meg-side',
+        schemaType: 'page',
+        value: {
+          title: 'Om meg',
+          slug: { _type: 'slug', current: 'om-meg' },
+          body: omMegBody,
         },
       },
     ],
