@@ -2,7 +2,8 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-import { getService, getServices, getSiteSettings, publishedQuery, urlFor } from '@/lib/sanity'
+import { draftMode } from 'next/headers'
+import { getService, getServices, getSiteSettings, getSanityQueryOptions, publishedQuery, urlFor } from '@/lib/sanity'
 import { PortableTextRenderer } from '@/components/PortableText'
 import { ServiceBodyFallback } from '@/components/ServiceBodyFallback'
 import { getServiceFallback, resolveServiceShortDescription } from '@/lib/service-fallbacks'
@@ -32,7 +33,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ServicePage({ params }: PageProps) {
   const { slug } = await params
-  const [service, settings] = await Promise.all([getService(slug), getSiteSettings()])
+  const { isEnabled: isDraftMode } = await draftMode()
+  const sanityOptions = getSanityQueryOptions(isDraftMode)
+  const [service, settings] = await Promise.all([
+    getService(slug, sanityOptions),
+    getSiteSettings(sanityOptions),
+  ])
   if (!service) notFound()
 
   const phoneDisplay = getPhoneDisplay(settings?.phone)

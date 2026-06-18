@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
-import { getArticles, urlFor } from '@/lib/sanity'
+import { draftMode } from 'next/headers'
+import { getArticles, getSanityQueryOptions, urlFor } from '@/lib/sanity'
 import { formatDateNb } from '@/lib/utils'
 
 export const revalidate = 3600
@@ -12,7 +13,8 @@ export const metadata: Metadata = {
 }
 
 export default async function ArtiklerPage() {
-  const articles = await getArticles()
+  const { isEnabled: isDraftMode } = await draftMode()
+  const articles = await getArticles(getSanityQueryOptions(isDraftMode))
 
   return (
     <div className="py-16 md:py-24">

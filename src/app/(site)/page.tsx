@@ -1,18 +1,21 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import { draftMode } from 'next/headers'
 import { CourseCard } from '@/components/CourseCard'
 import { ServiceCard } from '@/components/ServiceCard'
-import { getSiteSettings, getServices, getCourses, urlFor } from '@/lib/sanity'
+import { getSiteSettings, getServices, getCourses, getSanityQueryOptions, urlFor } from '@/lib/sanity'
 import { mapServiceCards } from '@/lib/service-fallbacks'
 import { getPhoneDisplay, getPhoneTel } from '@/lib/utils'
 
 export const revalidate = 3600
 
 export default async function HomePage() {
+  const { isEnabled: isDraftMode } = await draftMode()
+  const sanityOptions = getSanityQueryOptions(isDraftMode)
   const [settings, services, courses] = await Promise.all([
-    getSiteSettings(),
-    getServices(),
-    getCourses(),
+    getSiteSettings(sanityOptions),
+    getServices(sanityOptions),
+    getCourses(sanityOptions),
   ])
 
   const phoneDisplay = getPhoneDisplay(settings?.phone)

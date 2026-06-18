@@ -5,7 +5,7 @@ import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
 import { SiteClientExtras } from '@/components/SiteClientExtras'
 import { DisableDraftMode } from '@/components/DisableDraftMode'
-import { getServices, getSiteSettings, publishedQuery } from '@/lib/sanity'
+import { getServices, getSiteSettings, getSanityQueryOptions, publishedQuery } from '@/lib/sanity'
 import { mapServiceNavItems } from '@/lib/service-fallbacks'
 import '../globals.css'
 
@@ -43,7 +43,11 @@ export default async function SiteLayout({
   children: React.ReactNode
 }>) {
   const { isEnabled: isDraftMode } = await draftMode()
-  const [settings, services] = await Promise.all([getSiteSettings(), getServices()])
+  const sanityOptions = getSanityQueryOptions(isDraftMode)
+  const [settings, services] = await Promise.all([
+    getSiteSettings(sanityOptions),
+    getServices(sanityOptions),
+  ])
   const serviceNavItems = mapServiceNavItems(services)
 
   return (

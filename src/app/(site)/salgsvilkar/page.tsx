@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
-import { getPage } from '@/lib/sanity'
+import { draftMode } from 'next/headers'
+import { getPage, getSanityQueryOptions } from '@/lib/sanity'
 import { LegalPageContent } from '@/components/LegalPageContent'
 
 export const revalidate = 3600
@@ -10,7 +11,8 @@ export const metadata: Metadata = {
 }
 
 export default async function SalgsvilkarPage() {
-  const page = await getPage('salgsvilkar')
+  const { isEnabled: isDraftMode } = await draftMode()
+  const page = await getPage('salgsvilkar', getSanityQueryOptions(isDraftMode))
 
   return (
     <div className="py-16 md:py-24">

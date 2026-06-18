@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
+import { draftMode } from 'next/headers'
 import { CourseListingView } from '@/components/CourseListingView'
-import { getCourses, getSiteSettings } from '@/lib/sanity'
+import { getCourses, getSiteSettings, getSanityQueryOptions } from '@/lib/sanity'
 import { getPhoneDisplay, getPhoneTel } from '@/lib/utils'
 
 export const revalidate = 3600
@@ -11,7 +12,12 @@ export const metadata: Metadata = {
 }
 
 export default async function KursPage() {
-  const [courses, settings] = await Promise.all([getCourses(), getSiteSettings()])
+  const { isEnabled: isDraftMode } = await draftMode()
+  const sanityOptions = getSanityQueryOptions(isDraftMode)
+  const [courses, settings] = await Promise.all([
+    getCourses(sanityOptions),
+    getSiteSettings(sanityOptions),
+  ])
   const phoneDisplay = getPhoneDisplay(settings?.phone)
   const phoneTel = getPhoneTel(settings?.phone)
 

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
+import { draftMode } from 'next/headers'
 import { Phone } from 'lucide-react'
-import { getPage, getSiteSettings } from '@/lib/sanity'
+import { getPage, getSiteSettings, getSanityQueryOptions } from '@/lib/sanity'
 import { PortableTextRenderer } from '@/components/PortableText'
 import { getPhoneDisplay, getPhoneTel } from '@/lib/utils'
 
@@ -19,7 +20,12 @@ const defaultPrices = [
 ] as const
 
 export default async function PriserPage() {
-  const [page, settings] = await Promise.all([getPage('priser'), getSiteSettings()])
+  const { isEnabled: isDraftMode } = await draftMode()
+  const sanityOptions = getSanityQueryOptions(isDraftMode)
+  const [page, settings] = await Promise.all([
+    getPage('priser', sanityOptions),
+    getSiteSettings(sanityOptions),
+  ])
   const phoneDisplay = getPhoneDisplay(settings?.phone)
   const phoneTel = getPhoneTel(settings?.phone)
   const prices = page?.priceList?.length ? page.priceList : defaultPrices

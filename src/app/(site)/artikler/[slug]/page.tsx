@@ -2,7 +2,8 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-import { getArticle, getArticles, publishedQuery, urlFor } from '@/lib/sanity'
+import { draftMode } from 'next/headers'
+import { getArticle, getArticles, getSanityQueryOptions, publishedQuery, urlFor } from '@/lib/sanity'
 import { PortableTextRenderer } from '@/components/PortableText'
 import { formatDateNb } from '@/lib/utils'
 
@@ -29,7 +30,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ArticlePage({ params }: PageProps) {
   const { slug } = await params
-  const article = await getArticle(slug)
+  const { isEnabled: isDraftMode } = await draftMode()
+  const article = await getArticle(slug, getSanityQueryOptions(isDraftMode))
   if (!article) notFound()
 
   return (

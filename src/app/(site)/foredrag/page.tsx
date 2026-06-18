@@ -1,15 +1,16 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
+import { draftMode } from 'next/headers'
 import { Mail, Phone } from 'lucide-react'
-import { getPage, getSiteSettings, getSanityImageAspectStyle, urlFor } from '@/lib/sanity'
+import { getPage, getSiteSettings, getSanityQueryOptions, getSanityImageAspectStyle, publishedQuery, urlFor } from '@/lib/sanity'
 import { PortableTextRenderer } from '@/components/PortableText'
 import { getPhoneDisplay, getPhoneTel } from '@/lib/utils'
 
 export const revalidate = 3600
 
 export async function generateMetadata(): Promise<Metadata> {
-  const page = await getPage('foredrag')
+  const page = await getPage('foredrag', publishedQuery)
   return {
     title: page?.title ?? 'Foredrag',
     description:
@@ -18,7 +19,12 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ForedragPage() {
-  const [page, settings] = await Promise.all([getPage('foredrag'), getSiteSettings()])
+  const { isEnabled: isDraftMode } = await draftMode()
+  const sanityOptions = getSanityQueryOptions(isDraftMode)
+  const [page, settings] = await Promise.all([
+    getPage('foredrag', sanityOptions),
+    getSiteSettings(sanityOptions),
+  ])
   const phoneDisplay = getPhoneDisplay(settings?.phone)
   const phoneTel = getPhoneTel(settings?.phone)
   const heroImage = page?.sidebarImages?.[0]

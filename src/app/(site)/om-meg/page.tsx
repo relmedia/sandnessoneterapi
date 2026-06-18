@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
-import { getPage } from '@/lib/sanity'
+import { draftMode } from 'next/headers'
+import { getPage, getSanityQueryOptions } from '@/lib/sanity'
 import { PortableTextRenderer } from '@/components/PortableText'
 
 export const revalidate = 3600
@@ -11,7 +12,8 @@ export const metadata: Metadata = {
 }
 
 export default async function OmMegPage() {
-  const page = await getPage('om-meg')
+  const { isEnabled: isDraftMode } = await draftMode()
+  const page = await getPage('om-meg', getSanityQueryOptions(isDraftMode))
 
   return (
     <div className="py-16 md:py-24">
